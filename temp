@@ -1,27 +1,51 @@
-import time
-from plyer import notification
+from kafka import KafkaProducer
+import json
+from datetime import datetime
 
-def show_notification():
-    """Show a notification for the 20-20-20 rule."""
-    notification.notify(
-        title="20-20-20 Rule Reminder",
-        message="Time to take a break! Look at something 20 feet away for 20 seconds.",
-        app_name="20-20-20 Reminder",
-        timeout=10  # Notification duration in seconds
-    )
-
-def start_timer():
-    """Start the 20-minute timer."""
+def producer():
     try:
+        producer = KafkaProducer(
+            bootstrap_servers='172.19.165.234:9092',
+            value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+            key_serializer=lambda k :k.encode('utf-8')
+
+        )
+        print("Chat Producer started. Type messages to send ('exit' to quit):")
+    except Exception as e:
+        print(f"Error occured:{e}")
+        exit()
+    while True:
         while True:
-            # Wait for 20 minutes (1200 seconds)
-            time.sleep(1200)
-            # Show the notification
-            show_notification()
-    except KeyboardInterrupt:
-        print("\nProgram stopped by user.")
+            user=input("enter ur username:")
+            if user.strip():
+                break
+            else:
+                print("username cant be blank")
+
+        if user.lower() == 'exit':
+            break
+
+        while True:
+            message = input(user+"'s Message: ")
+            if message.strip():
+                break
+            else:
+                print("message cant be blank")
+
+
+        timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+
+        try:
+            f=producer.send('chat-messages', key=user,value={'user': user, 'message': message,'timestamp':timestamp})
+            f.get(timeout=10)
+            print("Message sent!")
+
+        except Exception as e:
+            print(f"failed to send message {e}")
+
+    producer.close()
+
 
 if __name__ == "__main__":
-    print("20-20-20 Rule Reminder is running.")
-    print("Press Ctrl+C to stop.")
-    start_timer()
+    producer()
