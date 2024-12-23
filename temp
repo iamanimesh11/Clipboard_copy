@@ -1,13 +1,14 @@
 import time
-import tkinter as tk
-from tkinter import messagebox
+from plyer import notification
 
-def show_reminder():
-    """Show a popup reminder to take a break."""
-    root = tk.Tk()
-    root.withdraw()  # Hide the root window
-    messagebox.showinfo("20-20-20 Rule", "Time to take a break!\nLook at something 20 feet away for 20 seconds.")
-    root.destroy()  # Destroy the root window after showing the popup
+def show_notification():
+    """Show a notification for the 20-20-20 rule."""
+    notification.notify(
+        title="20-20-20 Rule Reminder",
+        message="Time to take a break! Look at something 20 feet away for 20 seconds.",
+        app_name="20-20-20 Reminder",
+        timeout=10  # Notification duration in seconds
+    )
 
 def start_timer():
     """Start the 20-minute timer."""
@@ -15,8 +16,8 @@ def start_timer():
         while True:
             # Wait for 20 minutes (1200 seconds)
             time.sleep(1200)
-            # Show the reminder
-            show_reminder()
+            # Show the notification
+            show_notification()
     except KeyboardInterrupt:
         print("\nProgram stopped by user.")
 
