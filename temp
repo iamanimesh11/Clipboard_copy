@@ -1,3 +1,159 @@
+To enhance message processing in your Kafka-based chat system, let’s incorporate message filtering and transformations. Here's what we'll do:
 
 
-now ive did what u said in same way .but pl once understand my case as topic has 2 partition so its for 2 years no other user should share partition.suppose user 1 send message  it consumed in partition 0 ,user 2 send message it consumed in partition 1 .now suppose if user 3 send message it get consumed in partitoon o or 1 but i dont want it to be conusmd in any as my partition are fixed for 2 user .hoe you understand what my ask is 
+---
+
+Step: Add Message Filtering and Transformation
+
+We'll add logic to:
+
+1. Filter Messages: Allow only messages that meet certain criteria (e.g., no empty messages, profanity filtering, or length restrictions).
+
+
+2. Transform Messages: Modify the content of the message before sending or consuming (e.g., append a timestamp, add emojis, or convert to uppercase).
+
+
+
+
+---
+
+Producer Script: Add Filters and Transformations
+
+In this script:
+
+Filter out empty or invalid messages.
+
+Transform the message by appending a timestamp.
+
+
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
+import json
+from datetime import datetime
+
+
+def producer():
+    producer = KafkaProducer(
+        bootstrap_servers='172.19.165.234:9092',
+        value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    )
+    print("Chat Producer started. Type messages to send ('exit' to quit):")
+
+    while True:
+        user = input("Enter username: ").strip()
+        if user.lower() == 'exit':
+            break
+
+        message = input(f"{user}: ").strip()
+
+        # Filter out empty messages
+        if not message:
+            print("Error: Message cannot be empty.")
+            continue
+
+        # Transform the message (e.g., add timestamp)
+        transformed_message = f"{message} (sent at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
+
+        try:
+            producer.send(
+                topic='chat-messagessss',
+                value={'user': user, 'message': transformed_message}
+            )
+            print("Message sent!")
+        except KafkaError as e:
+            print(f"Error sending message: {e}")
+
+    producer.close()
+
+
+if __name__ == "__main__":
+    producer()
+
+
+---
+
+Consumer Script: Enhanced Processing
+
+In the consumer script:
+
+Process messages to extract specific parts (e.g., user and timestamp).
+
+Perform transformations (e.g., convert to uppercase, or display user statistics).
+
+
+from kafka import KafkaConsumer
+import json
+
+
+def consumer():
+    consumer = KafkaConsumer(
+        'chat-messagessss',
+        bootstrap_servers='172.19.165.234:9092',
+        value_deserializer=lambda v: json.loads(v.decode('utf-8')),
+        group_id='chat-group'
+    )
+    print("Chat Consumer started. Listening for messages:")
+
+    user_message_count = {}  # To track messages per user
+
+    for message in consumer:
+        data = message.value
+
+        # Extract message parts
+        user = data['user']
+        msg_content = data['message']
+
+        # Transform the message (e.g., convert to uppercase)
+        transformed_content = msg_content.upper()
+
+        # Update user statistics
+        user_message_count[user] = user_message_count.get(user, 0) + 1
+
+        # Print the transformed message
+        print(f"{user}: {transformed_content}")
+
+        # Display user statistics
+        print(f"Messages received so far - {user_message_count}")
+
+
+if __name__ == "__main__":
+    consumer()
+
+
+---
+
+Key Features Added
+
+1. Producer-Side Enhancements:
+
+Filters out invalid messages (e.g., empty ones).
+
+Transforms messages by appending a timestamp.
+
+
+
+2. Consumer-Side Enhancements:
+
+Transforms messages (e.g., converts to uppercase).
+
+Tracks and displays message statistics (e.g., number of messages per user).
+
+
+
+
+
+---
+
+Next Steps
+
+Test the updated producer and consumer scripts. Once working, we can move to:
+
+Persisting messages in a database.
+
+Adding analytics (e.g., word frequency, active users).
+
+Implementing notifications for specific keywords.
+
+
+Would you like to test this enhancement first or move to persistence in the next step?
+
