@@ -1,23 +1,26 @@
-from kafka import KafkaProducer
-import json
+import time
+import tkinter as tk
+from tkinter import messagebox
 
-def producer():
-    producer = KafkaProducer(
-        bootstrap_servers='172.19.165.234:9092',
-        key_serializer=lambda k: k.encode('utf-8'),  # Serialize the key
-        value_serializer=lambda v: json.dumps(v).encode('utf-8')  # Serialize the value
-    )
-    print("Chat Producer started. Type messages to send ('exit' to quit):")
+def show_reminder():
+    """Show a popup reminder to take a break."""
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+    messagebox.showinfo("20-20-20 Rule", "Time to take a break!\nLook at something 20 feet away for 20 seconds.")
+    root.destroy()  # Destroy the root window after showing the popup
 
-    while True:
-        user = input("Enter username (User1/User2): ")
-        if user.lower() == 'exit':
-            break
-        message = input(f"{user}: ")
-        producer.send('chat-messagessss', key=user, value={'user': user, 'message': message})
-        print("Message sent!")
-
-    producer.close()
+def start_timer():
+    """Start the 20-minute timer."""
+    try:
+        while True:
+            # Wait for 20 minutes (1200 seconds)
+            time.sleep(1200)
+            # Show the reminder
+            show_reminder()
+    except KeyboardInterrupt:
+        print("\nProgram stopped by user.")
 
 if __name__ == "__main__":
-    producer()
+    print("20-20-20 Rule Reminder is running.")
+    print("Press Ctrl+C to stop.")
+    start_timer()
