@@ -1,0 +1,14 @@
+C:\Users\lgeil.IL-MF10-NB100TS\Miniconda3\envs\myenv\python.exe C:\Users\lgeil.IL-MF10-NB100TS\DE_PERSONAL\chat_messaging_kafka\consumer2.py 
+Traceback (most recent call last):
+  File "C:\Users\lgeil.IL-MF10-NB100TS\DE_PERSONAL\chat_messaging_kafka\consumer2.py", line 29, in <module>
+    consumer1()
+  File "C:\Users\lgeil.IL-MF10-NB100TS\DE_PERSONAL\chat_messaging_kafka\consumer2.py", line 20, in consumer1
+    consumer.assign(partition)
+  File "C:\Users\lgeil.IL-MF10-NB100TS\Miniconda3\envs\myenv\lib\site-packages\kafka\consumer\group.py", line 425, in assign
+    self._subscription.assign_from_user(partitions)
+  File "C:\Users\lgeil.IL-MF10-NB100TS\Miniconda3\envs\myenv\lib\site-packages\kafka\consumer\subscription_state.py", line 219, in assign_from_user
+    raise IllegalStateError(self._SUBSCRIPTION_EXCEPTION_MESSAGE)
+kafka.errors.IllegalStateError: IllegalStateError: You must choose only one way to configure your consumer: (1) subscribe to specific topics by name, (2) subscribe to topics matching a regex pattern, (3) assign itself specific topic-partitions.
+Chat Consumer 2 started. Listening for messages:
+
+Process finished with exit code 1
