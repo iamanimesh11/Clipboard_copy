@@ -1,88 +1,90 @@
-To enhance message processing in your Kafka-based chat system, let’s incorporate message filtering and transformations. Here's what we'll do:
+Great! Now that you've completed message filtering and transformation, let's move to the next step: Persisting messages into a database. This will allow you to store chat history and perform analytics later.
 
 
 ---
 
-Step: Add Message Filtering and Transformation
+Step: Persist Messages to a Database
 
-We'll add logic to:
+We'll use PostgreSQL for storing messages. Here's what we'll do:
 
-1. Filter Messages: Allow only messages that meet certain criteria (e.g., no empty messages, profanity filtering, or length restrictions).
+1. Set up a Database:
 
-
-2. Transform Messages: Modify the content of the message before sending or consuming (e.g., append a timestamp, add emojis, or convert to uppercase).
-
+Create a messages table with fields for id, user, message, timestamp, and partition.
 
 
 
----
+2. Update Consumer Script:
 
-Producer Script: Add Filters and Transformations
-
-In this script:
-
-Filter out empty or invalid messages.
-
-Transform the message by appending a timestamp.
+Modify the consumer to save messages into the database.
 
 
-from kafka import KafkaProducer
-from kafka.errors import KafkaError
-import json
-from datetime import datetime
 
-
-def producer():
-    producer = KafkaProducer(
-        bootstrap_servers='172.19.165.234:9092',
-        value_serializer=lambda v: json.dumps(v).encode('utf-8')
-    )
-    print("Chat Producer started. Type messages to send ('exit' to quit):")
-
-    while True:
-        user = input("Enter username: ").strip()
-        if user.lower() == 'exit':
-            break
-
-        message = input(f"{user}: ").strip()
-
-        # Filter out empty messages
-        if not message:
-            print("Error: Message cannot be empty.")
-            continue
-
-        # Transform the message (e.g., add timestamp)
-        transformed_message = f"{message} (sent at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
-
-        try:
-            producer.send(
-                topic='chat-messagessss',
-                value={'user': user, 'message': transformed_message}
-            )
-            print("Message sent!")
-        except KafkaError as e:
-            print(f"Error sending message: {e}")
-
-    producer.close()
-
-
-if __name__ == "__main__":
-    producer()
 
 
 ---
 
-Consumer Script: Enhanced Processing
+Database Setup
 
-In the consumer script:
+Create a table in PostgreSQL:
 
-Process messages to extract specific parts (e.g., user and timestamp).
+CREATE TABLE chat_messages (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50),
+    message TEXT,
+    timestamp TIMESTAMP,
+    partition INT
+);
 
-Perform transformations (e.g., convert to uppercase, or display user statistics).
 
+---
+
+Enhanced Consumer Script
+
+We'll modify the consumer to save messages into the PostgreSQL database.
+
+Install Required Packages
+
+Ensure you have the psycopg2 library installed in your environment:
+
+pip install psycopg2
+
+Script
 
 from kafka import KafkaConsumer
 import json
+import psycopg2
+from psycopg2 import sql
+
+
+def save_to_db(user, message, timestamp, partition):
+    try:
+        # Connect to PostgreSQL
+        connection = psycopg2.connect(
+            dbname="your_database",
+            user="your_user",
+            password="your_password",
+            host="localhost",
+            port="5432"
+        )
+        cursor = connection.cursor()
+
+        # Insert message into the database
+        insert_query = sql.SQL("""
+            INSERT INTO chat_messages (username, message, timestamp, partition)
+            VALUES (%s, %s, %s, %s)
+        """)
+        cursor.execute(insert_query, (user, message, timestamp, partition))
+        connection.commit()
+
+        print("Message saved to database!")
+
+    except Exception as e:
+        print(f"Error saving to database: {e}")
+
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
 
 
 def consumer():
@@ -94,26 +96,19 @@ def consumer():
     )
     print("Chat Consumer started. Listening for messages:")
 
-    user_message_count = {}  # To track messages per user
-
     for message in consumer:
         data = message.value
 
-        # Extract message parts
         user = data['user']
         msg_content = data['message']
+        partition = message.partition  # Get the partition
+        timestamp = message.timestamp  # Get message timestamp
 
-        # Transform the message (e.g., convert to uppercase)
-        transformed_content = msg_content.upper()
+        # Print received message
+        print(f"Received - User: {user}, Message: {msg_content}, Partition: {partition}, Timestamp: {timestamp}")
 
-        # Update user statistics
-        user_message_count[user] = user_message_count.get(user, 0) + 1
-
-        # Print the transformed message
-        print(f"{user}: {transformed_content}")
-
-        # Display user statistics
-        print(f"Messages received so far - {user_message_count}")
+        # Save to database
+        save_to_db(user, msg_content, timestamp, partition)
 
 
 if __name__ == "__main__":
@@ -122,22 +117,26 @@ if __name__ == "__main__":
 
 ---
 
-Key Features Added
+Testing
 
-1. Producer-Side Enhancements:
+1. Run PostgreSQL:
 
-Filters out invalid messages (e.g., empty ones).
-
-Transforms messages by appending a timestamp.
+Ensure your PostgreSQL server is running and the chat_messages table exists.
 
 
 
-2. Consumer-Side Enhancements:
+2. Start Consumer:
 
-Transforms messages (e.g., converts to uppercase).
+Run the updated consumer script to begin saving messages to the database.
 
-Tracks and displays message statistics (e.g., number of messages per user).
 
+
+3. Send Messages:
+
+Use the producer script to send messages. Verify that they are stored in the database by querying:
+
+
+SELECT * FROM chat_messages;
 
 
 
@@ -146,14 +145,22 @@ Tracks and displays message statistics (e.g., number of messages per user).
 
 Next Steps
 
-Test the updated producer and consumer scripts. Once working, we can move to:
+Once this works, we can proceed to:
 
-Persisting messages in a database.
+1. Data Analytics:
 
-Adding analytics (e.g., word frequency, active users).
+Perform queries to analyze user activity (e.g., most active users).
 
-Implementing notifications for specific keywords.
+Visualize data using tools like Power BI or Tableau.
 
 
-Would you like to test this enhancement first or move to persistence in the next step?
+
+2. Notification System:
+
+Trigger alerts for specific keywords or conditions.
+
+
+
+
+Would you like to focus on analytics, notifications, or another enhancement next?
 
