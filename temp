@@ -1,4 +1,4 @@
-LGE+animesh1.singh@LGEI4VPC40719 MINGW64 /e/RPA-MANAGEMENT/RPA-MANAGEMENT (main)
-$ git push origin main
-remote: Repository not found.
-fatal: repository 'https://github.com/LGEIL-DEVELOPMENT/RPA-MANAGEMENT.git/' not found
+animesh@IL-MF10-NA106Y0:/$ sudo snap install pgadmin4
+error: cannot install "pgadmin4": Post "https://api.snapcraft.io/v2/snaps/refresh": x509:
+       certificate signed by unknown authority
+animesh@IL-MF10-NA106Y0:/$
