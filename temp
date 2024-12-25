@@ -1,18 +1,28 @@
-animesh@IL-MF10-NA106Y0:~$ sudo apt update
-Ign:1 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
-Ign:1 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
-Hit:2 http://archive.ubuntu.com/ubuntu noble InRelease
-Hit:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease
-Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease
-Hit:5 http://archive.ubuntu.com/ubuntu noble-backports InRelease
-Ign:1 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
-Err:1 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
-  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 217.196.149.55 443]
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-34 packages can be upgraded. Run 'apt list --upgradable' to see them.
-W: Failed to fetch https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal/dists/pgadmin4/InRelease  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 217.196.149.55 443]
-W: Some index files failed to download. They have been ignored, or old ones used instead.
-animesh@IL-MF10-NA106Y0:~$
+from kafka.admin import KafkaAdminClient, NewTopic
 
+def create_kafka_topic(topic_name, num_partitions, replication_factor):
+    try:
+        # Initialize KafkaAdminClient
+        admin_client = KafkaAdminClient(
+            bootstrap_servers="localhost:9092",  # Replace with your broker address
+            client_id="kafka-topic-creator"
+        )
+
+        # Define the topic to be created
+        topic = NewTopic(
+            name=topic_name,
+            num_partitions=num_partitions,
+            replication_factor=replication_factor
+        )
+
+        # Create the topic
+        admin_client.create_topics(new_topics=[topic], validate_only=False)
+        print(f"Topic '{topic_name}' created successfully!")
+
+    except Exception as e:
+        print(f"Error creating topic: {e}")
+    finally:
+        admin_client.close()
+
+if __name__ == "__main__":
+    create_kafka_topic("new_topic", num_partitions=2, replication_factor=1)
