@@ -1,2 +1,30 @@
-
-#
+animesh@IL-MF10-NA106Y0:~$ sudo apt update
+[sudo] password for animesh:
+Ign:1 https://apt.grafana.com stable InRelease
+Ign:2 https://apt.grafana.com beta InRelease
+Ign:1 https://apt.grafana.com stable InRelease
+Ign:2 https://apt.grafana.com beta InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu noble InRelease
+Ign:4 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:6 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:7 http://archive.ubuntu.com/ubuntu noble-backports InRelease
+Ign:4 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
+Ign:1 https://apt.grafana.com stable InRelease
+Ign:2 https://apt.grafana.com beta InRelease
+Ign:4 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
+Err:1 https://apt.grafana.com stable InRelease
+  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 146.75.50.217 443]
+Err:2 https://apt.grafana.com beta InRelease
+  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 146.75.50.217 443]
+Err:4 https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal pgadmin4 InRelease
+  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 147.75.85.69 443]
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+1 package can be upgraded. Run 'apt list --upgradable' to see it.
+W: Failed to fetch https://apt.grafana.com/dists/stable/InRelease  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 146.75.50.217 443]
+W: Failed to fetch https://apt.grafana.com/dists/beta/InRelease  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 146.75.50.217 443]
+W: Failed to fetch https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/focal/dists/pgadmin4/InRelease  Certificate verification failed: The certificate is NOT trusted. The certificate issuer is unknown.  Could not handshake: Error in the certificate verification. [IP: 147.75.85.69 443]
+W: Some index files failed to download. They have been ignored, or old ones used instead.
+animesh@IL-MF10-NA106Y0:~$
