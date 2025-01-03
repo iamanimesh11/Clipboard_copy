@@ -1,1 +1,13 @@
-Process: 3585 ExecStart=/usr/local/bin/node_exporter — collector.mountstats — collector.logind — collector.processes — collector.ntp — collector.systemd — collector.tcpstat — collector.wifi
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+
+[Install]
+WantedBy=multi-user.target
