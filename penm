@@ -1,62 +1,213 @@
-from kafka import KafkaConsumer, TopicPartition
-import json
-import psycopg2
-from psycopg2 import sql
+To display disk usage, CPU utilization, memory usage, and other system metrics in your Grafana dashboard, you can use the Node Exporter and Prometheus as your data source. Node Exporter collects system-level metrics such as disk usage, memory, CPU, and network statistics.
 
-def consumer1():
-    consumer = KafkaConsumer(
-        'chat-messages',  # Kafka topic
-
-        group_id='chat-consumer-group',  # Consumer group ID
-
-        bootstrap_servers='172.19.165.234:9092',  # Replace with your Kafka server
-        value_deserializer=lambda v: json.loads(v.decode('utf-8')),
-        enable_auto_commit=False , # Disable auto commit to handle offsets manually
-    )
+Steps to Add System Metrics to Grafana Dashboard
 
 
-    print("Chat Consumer started. Listening for messages on Partition 0:")
+---
 
-    for message in consumer:
-        partition = message.partition
-        data = message.value
-        user=data['user']
-        msg_content=data['message']
-        timestamp=data['timestamp']
+Step 1: Verify Node Exporter Installation
 
-        print(f"{user} : {msg_content}  {timestamp}")
-        save_to_db(user,msg_content,timestamp, partition)
-        consumer.commit()
+1. Check if Node Exporter is Running:
+
+Verify that Node Exporter is installed and running on the system. You can do this by navigating to http://<your-server-ip>:9100/metrics in your browser. If it loads a page with metrics, Node Exporter is running correctly.
 
 
-def save_to_db(user,message,timestamp,partition):
-    try:
-        table_name="kafka_chat_message"
-        connection =psycopg2.connect(
-            dbname="airflow_ETL",
-            user="airflow_user",
-            password="animesh11",
-            host="localhost",
-            port="5432"
-        )
-        cursor=connection.cursor()
 
-        insert_query=sql.SQL("""
-        INSERT INTO "kafka_Schema".{table} (username,message,timestamp,partition)
-        VALUES (%s,%s,%s,%s)
-        """).format(table=sql.Identifier(table_name))  # Use sql.Identifier for dynamic table name
+2. Prometheus Configuration:
 
-        cursor.execute(insert_query,(user,message,timestamp,partition))
-        connection.commit()
-        print(f"{user}'s message stored in db")
-    except Exception as e:
-        print(f"error saving to database: {e}")
+Ensure that Node Exporter is added as a target in your Prometheus prometheus.yml configuration file. For example:
 
-    finally:
-        if connection:
-            cursor.close()
-            connection.close()
+scrape_configs:
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['localhost:9100']
+
+Restart Prometheus after making changes:
+
+systemctl restart prometheus
 
 
-if __name__ == "__main__":
-    consumer1()
+
+3. Verify Metrics:
+
+In Prometheus (at http://localhost:9090), search for metrics like node_filesystem_avail_bytes or node_cpu_seconds_total.
+
+
+
+
+
+---
+
+Step 2: Add Disk Usage Panel in Grafana
+
+1. Create a New Panel:
+
+Click on Add Panel > Graph or Time Series.
+
+
+
+2. Configure the Query:
+
+Use the following PromQL query to display the available disk space:
+
+node_filesystem_avail_bytes{mountpoint="/",fstype!="tmpfs"}
+
+To display total disk size:
+
+node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"}
+
+To calculate used disk space:
+
+(node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"} - node_filesystem_avail_bytes{mountpoint="/",fstype!="tmpfs"})
+
+To display disk usage percentage:
+
+100 * ((node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"} - node_filesystem_avail_bytes{mountpoint="/",fstype!="tmpfs"}) / node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"})
+
+
+
+3. Customize the Panel:
+
+Set the Panel Title to Disk Usage.
+
+Under Unit, set it to Percent (0-100%) or Bytes, depending on your preference.
+
+
+
+4. Save the Panel:
+
+Click Save to finalize the panel.
+
+
+
+
+
+---
+
+Step 3: Add CPU Utilization Panel
+
+1. Create a New Panel:
+
+Click on Add Panel > Graph or Time Series.
+
+
+
+2. Configure the Query:
+
+Use this PromQL query for CPU utilization:
+
+100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+This calculates the percentage of CPU being used.
+
+
+
+3. Customize the Panel:
+
+Set the Panel Title to CPU Utilization.
+
+Under Unit, set it to Percent (0-100%).
+
+
+
+4. Save the Panel:
+
+Click Save to finalize the panel.
+
+
+
+
+
+---
+
+Step 4: Add Memory Usage Panel
+
+1. Create a New Panel:
+
+Click on Add Panel > Graph or Time Series.
+
+
+
+2. Configure the Query:
+
+Use this PromQL query for memory usage:
+
+100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))
+
+This calculates the percentage of memory being used.
+
+
+
+3. Customize the Panel:
+
+Set the Panel Title to Memory Usage.
+
+Under Unit, set it to Percent (0-100%).
+
+
+
+4. Save the Panel:
+
+Click Save to finalize the panel.
+
+
+
+
+
+---
+
+Step 5: Add Network Usage Panel
+
+1. Create a New Panel:
+
+Click on Add Panel > Graph or Time Series.
+
+
+
+2. Configure the Query:
+
+For incoming network traffic:
+
+rate(node_network_receive_bytes_total[5m])
+
+For outgoing network traffic:
+
+rate(node_network_transmit_bytes_total[5m])
+
+
+
+3. Customize the Panel:
+
+Set the Panel Title to Network Usage.
+
+Under Unit, set it to Bytes/sec or Kilobytes/sec.
+
+
+
+4. Save the Panel:
+
+Click Save to finalize the panel.
+
+
+
+
+
+---
+
+Step 6: Organize Panels
+
+1. Arrange all the panels (Disk Usage, CPU Utilization, Memory Usage, Network Usage) in a logical layout on the dashboard.
+
+
+2. Add panel descriptions if necessary for clarity.
+
+
+3. Save the entire dashboard.
+
+
+
+
+---
+
+Let me know if you'd like to dive deeper into any of these steps or if you'd like additional customizations!
+
