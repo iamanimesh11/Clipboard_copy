@@ -15,4 +15,4 @@ async def on_message(message):
     if message.content.startswith('!hello'):
         await message.channel.send('Hello!')
 
-client.run('YOUR_BOT_TOKEN')
+client.run('MTMyNTY5NDQ2ODcwMzEyOTcwNA.GOpfzN.UmkYZZTBnhMc9rDkzc7DQ2odiWVeLX9m7dIKAk')
