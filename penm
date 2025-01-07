@@ -1,144 +1,116 @@
-Great! Let’s first focus on getting Kafka running in Docker. We will set up Kafka and Zookeeper, and then test the Kafka setup before moving to PySpark. Here’s how to proceed step by step.
-
-Step 1: Create the Kafka Docker Setup
-
-Task 1: Create a Directory for Kafka
-
-1. On your D drive (or any preferred location), create a new directory:
-
-cd D:
-mkdir kafka-docker
-cd kafka-docker
+To ensure Docker Desktop stores all its data (images, containers, volumes, etc.) in D drive, you need to reconfigure Docker after installation. Here’s a step-by-step guide to move Docker storage to the D drive:
 
 
-2. Inside this directory, create a docker-compose.yml file:
+---
 
-nano docker-compose.yml
+Step 1: Stop Docker Desktop
 
+Before making any changes:
 
-3. Add the following configuration for Kafka and Zookeeper in the docker-compose.yml:
-
-version: '3.8'
-
-services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    hostname: zookeeper
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    hostname: kafka
-    container_name: kafka
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    ports:
-      - "9092:9092"
+1. Right-click the Docker Desktop icon in the system tray.
 
 
-
-Task 2: Start Kafka and Zookeeper
-
-1. Open a terminal and navigate to the kafka-docker directory.
-
-
-2. Run the following command to start the Kafka and Zookeeper containers:
-
-docker-compose up -d
-
-This will download the required images and start both Kafka and Zookeeper in detached mode.
-
-
-3. To verify that both containers are running, use:
-
-docker ps
-
-You should see two containers running: zookeeper and kafka.
+2. Click Quit Docker Desktop to stop Docker.
 
 
 
 
 ---
 
-Step 2: Test Kafka Setup
+Step 2: Modify Docker’s Storage Location
 
-Task 1: Create Kafka Topics
+Option A: Modify daemon.json Configuration
 
-1. Open a terminal to interact with the Kafka container:
+1. Navigate to the Docker configuration directory:
 
-docker exec -it kafka bash
+Open the path C:\ProgramData\Docker\config.
 
-
-2. Create a topic named test-topic:
-
-kafka-topics --create --topic test-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-
-
-3. Verify the topic was created:
-
-kafka-topics --list --bootstrap-server localhost:9092
-
-You should see test-topic listed.
+If the config folder or daemon.json file does not exist, create them manually.
 
 
 
-Task 2: Produce Messages to the Topic
-
-1. Open a terminal to send messages to the test-topic:
-
-kafka-console-producer --topic test-topic --bootstrap-server localhost:9092
+2. Open (or create) the file daemon.json in a text editor like Notepad.
 
 
-2. Type some messages (press Enter after each message):
+3. Add or update the following configuration to specify the data-root directory on the D drive:
 
-Hello, Kafka!
-Kafka is awesome!
+{
+  "data-root": "D:\\docker-data"
+}
 
-
-
-Task 3: Consume Messages from the Topic
-
-1. Open another terminal and run the following command to consume the messages:
-
-kafka-console-consumer --topic test-topic --bootstrap-server localhost:9092 --from-beginning
+Replace D:\\docker-data with your desired path on the D drive.
 
 
-2. You should see the messages you produced:
-
-Hello, Kafka!
-Kafka is awesome!
+4. Save the file and close the editor.
 
 
 
 
 ---
 
-Step 3: Verify Everything is Working
+Step 3: Move Existing Docker Data (Optional)
 
-At this point, if the producer and consumer are successfully sending and receiving messages, Kafka is working properly in Docker.
+If Docker has already downloaded data to the C drive, you can move it to the D drive:
 
-You can now stop the containers:
+1. Navigate to the existing Docker data directory:
 
-docker-compose down
+Typically located at C:\ProgramData\Docker.
+
+
+
+2. Copy or move the Docker directory to your desired location on the D drive (e.g., D:\docker-data).
+
+
+3. Ensure the path you’ve set in daemon.json matches the directory where you’ve moved the data.
+
+
 
 
 ---
 
-Next Steps
+Step 4: Restart Docker
 
-Once you confirm Kafka is running correctly, we can proceed with integrating Spark.
+1. Open Docker Desktop again.
 
-Let me know if everything is working as expected so we can proceed with the PySpark integration!
 
+2. Docker will now use the D drive for all its data storage as specified in the daemon.json file.
+
+
+
+
+---
+
+Step 5: Verify Configuration
+
+1. Open Docker Desktop.
+
+
+2. Pull a new image or start a container to confirm the data is being stored in the new location (e.g., D:\docker-data).
+
+
+3. Check the size of the folder on the D drive to verify that it’s being used.
+
+
+
+
+---
+
+Alternative: Uninstall and Reinstall Docker with a New Data Directory
+
+If the above steps feel complicated, you can:
+
+1. Uninstall Docker Desktop completely.
+
+
+2. Delete all residual data from C:\ProgramData\Docker.
+
+
+3. Reinstall Docker Desktop and immediately modify the daemon.json file before pulling or running any containers.
+
+
+
+
+---
+
+Let me know if you need help with any of these steps!
 
