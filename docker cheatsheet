@@ -1,143 +1,76 @@
-Docker Cheatsheet
+Here’s a well-structured Docker Commands Cheatsheet for GitHub with markdown formatting to ensure readability:
 
-Basic Commands
 
-Start Docker:
+---
 
-sudo systemctl start docker
+Docker Commands Cheatsheet
 
-Stop Docker:
+A handy reference for commonly used Docker commands.
 
-sudo systemctl stop docker
 
-Check Docker Status:
+---
 
-sudo systemctl status docker
+1. Docker Basics
+
+
+---
+
+2. Docker Images
+
+
+---
+
+3. Docker Containers
+
+
+---
+
+4. Docker Volumes
+
+
+---
+
+5. Docker Networks
+
+
+---
+
+6. Docker Compose
+
+
+---
+
+7. Docker Cleanup
+
+
+---
+
+8. Tagging and Pushing Images
+
+
+---
+
+9. Debugging and Logs
+
+
+---
+
+10. Export and Import
+
+
+---
+
+Tips for GitHub Formatting
+
+Save this content in a file named README.md in your repository.
+
+Add headings, bold titles, and code blocks (as above) for clarity.
+
+Use GitHub's preview to ensure the cheatsheet looks good.
 
 
 
 ---
 
-Working with Images
-
-List Images:
-
-docker images
-
-Search for an Image:
-
-docker search <image-name>
-
-Pull an Image:
-
-docker pull <image-name>
-
-Remove an Image:
-
-docker rmi <image-name>
-
-Inspect an Image:
-
-docker inspect <image-name>
-
-
-
----
-
-Working with Containers
-
-List Running Containers:
-
-docker ps
-
-List All Containers (Including Stopped):
-
-docker ps -a
-
-Run a Container:
-
-docker run <image-name>
-
-Run a Container with Interactive Shell:
-
-docker run -it <image-name> bash
-
-Stop a Running Container:
-
-docker stop <container-id>
-
-Start a Stopped Container:
-
-docker start <container-id>
-
-Remove a Container:
-
-docker rm <container-id>
-
-Rename a Container:
-
-docker rename <old-name> <new-name>
-
-
-
----
-
-Building and Managing Custom Images
-
-Build an Image from a Dockerfile:
-
-docker build -t <image-name> .
-
-Tag an Image:
-
-docker tag <image-id> <repository>:<tag>
-
-Push an Image to Docker Hub:
-
-docker push <repository>:<tag>
-
-Remove Dangling Images:
-
-docker image prune
-
-
-
----
-
-Volumes and Storage
-
-List Volumes:
-
-docker volume ls
-
-Create a Volume:
-
-docker volume create <volume-name>
-
-Attach a Volume to a Container:
-
-docker run -v <volume-name>:<container-path> <image-name>
-
-Remove a Volume:
-
-docker volume rm <volume-name>
-
-
-
----
-
-Networking
-
-List Networks:
-
-docker network ls
-
-Create a Network:
-
-docker network create <network-name>
-
-Inspect a Network:
-
-
-
+Let me know if you'd like further help setting up your repository!
 
