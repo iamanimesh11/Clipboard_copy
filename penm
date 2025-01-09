@@ -1,143 +1,143 @@
-Great! Let’s first focus on getting Kafka running in Docker. We will set up Kafka and Zookeeper, and then test the Kafka setup before moving to PySpark. Here’s how to proceed step by step.
+Docker Cheatsheet
 
-Step 1: Create the Kafka Docker Setup
+Basic Commands
 
-Task 1: Create a Directory for Kafka
+Start Docker:
 
-1. On your D drive (or any preferred location), create a new directory:
+sudo systemctl start docker
 
-cd D:
-mkdir kafka-docker
-cd kafka-docker
+Stop Docker:
 
+sudo systemctl stop docker
 
-2. Inside this directory, create a docker-compose.yml file:
+Check Docker Status:
 
-nano docker-compose.yml
-
-
-3. Add the following configuration for Kafka and Zookeeper in the docker-compose.yml:
-
-version: '3.8'
-
-services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    hostname: zookeeper
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    hostname: kafka
-    container_name: kafka
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    ports:
-      - "9092:9092"
+sudo systemctl status docker
 
 
 
-Task 2: Start Kafka and Zookeeper
+---
 
-1. Open a terminal and navigate to the kafka-docker directory.
+Working with Images
+
+List Images:
+
+docker images
+
+Search for an Image:
+
+docker search <image-name>
+
+Pull an Image:
+
+docker pull <image-name>
+
+Remove an Image:
+
+docker rmi <image-name>
+
+Inspect an Image:
+
+docker inspect <image-name>
 
 
-2. Run the following command to start the Kafka and Zookeeper containers:
 
-docker-compose up -d
+---
 
-This will download the required images and start both Kafka and Zookeeper in detached mode.
+Working with Containers
 
-
-3. To verify that both containers are running, use:
+List Running Containers:
 
 docker ps
 
-You should see two containers running: zookeeper and kafka.
+List All Containers (Including Stopped):
 
+docker ps -a
 
+Run a Container:
 
+docker run <image-name>
 
----
+Run a Container with Interactive Shell:
 
-Step 2: Test Kafka Setup
+docker run -it <image-name> bash
 
-Task 1: Create Kafka Topics
+Stop a Running Container:
 
-1. Open a terminal to interact with the Kafka container:
+docker stop <container-id>
 
-docker exec -it kafka bash
+Start a Stopped Container:
 
+docker start <container-id>
 
-2. Create a topic named test-topic:
+Remove a Container:
 
-kafka-topics --create --topic test-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+docker rm <container-id>
 
+Rename a Container:
 
-3. Verify the topic was created:
-
-kafka-topics --list --bootstrap-server localhost:9092
-
-You should see test-topic listed.
-
-
-
-Task 2: Produce Messages to the Topic
-
-1. Open a terminal to send messages to the test-topic:
-
-kafka-console-producer --topic test-topic --bootstrap-server localhost:9092
-
-
-2. Type some messages (press Enter after each message):
-
-Hello, Kafka!
-Kafka is awesome!
-
-
-
-Task 3: Consume Messages from the Topic
-
-1. Open another terminal and run the following command to consume the messages:
-
-kafka-console-consumer --topic test-topic --bootstrap-server localhost:9092 --from-beginning
-
-
-2. You should see the messages you produced:
-
-Hello, Kafka!
-Kafka is awesome!
-
+docker rename <old-name> <new-name>
 
 
 
 ---
 
-Step 3: Verify Everything is Working
+Building and Managing Custom Images
 
-At this point, if the producer and consumer are successfully sending and receiving messages, Kafka is working properly in Docker.
+Build an Image from a Dockerfile:
 
-You can now stop the containers:
+docker build -t <image-name> .
 
-docker-compose down
+Tag an Image:
+
+docker tag <image-id> <repository>:<tag>
+
+Push an Image to Docker Hub:
+
+docker push <repository>:<tag>
+
+Remove Dangling Images:
+
+docker image prune
+
 
 
 ---
 
-Next Steps
+Volumes and Storage
 
-Once you confirm Kafka is running correctly, we can proceed with integrating Spark.
+List Volumes:
 
-Let me know if everything is working as expected so we can proceed with the PySpark integration!
+docker volume ls
+
+Create a Volume:
+
+docker volume create <volume-name>
+
+Attach a Volume to a Container:
+
+docker run -v <volume-name>:<container-path> <image-name>
+
+Remove a Volume:
+
+docker volume rm <volume-name>
+
+
+
+---
+
+Networking
+
+List Networks:
+
+docker network ls
+
+Create a Network:
+
+docker network create <network-name>
+
+Inspect a Network:
+
+
+
 
