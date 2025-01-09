@@ -1,1 +1,102 @@
 
+If you make changes to app.py and want to update your Docker image on Docker Hub, you will need to rebuild the image, tag it with a new version (or the same tag if you prefer), and push it again. Here's how you can do it:
+
+
+---
+
+Steps to Update and Push Changes
+
+1. Make Changes to app.py
+
+Edit your app.py file:
+
+nano app.py
+
+For example, update the content to:
+
+print("Hello again from the updated Docker image!")
+
+Save and exit (CTRL + X, Y, Enter).
+
+
+
+---
+
+2. Rebuild the Docker Image
+
+Rebuild the Docker image to include the changes in app.py:
+
+docker build -t <username>/<repository>:<new-tag> .
+
+Example:
+
+docker build -t animesh/my-python-app:v2 .
+
+
+
+
+---
+
+3. Push the Updated Image to Docker Hub
+
+Push the newly tagged image to Docker Hub:
+
+docker push <username>/<repository>:<new-tag>
+
+Example:
+
+docker push animesh/my-python-app:v2
+
+
+
+
+---
+
+4. (Optional) Update the latest Tag
+
+If you want this version to be the default (e.g., with the latest tag):
+
+Tag the image as latest:
+
+docker tag animesh/my-python-app:v2 animesh/my-python-app:latest
+
+Push the latest tag:
+
+docker push animesh/my-python-app:latest
+
+
+
+---
+
+5. Verify the Update
+
+Go to your Docker Hub account and verify that the new version (e.g., v2) is listed in the repository.
+
+You can pull the updated image on any system to confirm the changes:
+
+docker pull animesh/my-python-app:v2
+
+
+
+---
+
+Example Workflow for Updates
+
+# Step 1: Edit app.py
+nano app.py
+
+# Step 2: Rebuild the image
+docker build -t animesh/my-python-app:v2 .
+
+# Step 3: Push the updated image
+docker push animesh/my-python-app:v2
+
+# Step 4: Tag as latest (optional)
+docker tag animesh/my-python-app:v2 animesh/my-python-app:latest
+docker push animesh/my-python-app:latest
+
+
+---
+
+Let me know once you've tried it or if you have questions!
+
