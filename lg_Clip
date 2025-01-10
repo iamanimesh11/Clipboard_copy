@@ -1,23 +1,119 @@
+If the Generative AI API or any other Google Cloud API requires a service account, you can create one and use it for authentication. Here's how:
+
+
+---
+
+Step 1: Create a Service Account
+
+1. Go to the Google Cloud Console.
+
+
+2. Navigate to IAM & Admin > Service Accounts.
+
+
+3. Click Create Service Account.
+
+
+4. Fill in the following details:
+
+Service account name: Provide a descriptive name (e.g., genai-service-account).
+
+Service account ID: This will be auto-generated.
+
+Description: (Optional) Add a description.
+
+
+
+5. Click Create and Continue.
+
+
+
+
+---
+
+Step 2: Assign Roles
+
+1. In the "Grant this service account access to project" section:
+
+Add the role: Vertex AI User (or any role needed for the Generative AI API).
+
+Additional roles may be needed depending on your use case.
+
+
+
+2. Click Continue and then Done.
+
+
+
+
+---
+
+Step 3: Generate a Service Account Key
+
+1. In the Service Accounts page, find the account you created.
+
+
+2. Click the Actions Menu (⋮) > Manage Keys.
+
+
+3. Click Add Key > Create New Key.
+
+
+4. Choose JSON as the key type and click Create.
+
+A JSON file containing the service account key will be downloaded automatically. Keep this file secure.
+
+
+
+
+
+---
+
+Step 4: Use the Service Account Key in Your Code
+
+To authenticate your application using the service account key:
+
+1. Install the Google Cloud library if you haven't already:
+
+pip install google-auth google-auth-oauthlib google-api-python-client
+
+
+2. Set the environment variable to point to the downloaded JSON key file:
+
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your-service-account-key.json"
+
+
+3. Use the service account to access the Generative AI API in your script:
+
+from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 import google.generativeai as genai
-# extract google search links of query from google cloud search
-from googleapiclient.discovery import build
-api_key="AIzaSyBxGGL8Gs3klPnmkh7wosS-yS1bl5YyJkM"
-cse_id="50dce64271acf4015"
+
+# Authenticate with the service account
+credentials = service_account.Credentials.from_service_account_file(
+    "/path/to/your-service-account-key.json"
+)
+
+genai.configure(api_key="YOUR_API_KEY", credentials=credentials)
+
+model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+response = model.generate_content("Summarize this text: The quick brown fox jumps over the lazy dog.")
+print(response.text)
 
 
-genai_API="AIzaSyCuWhC9Wx80HDB7bOf1R_-yy1P3z7PiKlw"
-genai.configure(api_key=genai_API)
-model=genai.GenerativeModel(model_name="gemini-1.5-flash")
-# 
-# with open("genai_text_input.txt", "r", encoding="utf-8") as f:
-#     final_text=f.read()
 
-final_text="whats hello"
-response=model.generate_content("pleease provide a concise, summary of the below text: "+ final_text)
-Final_message_From_AI =response.text
 
-C:\Users\lgeil.IL-MF10-NB100TS\Miniconda3\envs\myenv\python.exe "\\wsl.localhost\Ubuntu\home\animesh\airflow\dags\Airflow_project\real-time trafic monitoring\genai_text_Extracter.py" 
-WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1736494852.503508   20832 init.cc:229] grpc_wait_for_shutdown_with_timeout() timed out.
+---
 
-Process finished with exit code 0
+Step 5: Test the Service Account
+
+Run your script to ensure it connects successfully to the API.
+
+If you encounter permission issues, double-check the roles assigned to the service account.
+
+
+
+---
+
+Let me know if you need help with any specific part of the process!
+
