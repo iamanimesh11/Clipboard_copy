@@ -38,7 +38,9 @@ Enough for our app ,Now lets talk about efficient technology for everything in A
 a basic application for above needs can be developed in meantime which is just first step 
 now its comes to efficincy optimization we need to do something more side by things in it:
 predefined chatbot can be developed with dialoglfow tech and the database postgresql,
-for file storages: aws s3,
+for file storages: aws s3, (more specifci phtos or videos for diagonsis.
+
+
 
 dialogflow by google can help to understnad the user query and search possible diagonis issue in its library
 
