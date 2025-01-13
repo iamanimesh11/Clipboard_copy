@@ -1,5 +1,5 @@
-Customer support:
-- By chat: using NlP predefined rules to solve issues and then connect via agent if not solved.ticket generated as sson as chat started by agent and wil be mark down solved on cusotmer aggreeement
+1 Customer support:
+- By chat: using NlP predefined rules to solve issues and then connect via agent if not solved ticket generated as s0on as chat started by agent and wil be mark down solved on cusotmer aggreeement
           tickets history mst be shown to users 
 
 - By whatsapp :similarly as in chat ,tickets generation or reference number must be shown
@@ -8,5 +8,30 @@ Customer support:
 
 agents can be subdivided on basis of usally issues customer may face
 
-Orders placed: Listed all orders placed on mobile number either directly from LG  or any dealer (must be registered or later)
+2. Centralized Product Management
+
+Dashboard for Registered Products:
+View all registered appliances with details like model number, warranty status, and purchase date,assosciated bill and services
+Send reminders for scheduled maintenance, filter replacements, or warranty expiration on eligible products
+
+3. real time Repair & Service Tracking
+
+Request Repairs:
+Customers can initiate repair requests directly through the app and so ticket id will be generated
+
+Real-Time Tracking:
+Show the status of repairs with stages like "Technician Assigned," "Repair in Progress," or "Completed."
+cusotmer must be able to track
+
+
+4. Payment Integration(optional)
+
+Secure Payments:
+Enable in-app payments for service requests, extended warranties, or spare parts.
+dealers must be registed as a receiver for payments made by customers
+
+
+
+
+
 
