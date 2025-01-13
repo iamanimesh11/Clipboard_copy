@@ -1,1 +1,12 @@
-f
+Customer support:
+- By chat: using NlP predefined rules to solve issues and then connect via agent if not solved.ticket generated as sson as chat started by agent and wil be mark down solved on cusotmer aggreeement
+          tickets history mst be shown to users 
+
+- By whatsapp :similarly as in chat ,tickets generation or reference number must be shown
+- By call :customer care must follow everything fter creating ticket nubmer in customer account
+- By email: emails should be auto replied to customer by analysing nlp on mail and generate ticket if ncessary,
+
+agents can be subdivided on basis of usally issues customer may face
+
+Orders placed: Listed all orders placed on mobile number either directly from LG  or any dealer (must be registered or later)
+
