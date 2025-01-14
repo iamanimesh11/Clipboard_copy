@@ -1,5 +1,47 @@
-<head>
-    <title>Real-Time GPS Tracker</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-</head>
+<body>
+    <h1>Real-Time GPS Tracker</h1>
+    <button onclick="startTracking()">Start Tracking</button>
+    <div id="map" style="height: 500px;"></div>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 13); // Default to 0,0 coordinates
+
+        // Set the map tile layer (this is the background map)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Create a marker for the user's location
+        var marker = L.marker([0, 0]).addTo(map);
+
+        function startTracking() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+
+                        // Update the marker position
+                        marker.setLatLng([lat, lon]);
+
+                        // Move the map view to the new location
+                        map.setView([lat, lon], 13);
+
+                        // Optionally, send the location to your server
+                        const data = { lat, lon, id: "mobile_agent_1" };
+                        fetch("http://192.168.1.4:5001/send_location", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data),
+                        }).catch((err) => console.error("Error sending location:", err));
+                    },
+                    (err) => console.error("Error getting location:", err),
+                    { enableHighAccuracy: true }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+</body>
