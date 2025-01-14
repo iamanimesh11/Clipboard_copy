@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time GPS Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>GPS Prototype</h1>
+        <button onclick="startTracking()">Where am I ?</button>
+      
+<!--         <iframe id="map" src=""></iframe>
+ -->
+        <p id="status"></p>
+        <p id="location-link"></p> <!-- Location link placeholder -->
+        <p id="latitude"></p>      <!-- Latitude placeholder -->
+        <p id="longitude"></p>     <!-- Longitude placeholder -->
+        <p id="city"></p>          <!-- City name placeholder -->
+    </div>
+      <div id ="map" stlye="height: 20px; width:100%;"> </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
