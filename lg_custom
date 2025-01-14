@@ -35,6 +35,10 @@ can include lg best care program in app
 
 Enough for our app ,Now lets talk about efficient technology for everything in App.
 
+so must need for our app is:
+user registeration is must and prodcut linked.(App won't help on unregistered user and product)
+customer feedbacks must be analyzed dynamically .
+
 a basic application for above needs can be developed in meantime which is just first step 
 now its comes to efficincy optimization we need to do something more side by things in it:
 predefined chatbot can be developed with dialoglfow tech and the database postgresql,
@@ -44,5 +48,14 @@ for file storages: aws s3, (more specifci phtos or videos for diagonsis.
 
 dialogflow by google can help to understnad the user query and search possible diagonis issue in its library
 
+
+
+Logging and Analytics:
+
+All chat logs and actions are sent to a data pipeline (Kafka) and stored in a data lake (Amazon S3).
+Metrics like chat duration, resolution time, and sentiment score are updated in a real-time dashboard (Grafana).
+customer chats snetiments will be analyzed on sentiment score and thus assigned priority ,
+or if possible develop dyamic time queue (like in google pay)
+samsung developed  smart touch IVR for user interaction thhats a great idea for real.
 
 
