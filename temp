@@ -1,53 +1,92 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // Ensure the DOM is fully loaded before initializing the map
+let map;
+let marker;
+let currentLocation = { lat: 0, lng: 0 };
+let routeLayer;
 
-    // Check if the map container exists
-    const mapContainer = document.getElementById('map');
-    if (mapContainer) {
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 13); // Default to 0,0 coordinates
+// Initialize Map
+function initMap() {
+    map = L.map("map").setView([0, 0], 13);
 
-        // Set the map tile layer (this is the background map)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+    // Add OpenStreetMap tiles
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+    }).addTo(map);
 
-        // Create a marker for the user's location
-        var marker = L.marker([0, 0]).addTo(map);
+    // Add a marker for the technician's location
+    marker = L.marker([0, 0]).addTo(map).bindPopup("Technician Location");
+}
 
-        function startTracking() {
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
+// Track Technician's Real-Time Location
+function trackLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+            (position) => {
+                currentLocation.lat = position.coords.latitude;
+                currentLocation.lng = position.coords.longitude;
 
-                        // Update the marker position
-                        marker.setLatLng([lat, lon]);
-
-                        // Move the map view to the new location
-                        map.setView([lat, lon], 13);
-
-                        // Optionally, send the location to your server
-                        const data = { lat, lon, id: "mobile_agent_1" };
-                        fetch("http://192.168.1.4:5001/send_location", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(data),
-                        }).catch((err) => console.error("Error sending location:", err));
-                    },
-                    (err) => console.error("Error getting location:", err),
-                    { enableHighAccuracy: true }
-                );
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        // Optionally, trigger startTracking when the button is clicked
-        document.querySelector('button').addEventListener('click', startTracking);
-
+                // Update marker and map view
+                marker.setLatLng([currentLocation.lat, currentLocation.lng]).update();
+                map.setView([currentLocation.lat, currentLocation.lng], 15);
+            },
+            (error) => {
+                console.error("Error getting location:", error);
+            },
+            { enableHighAccuracy: true }
+        );
     } else {
-        console.error("Map container not found");
+        alert("Geolocation not supported by your browser.");
     }
-});
+}
+
+// Calculate and Display Route
+async function calculateRoute() {
+    const destination = document.getElementById("destinationInput").value;
+
+    if (!destination) {
+        alert("Please enter a destination.");
+        return;
+    }
+
+    // Convert destination to coordinates using OpenRouteService's Geocoding API
+    const geocodeUrl = `https://api.openrouteservice.org/geocode/search?api_key=YOUR_API_KEY&text=${encodeURIComponent(
+        destination
+    )}`;
+    const geocodeResponse = await fetch(geocodeUrl);
+    const geocodeData = await geocodeResponse.json();
+    const destCoords = geocodeData.features[0]?.geometry.coordinates;
+
+    if (!destCoords) {
+        alert("Failed to find destination coordinates. Please try again.");
+        return;
+    }
+
+    // Calculate route using OpenRouteService's Directions API
+    const routeUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=YOUR_API_KEY`;
+    const body = {
+        coordinates: [
+            [currentLocation.lng, currentLocation.lat],
+            destCoords,
+        ],
+    };
+
+    const routeResponse = await fetch(routeUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+    });
+    const routeData = await routeResponse.json();
+    const coordinates = routeData.features[0].geometry.coordinates;
+
+    // Display route on map
+    if (routeLayer) {
+        map.removeLayer(routeLayer);
+    }
+    routeLayer = L.polyline(
+        coordinates.map((coord) => [coord[1], coord[0]]),
+        { color: "blue" }
+    ).addTo(map);
+}
+
+// Initialize the map and start tracking
+initMap();
+trackLocation();
