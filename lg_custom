@@ -2,10 +2,11 @@ we need to divide our aproach in two ways:
 1. Data being geneerrated by iot sensors stores in DB and ml model further and make real time actions-insights from it/
 2. Triggering alert to service team or customer app could be next
 
+***************
 Stage 1 : Data collection:
 
 Simply IOT senors like accelerometers, temperature sensors  produce continously regarding so It will be in time-series manner.sensors continously monitor key parameters
-for ska eof simplicty lets assume data being on cloud in format of Json:
+for ska eof simplicty lets assume data being on cloud in format of parquet:
 for example : 
 
 log generation :The appliance's microcontroller or IoT module formats sensor readings into structured logs.
@@ -20,6 +21,11 @@ log generation :The appliance's microcontroller or IoT module formats sensor rea
 }
 
 Logs are transmitted to the cloud using IOT communication portal:
+now data will be in terabytes,how will we process this much?
+using streaming pipelines like most advacned apache kafka for real time collection and buffering
+and amazon kinesis for streaming data ingestion
+they can handle even high trafffic
+
 
 MQTT: Lightweight and efficient for real-time updates.
 HTTP/HTTPS: For periodic data uploads.
@@ -27,11 +33,17 @@ HTTP/HTTPS: For periodic data uploads.
 
 now where this all data willl be dumped??
 
+
+# data lakehouse storage:
+
 if the data is completely raw and unstrucutred then we have to store all into data lake house . we can distribute this by regions or areas 
 (aws s3 is ppopular storage bucket as well as snowflake for complext analytics )
 for example sotring 1TB data cost about $23/month whule storing 1 tb in a data warehouse like redshift is sth about $250-$300/month
 as wwarehouses chargws for computing as well. so far in short all them game is of saving cost.
 
+
+
+******************************************
 now we have to think carefully about system for IOT as tradiitional methodolgy will fail and prone to critical issue with terabyes of data.
 Best approach to go for Cloud platofrm as its highly scalable and manageable.
 
@@ -42,6 +54,12 @@ time-series databases are perfect for analyzing trends ocer time.like: InfluxDB
 TimescaleDB Cloud	SQL-based time-series
 Amazon Timestream	AWS ecosystem
 
+
+** processing on logs data like cleaning,filtering or grouping and many more  can be stored in data warehouse after all
+as it querying and repoting would be faster .
+
+I'll make confirm decision after knowing in which format data is being receiving from sensors of appliances.
+im saying this becauss either go for data lake house or just both different data lake and data warehouse all dpeends on needs
 
 
 
