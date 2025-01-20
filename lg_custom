@@ -6,7 +6,7 @@ we need to divide our aproach in two ways:
 Stage 1 : Data collection:
 
 Simply IOT senors like accelerometers, temperature sensors  produce continously regarding so It will be in time-series manner.sensors continously monitor key parameters
-for ska eof simplicty lets assume data being on cloud in format of parquet:
+for ska eof simplicty lets assume data being on cloud in format of json:
 for example : 
 
 log generation :The appliance's microcontroller or IoT module formats sensor readings into structured logs.
@@ -20,6 +20,7 @@ log generation :The appliance's microcontroller or IoT module formats sensor rea
   "message": "Overloaded drum detected"
 }
 
+processed data will be conveerted in parquet format
 Logs are transmitted to the cloud using IOT communication portal:
 now data will be in terabytes,how will we process this much?
 using streaming pipelines like most advacned apache kafka for real time collection and buffering
