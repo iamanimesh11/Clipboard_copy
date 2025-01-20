@@ -1,61 +1,49 @@
-1 Customer support:
-- By chat: using NlP predefined rules to solve issues and then connect via agent if not solved ticket generated as s0on as chat started by agent and wil be mark down solved on cusotmer aggreeement
-          tickets history mst be shown to users 
+we need to divide our aproach in two ways:
+1. Data being geneerrated by iot sensors stores in DB and ml model further and make real time actions-insights from it/
+2. Triggering alert to service team or customer app could be next
 
-- By whatsapp :similarly as in chat ,tickets generation or reference number must be shown
-- By call :customer care must follow everything fter creating ticket nubmer in customer account
-- By email: emails should be auto replied to customer by analysing nlp on mail and generate ticket if ncessary,
+Stage 1 : Data collection:
 
-agents can be subdivided on basis of usally issues customer may face
+Simply IOT senors like accelerometers, temperature sensors  produce continously regarding so It will be in time-series manner.sensors continously monitor key parameters
+for ska eof simplicty lets assume data being on cloud in format of Json:
+for example : 
 
-2. Centralized Product Management
+log generation :The appliance's microcontroller or IoT module formats sensor readings into structured logs.
+{
+  "device_id": "WM12345",
+  "timestamp": "2025-01-19T15:00:00Z",
+  "sensor": "Load Sensor",
+  "value": 15.2,
+  "threshold": 12.0,
+  "status": "Warning",
+  "message": "Overloaded drum detected"
+}
 
-Dashboard for Registered Products:
-View all registered appliances with details like model number, warranty status, and purchase date,assosciated bill and services
-Send reminders for scheduled maintenance, filter replacements, or warranty expiration on eligible products
+Logs are transmitted to the cloud using IOT communication portal:
 
-3. real time Repair & Service Tracking
-
-Request Repairs:
-Customers can initiate repair requests directly through the app and so ticket id will be generated
-
-Real-Time Tracking:
-Show the status of repairs with stages like "Technician Assigned," "Repair in Progress," or "Completed."
-cusotmer must be able to track
-
-
-4. Payment Integration(optional)
-
-Secure Payments:
-Enable in-app payments for service requests, extended warranties, or spare parts.
-dealers must be registed as a receiver for payments made by customers
+MQTT: Lightweight and efficient for real-time updates.
+HTTP/HTTPS: For periodic data uploads.
 
 
-can include lg best care program in app
+now where this all data willl be dumped??
 
-Enough for our app ,Now lets talk about efficient technology for everything in App.
+if the data is completely raw and unstrucutred then we have to store all into data lake house . we can distribute this by regions or areas 
+(aws s3 is ppopular storage bucket as well as snowflake for complext analytics )
+for example sotring 1TB data cost about $23/month whule storing 1 tb in a data warehouse like redshift is sth about $250-$300/month
+as wwarehouses chargws for computing as well. so far in short all them game is of saving cost.
 
-so must need for our app is:
-user registeration is must and prodcut linked.(App won't help on unregistered user and product)
-customer feedbacks must be analyzed dynamically .
+now we have to think carefully about system for IOT as tradiitional methodolgy will fail and prone to critical issue with terabyes of data.
+Best approach to go for Cloud platofrm as its highly scalable and manageable.
 
-a basic application for above needs can be developed in meantime which is just first step 
-now its comes to efficincy optimization we need to do something more side by things in it:
-predefined chatbot can be developed with dialoglfow tech and the database postgresql,
-for file storages: aws s3, (more specifci phtos or videos for diagonsis.
+
+chosing perfect data warehouse is important .
+time-series databases are perfect for analyzing trends ocer time.like: InfluxDB
+
+TimescaleDB Cloud	SQL-based time-series
+Amazon Timestream	AWS ecosystem
 
 
 
-dialogflow by google can help to understnad the user query and search possible diagonis issue in its library
 
-
-
-Logging and Analytics:
-
-All chat logs and actions are sent to a data pipeline (Kafka) and stored in a data lake (Amazon S3).
-Metrics like chat duration, resolution time, and sentiment score are updated in a real-time dashboard (Grafana).
-customer chats snetiments will be analyzed on sentiment score and thus assigned priority ,
-or if possible develop dyamic time queue (like in google pay)
-samsung developed  smart touch IVR for user interaction thhats a great idea for real.
 
 
