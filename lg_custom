@@ -1,68 +1,57 @@
-we need to divide our aproach in two ways:
-1. Data being geneerrated by iot sensors stores in DB and ml model further and make real time actions-insights from it/
-2. Triggering alert to service team or customer app could be next
+from flask import Flask, render_template, request, redirect, url_for
+import psycopg2
+import os
 
-***************
-Stage 1 : Data collection:
+app = Flask(__name__)
 
-Simply IOT senors like accelerometers, temperature sensors  produce continously regarding so It will be in time-series manner.sensors continously monitor key parameters
-for ska eof simplicty lets assume data being on cloud in format of json:
-for example : 
-
-log generation :The appliance's microcontroller or IoT module formats sensor readings into structured logs.
-{
-  "device_id": "WM12345",
-  "timestamp": "2025-01-19T15:00:00Z",
-  "sensor": "Load Sensor",
-  "value": 15.2,
-  "threshold": 12.0,
-  "status": "Warning",
-  "message": "Overloaded drum detected"
-}
-
-processed data will be conveerted in parquet format
-Logs are transmitted to the cloud using IOT communication portal:
-now data will be in terabytes,how will we process this much?
-using streaming pipelines like most advacned apache kafka for real time collection and buffering
-and amazon kinesis for streaming data ingestion
-they can handle even high trafffic
+# Database connection parameters
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_NAME = os.getenv('DB_NAME', 'DE_DATABASE')  # Your database name
+DB_USER = os.getenv('DB_USER', 'de_user')  # Your username
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'animesh11')  # Your password
 
 
-MQTT: Lightweight and efficient for real-time updates.
-HTTP/HTTPS: For periodic data uploads.
+# Establish PostgreSQL connection
+def get_db_connection():
+    conn = psycopg2.connect(
+        host=DB_HOST,
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD
+    )
+    print(f"Connected to database {DB_NAME} on {DB_HOST}")
+    return conn
 
 
-now where this all data willl be dumped??
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        name = request.form['name']
+        age = request.form['age']
+
+        # Insert the data into the 'People' table in 'DE_DOCKER' schema
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+
+            # Log the query
+            query = 'INSERT INTO "DE_DOCKER"."People" (name, created_at) VALUES (%s, NOW())'
+            print(f"Executing query: {query} with values: {name}")
+
+            cur.execute(query, (name,))
+            conn.commit()
+
+            cur.close()
+            conn.close()
+            print("Data inserted successfully!")
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return f"Error: {e}"
+
+        return redirect(url_for('index'))
+
+    return render_template('index.html')
 
 
-# data lakehouse storage:
-
-if the data is completely raw and unstrucutred then we have to store all into data lake house . we can distribute this by regions or areas 
-(aws s3 is ppopular storage bucket as well as snowflake for complext analytics )
-for example sotring 1TB data cost about $23/month whule storing 1 tb in a data warehouse like redshift is sth about $250-$300/month
-as wwarehouses chargws for computing as well. so far in short all them game is of saving cost.
-
-
-
-******************************************
-now we have to think carefully about system for IOT as tradiitional methodolgy will fail and prone to critical issue with terabyes of data.
-Best approach to go for Cloud platofrm as its highly scalable and manageable.
-
-
-chosing perfect data warehouse is important .
-time-series databases are perfect for analyzing trends ocer time.like: InfluxDB
-
-TimescaleDB Cloud	SQL-based time-series
-Amazon Timestream	AWS ecosystem
-
-
-** processing on logs data like cleaning,filtering or grouping and many more  can be stored in data warehouse after all
-as it querying and repoting would be faster .
-
-I'll make confirm decision after knowing in which format data is being receiving from sensors of appliances.
-im saying this becauss either go for data lake house or just both different data lake and data warehouse all dpeends on needs
-
-
-
-
-
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
