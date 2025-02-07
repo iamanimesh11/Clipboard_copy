@@ -1,1 +1,20 @@
-suppose appliance a1 is assciated with customer c1  .and its sensor data is being send to model trained on sensors data and it generate real time alert to the machine  and so cusomter assosciated with it can receive on smartphone .now its just oveirveiw ,it may geenrate ticket in customer ID, i was thinking use of kafka as its greatest tool for real time case ,but how gonna mnage it,like need to create each partition for a device or what??? damn
+from fastapi import FastAPI, HTTPException
+import logging
+
+app = FastAPI()
+
+# Enable logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+
+@app.post("/device-event/")
+async def receive_device_event(event: dict):
+    device_id = event.get("device_id")
+    event_type = event.get("event_type")
+    data = event.get("data")
+
+    if not device_id or not event_type:
+        raise HTTPException(status_code=400, detail="Missing device_id or event_type")
+
+    logging.info(f"🔔 Event received - Device ID: {device_id}, Type: {event_type}, Data: {data}")
+
+    return {"status": "Event received"}
