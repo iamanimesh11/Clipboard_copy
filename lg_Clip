@@ -1,61 +1,23 @@
-import psycopg2
-import requests
-import logging
-from Database_connection import connect_Database
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
-
-# Connect to PostgreSQL
-db_connection = connect_Database()
-cur = db_connection.cursor()
-
-# Step 1: Ensure subscription log table exists
-cur.execute("""
-    CREATE TABLE IF NOT EXISTS iot_lg.device_subscription_log (
-        device_id VARCHAR(255) PRIMARY KEY,
-        subscribed BOOLEAN DEFAULT FALSE,
-        webhook_url TEXT,
-        timestamp TIMESTAMP DEFAULT NOW()
-    );
-""")
-db_connection.commit()
-
-# Step 2: Fetch all device IDs from device_staging
-cur.execute("SELECT device_id FROM iot_lg.device_staging;")
-devices = cur.fetchall()
-
-# Webhook URL (Simulated)
-WEBHOOK_URL = "http://localhost:8000/device-event/"
-
-# Step 3: Subscribe each device to the webhook
-for device in devices:
-    device_id = device[0]
-
-    payload = {
-        "device_id": device_id,
-        "webhook_url": WEBHOOK_URL
-    }
-
-    try:
-        response = requests.post(WEBHOOK_URL, json=payload)
-
-        if response.status_code == 200:
-            logging.info(f"✅ Subscribed {device_id} to webhook.")
-
-            # Log success in database
-            cur.execute("""
-                INSERT INTO iot_lg.device_subscription_log (device_id, subscribed, webhook_url)
-                VALUES (%s, TRUE, %s)
-                ON CONFLICT (device_id) DO UPDATE SET subscribed=TRUE;
-            """, (device_id, WEBHOOK_URL))
-            db_connection.commit()
-        else:
-            logging.warning(f"⚠️ Failed to subscribe {device_id}. Response: {response.text}")
-
-    except Exception as e:
-        logging.error(f"❌ Error subscribing {device_id}: {e}")
-
-# Close DB connection
-cur.close()
-db_connection.close()
+query=f"""
+        CREATE TABLE IF NOT EXISTS {schema_name}.roads (
+            road_id SERIAL ,
+            road_name VARCHAR(255) NOT NULL PRIMARY KEY,
+            road_type VARCHAR(50),  
+            centroid_lat DOUBLE PRECISION,
+            centroid_lon DOUBLE PRECISION,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
+    
+query=f"""
+        CREATE TABLE IF NOT EXISTS {schema_name}.traffic_data (
+            traffic_id SERIAL PRIMARY KEY,
+            road_id INT REFERENCES {schema_name}.roads(road_id) ON DELETE CASCADE,
+            current_speed INT,
+            free_flow_speed INT,
+            current_travel_time INT,
+            free_flow_travel_time INT,
+            road_closure BOOLEAN DEFAULT FALSE,
+            recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
