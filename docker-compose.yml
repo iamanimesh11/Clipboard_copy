@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  my_api_app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - my_api_network
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+networks:
+  my_api_network:
+    driver: bridge
