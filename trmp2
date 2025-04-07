@@ -1,0 +1,25 @@
+# airflow/dags/kafka_road_producer_dag.py
+
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from datetime import datetime, timedelta
+
+default_args = {
+    'owner': 'animesh',
+    'retries': 2,
+    'retry_delay': timedelta(minutes=1),
+}
+
+with DAG(
+    dag_id='kafka_road_producer_dag',
+    default_args=default_args,
+    description='DAG to run Kafka road producer script',
+    schedule_interval='*/5 * * * *',  # Every 5 minutes
+    start_date=datetime(2024, 4, 7),
+    catchup=False,
+) as dag:
+
+    run_kafka_road_producer = BashOperator(
+        task_id='run_kafka_road_producer',
+        bash_command='python3 /path/to/kafka-road-producer.py',
+    )
