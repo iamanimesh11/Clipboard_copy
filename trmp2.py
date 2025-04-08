@@ -1,95 +1,58 @@
-import time
-import os
-import sys
-import json
-import string
-import random
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from datetime import datetime, timedelta
+import psycopg2
+import logging
 
+default_args = {
+    'owner': 'airflow',
+    'start_date': datetime(2024, 1, 1),
+    'retries': 1,
+    'retry_delay': timedelta(minutes=1),
+}
 
-from kafka import KafkaProducer
-from datetime import datetime
-from kafka.admin import KafkaAdminClient,NewTopic
-from oauthlib.common import generate_timestamp
-
-AIRFLOW_HOME = os.getenv("AIRFLOW_HOME", "/opt/airflow")
-if AIRFLOW_HOME != "/opt/airflow":
-    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    AIRFLOW_HOME = BASE_DIR
-    print(BASE_DIR)
+def check_etl_health():
+    logging.info("Starting ETL health check...")
     
-SCRIPTS_PATH = os.path.join(AIRFLOW_HOME, "scripts")
-sys.path.append(SCRIPTS_PATH)
-common_PATH = os.path.join(AIRFLOW_HOME, "common") 
-sys.path.append(common_PATH)
-common_PATH = os.path.join(AIRFLOW_HOME, "common","logging_and_monitoring","logs") 
-sys.path.append(common_PATH)
+    conn = psycopg2.connect(
+        host="your_postgres_host",
+        port="your_postgres_port",
+        database="your_db_name",
+        user="your_user",
+        password="your_password"
+    )
+    cur = conn.cursor()
 
-from utils.api_utils import get_nearby_roads_with_coordinates
+    tables = {
+        'roaddata': 'created_at',
+        'trafficdata': 'recorded_at'
+    }
 
-#from road_data_real_time_traffic_onbounding_box import get_nearby_roads_with_coordinates
-from modify_Topics import create_kafka_topic
-from logging_and_monitoring.centralized_logging import setup_logger
+    for table, time_col in tables.items():
+        cur.execute(f"SELECT MAX({time_col}) FROM {table};")
+        latest_time = cur.fetchone()[0]
 
-producer_Script_logs_path=os.path.join(common_PATH, "Road_Producer.log")
-logger = setup_logger("Road_Data_ETL", "producer_script", "kafka", producer_Script_logs_path)
+        cur.execute(f"SELECT COUNT(*) FROM {table};")
+        row_count = cur.fetchone()[0]
 
-admin_client=KafkaAdminClient(
-            bootstrap_servers=['kafka:9092'],
-            client_id="kafka_topic_manager"
-        )
+        logging.info(f"{table} | Latest: {latest_time} | Rows: {row_count}")
 
-def producer():
-    logger.info("Producer funtion called")
-    try:
-        producer = KafkaProducer(
-            bootstrap_servers='kafka:9092',
-            value_serializer=lambda v: json.dumps(v).encode('utf-8')
-        )
-        logger.info("Producer passed")
+        if latest_time is None or (datetime.now() - latest_time) > timedelta(minutes=20):
+            logging.warning(f"{table} data might be stale!")
 
+    cur.close()
+    conn.close()
 
-    except Exception as e:
-        print(f"Error occurred:{e}")
-        logger.error("Error occured : {e}")
-        exit()
-    road_list = []
-    nearby_roads = get_nearby_roads_with_coordinates(28.60507059568563, 77.44698311030206)
-    print(len(nearby_roads))
-   
-    logger.info(len(nearby_roads))
-    if nearby_roads:
-        # Print results
-        for road_name, coords in nearby_roads.items():
-            # logging.info(f"Road_name: {road_name}, Start_coords : {coords['start']} , End_coords : {coords['end']}")
-            road_list.append({
-                "name": road_name,
-                "start_lat": coords['start'][0],
-                "start_lon": coords['start'][1],
-                "end_lat": coords['end'][0],
-                "end_lon": coords['end'][1],
-            })
-        timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        message = json.dumps(road_list).encode('utf-8')
-        logger.info(message)
+with DAG(
+    'monitor_etl_health_dag',
+    default_args=default_args,
+    schedule_interval='*/10 * * * *',
+    catchup=False
+) as dag:
 
-        try:
-                f = producer.send('road-topic',value=road_list)
-                f.get(timeout=10)
-                logger.info("Message sent")
-                time.sleep(3)
+    monitor_task = PythonOperator(
+        task_id='check_etl_status',
+        python_callable=check_etl_health
+    )
 
-        except Exception as e:
-                logger.fatal(f"failed to send message {e}")
-
-        producer.close()
-
-
-if __name__ == "__main__":
-    try: 
-        create_kafka_topic(admin_client,"road-topic",2,1)
-        logger.info(f"topic road-topic created successfully")
-
-    except Exception as e:
-        logger.fatal(f"failed to create topic road-topic: {e}")
-
-    producer()
+    monitor_task
