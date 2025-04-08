@@ -1,58 +1,78 @@
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
-import psycopg2
-import logging
+query = f"""
+        CREATE TABLE IF NOT EXISTS {schema_name}.traffic_data (
+            traffic_id SERIAL PRIMARY KEY,
+            road_name TEXT,
+            latitude DECIMAL(10, 6),
+            longitude DECIMAL(10, 6),
+            current_speed INT,
+            free_flow_speed INT,
+            current_travel_time INT,
+            free_flow_travel_time INT,
+            road_closure BOOLEAN DEFAULT FALSE,
+            recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            mapurl TEXT,
+            traffic_condition VARCHAR(50),
+            weather_id UUID REFERENCES {schema_name}.weather_data(weather_id),
+            UNIQUE(road_id,recorded_at)
+            FOREIGN KEY (road_id) REFERENCES {schema_name}.roads(road_id) ON DELETE CASCADE    
+        );
+        """
+        cursor.execute(query=query) 
+        conn.commit()
+        logger.info(f"Table 'traffic_data' is ready.", extra={"stage": "table_setup"})
+        # Create index for traffic_data table safely
+        try:
+            cursor.execute(f"""
+                        DO $$ 
+                            BEGIN
+                                IF NOT EXISTS (
+                                    SELECT 1 FROM pg_indexes WHERE LOWER(indexname) = LOWER('traffic_Data_road_id_idx')
+                                ) THEN
+                                    CREATE INDEX traffic_Data_road_id_idx ON roads_traffic.traffic_data(road_id);
+                                END IF;
+                            END $$;
 
-default_args = {
-    'owner': 'airflow',
-    'start_date': datetime(2024, 1, 1),
-    'retries': 1,
-    'retry_delay': timedelta(minutes=1),
-}
+                    """)
+            conn.commit()
+            logger.info("Index 'traffic_Data_road_id_idx' created successfully.", extra={"stage": "index_creation"})
+        except Exception as e:
+            conn.rollback()
+            logger.warning(f"Skipping index creation for 'traffic_Data_road_id_idx': {e}",
+                           extra={"stage": "index_creation"})
 
-def check_etl_health():
-    logging.info("Starting ETL health check...")
-    
-    conn = psycopg2.connect(
-        host="your_postgres_host",
-        port="your_postgres_port",
-        database="your_db_name",
-        user="your_user",
-        password="your_password"
-    )
-    cur = conn.cursor()
+        query = f"""
+        CREATE TABLE IF NOT EXISTS {schema_name}.weather_data (
+            weather_id UUID PRIMARY KEY DEFAULT get_random_uuid(),
+            latitude DECIMAL(10, 6),
+            longitude DECIMAL(10, 6),
+            weather_conditions VARCHAR(50) ,
+            temperature FLOAT,
+            humidity FLOAT,
+            recorded_at TIMESTAMP NOT NULL,
+            UNIQUE(latitude,longitude,recorded_at)       
+        );
+        """
+        cursor.execute(query=query) 
+        conn.commit()
+        logger.info(f"Table 'weather_data' is ready.", extra={"stage": "table_setup"})
+        # Create index for traffic_data table safely
+        try:
+            cursor.execute(f"""
+                        DO $$ 
+                            BEGIN
+                                IF NOT EXISTS (
+                                    SELECT 1 FROM pg_indexes WHERE LOWER(indexname) = LOWER('traffic_Data_road_id_idx')
+                                ) THEN
+                                    CREATE INDEX traffic_Data_road_id_idx ON roads_traffic.traffic_data(road_id);
+                                END IF;
+                            END $$;
 
-    tables = {
-        'roaddata': 'created_at',
-        'trafficdata': 'recorded_at'
-    }
+                    """)
+            conn.commit()
+            logger.info("Index 'traffic_Data_road_id_idx' created successfully.", extra={"stage": "index_creation"})
+        except Exception as e:
+            conn.rollback()
+            logger.warning(f"Skipping index creation for 'traffic_Data_road_id_idx': {e}",
+                           extra={"stage": "index_creation"})
 
-    for table, time_col in tables.items():
-        cur.execute(f"SELECT MAX({time_col}) FROM {table};")
-        latest_time = cur.fetchone()[0]
-
-        cur.execute(f"SELECT COUNT(*) FROM {table};")
-        row_count = cur.fetchone()[0]
-
-        logging.info(f"{table} | Latest: {latest_time} | Rows: {row_count}")
-
-        if latest_time is None or (datetime.now() - latest_time) > timedelta(minutes=20):
-            logging.warning(f"{table} data might be stale!")
-
-    cur.close()
-    conn.close()
-
-with DAG(
-    'monitor_etl_health_dag',
-    default_args=default_args,
-    schedule_interval='*/10 * * * *',
-    catchup=False
-) as dag:
-
-    monitor_task = PythonOperator(
-        task_id='check_etl_status',
-        python_callable=check_etl_health
-    )
-
-    monitor_task
+        logger.info("Database setup completed successfully.", extra={"stage": "success"})
