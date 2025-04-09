@@ -1,22 +1,21 @@
-def mark_api_status(api_name, is_down):
-    key = get_today_key()
-    doc_ref = db.collection(API_TRACK_COLLECTION).document(key)
-    doc_ref.set({f"{api_name}.is_down": is_down}, merge=True)
+MAX_LIMIT = 2500
+MAX_FAILURES = 5
 
-def increment_failure(api_name):
-    key = get_today_key()
-    doc_ref = db.collection(API_TRACK_COLLECTION).document(key)
-    doc_ref.set({f"{api_name}.failures": firestore.Increment(1)}, merge=True)
+count, failures, is_down = get_status("tomtom")
 
-def reset_failure_count(api_name):
-    key = get_today_key()
-    doc_ref = db.collection(API_TRACK_COLLECTION).document(key)
-    doc_ref.set({f"{api_name}.failures": 0}, merge=True)
+if count >= MAX_LIMIT or failures >= MAX_FAILURES:
+    mark_api_status("tomtom", True)
+    print("TomTom API is DOWN")
+else:
+    try:
+        # Make the API call
+        response = requests.get("...")
+        response.raise_for_status()
 
-def get_status(api_name):
-    key = get_today_key()
-    doc = db.collection(API_TRACK_COLLECTION).document(key).get()
-    if doc.exists:
-        data = doc.to_dict().get(api_name, {})
-        return data.get("count", 0), data.get("failures", 0), data.get("is_down", False)
-    return 0, 0, False
+        increment_api_count("tomtom")
+        reset_failure_count("tomtom")
+        mark_api_status("tomtom", False)
+
+    except Exception as e:
+        increment_failure("tomtom")
+        print("TomTom API failure")
