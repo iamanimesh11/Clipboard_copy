@@ -1,78 +1,71 @@
-query = f"""
-        CREATE TABLE IF NOT EXISTS {schema_name}.traffic_data (
-            traffic_id SERIAL PRIMARY KEY,
-            road_name TEXT,
-            latitude DECIMAL(10, 6),
-            longitude DECIMAL(10, 6),
-            current_speed INT,
-            free_flow_speed INT,
-            current_travel_time INT,
-            free_flow_travel_time INT,
-            road_closure BOOLEAN DEFAULT FALSE,
-            recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            mapurl TEXT,
-            traffic_condition VARCHAR(50),
-            weather_id UUID REFERENCES {schema_name}.weather_data(weather_id),
-            UNIQUE(road_id,recorded_at)
-            FOREIGN KEY (road_id) REFERENCES {schema_name}.roads(road_id) ON DELETE CASCADE    
-        );
-        """
-        cursor.execute(query=query) 
-        conn.commit()
-        logger.info(f"Table 'traffic_data' is ready.", extra={"stage": "table_setup"})
-        # Create index for traffic_data table safely
-        try:
-            cursor.execute(f"""
-                        DO $$ 
-                            BEGIN
-                                IF NOT EXISTS (
-                                    SELECT 1 FROM pg_indexes WHERE LOWER(indexname) = LOWER('traffic_Data_road_id_idx')
-                                ) THEN
-                                    CREATE INDEX traffic_Data_road_id_idx ON roads_traffic.traffic_data(road_id);
-                                END IF;
-                            END $$;
+import requests
+import sys
+import os
+import random
+import psycopg2
+from psycopg2 import extras
+from geopy.distance import geodesic
+from datetime import datetime
+import firebase_admin
+from firebase_admin import credentials, firestore
 
-                    """)
-            conn.commit()
-            logger.info("Index 'traffic_Data_road_id_idx' created successfully.", extra={"stage": "index_creation"})
-        except Exception as e:
-            conn.rollback()
-            logger.warning(f"Skipping index creation for 'traffic_Data_road_id_idx': {e}",
-                           extra={"stage": "index_creation"})
 
-        query = f"""
-        CREATE TABLE IF NOT EXISTS {schema_name}.weather_data (
-            weather_id UUID PRIMARY KEY DEFAULT get_random_uuid(),
-            latitude DECIMAL(10, 6),
-            longitude DECIMAL(10, 6),
-            weather_conditions VARCHAR(50) ,
-            temperature FLOAT,
-            humidity FLOAT,
-            recorded_at TIMESTAMP NOT NULL,
-            UNIQUE(latitude,longitude,recorded_at)       
-        );
-        """
-        cursor.execute(query=query) 
-        conn.commit()
-        logger.info(f"Table 'weather_data' is ready.", extra={"stage": "table_setup"})
-        # Create index for traffic_data table safely
-        try:
-            cursor.execute(f"""
-                        DO $$ 
-                            BEGIN
-                                IF NOT EXISTS (
-                                    SELECT 1 FROM pg_indexes WHERE LOWER(indexname) = LOWER('traffic_Data_road_id_idx')
-                                ) THEN
-                                    CREATE INDEX traffic_Data_road_id_idx ON roads_traffic.traffic_data(road_id);
-                                END IF;
-                            END $$;
+# -----------------------------
+# Set up paths
+AIRFLOW_HOME = os.getenv("AIRFLOW_HOME", "/opt/airflow")
+if AIRFLOW_HOME != "/opt/airflow":
+    BASE_DIR = os.path.abspath(os.path.join(AIRFLOW_HOME, "..",".."))
+    AIRFLOW_HOME = BASE_DIR
 
-                    """)
-            conn.commit()
-            logger.info("Index 'traffic_Data_road_id_idx' created successfully.", extra={"stage": "index_creation"})
-        except Exception as e:
-            conn.rollback()
-            logger.warning(f"Skipping index creation for 'traffic_Data_road_id_idx': {e}",
-                           extra={"stage": "index_creation"})
+CREDENTIALS_PATH = os.path.join(AIRFLOW_HOME, "common", "credentials")
 
-        logger.info("Database setup completed successfully.", extra={"stage": "success"})
+COMMON_PATH = os.path.join(AIRFLOW_HOME, "common", "logging_and_monitoring")
+sys.path.append(COMMON_PATH)
+
+LOGS_PATH = os.path.join(COMMON_PATH, "logs")
+sys.path.append(LOGS_PATH)
+print(AIRFLOW_HOME)
+
+
+# Firebase setup
+cred = credentials.Certificate(os.path.join(CREDENTIALS_PATH, "firebase_cred.json"))
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+API_TRACK_COLLECTION = "api_usage"
+
+# -----------------------------
+# Logging setup
+# from centralized_logging import setup_logger
+
+# script_logs_path = os.path.join(LOGS_PATH, "db_utils.log")
+# logger = setup_logger("Road_Data_ETL", "db_utils", "python", script_logs_path)
+
+# -----------------------------
+# Utility functions
+def get_today_key():
+    return datetime.utcnow().strftime("%Y-%m-%d")
+
+def get_api_count():
+    key = get_today_key()
+    doc_ref = db.collection(API_TRACK_COLLECTION).document(key)
+    doc = doc_ref.get()
+    if doc.exists:
+        return doc.to_dict().get("count", 0)
+    return 0
+
+def increment_api_count():
+    key = get_today_key()
+    doc_ref = db.collection(API_TRACK_COLLECTION).document(key)
+    doc_ref.set({"count": firestore.Increment(1)}, merge=True)
+
+# -----------------------------
+# Main logic
+MAX_DAILY_LIMIT = 2500
+current_count = get_api_count()
+
+if current_count >= MAX_DAILY_LIMIT:
+    print("API limit reached")
+    print("API daily usage limit reached.")
+else:
+    increment_api_count()
+    print(f"API call allowed. Current count: {current_count + 1}")
