@@ -1,25 +1,18 @@
-from api_monitor import ApiMonitor
-import requests
+# run_device_type_consumers.py
 
-monitor = ApiMonitor(cred_path="/path/to/firebase_cred.json")
+import json
+import subprocess
 
-MAX_LIMIT = 2500
-MAX_FAILURES = 5
+with open("device_types.json") as f:
+    device_types = json.load(f)["device_types"]
 
-count, failures, is_down = monitor.get_status("tomtom")
-
-if count >= MAX_LIMIT or failures >= MAX_FAILURES:
-    monitor.mark_api_status("tomtom", True)
-    print("TomTom API is down.")
-else:
-    try:
-        response = requests.get("https://api.tomtom.com/...")
-        response.raise_for_status()
-
-        monitor.increment_api_count("tomtom")
-        monitor.reset_failure_count("tomtom")
-        monitor.mark_api_status("tomtom", False)
-
-    except requests.RequestException:
-        monitor.increment_failure("tomtom")
-        print("TomTom API call failed.")
+for device in device_types:
+    container_name = f"mqtt_consumer_{device}"
+    subprocess.run([
+        "docker", "run", "-d",
+        "--name", container_name,
+        "--network", "host",  # So it can access MQTT broker locally
+        "-e", f"DEVICE_TYPE={device}",
+        "-e", "MQTT_BROKER=localhost",
+        "mqtt_consumer_image"  # name of image you build from Dockerfile
+    ])
