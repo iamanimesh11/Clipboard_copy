@@ -1,0 +1,5 @@
+So both system are simulated , now what happen and let's understand how data flows basically ,
+So iot device like refrigerator,ac ,tv and so on generates data  like sensors data more basically as we know how iot works . 
+so suppose a event like motor failure occurs and so it send to backend server .now backend server receive it .
+by the time understand how business logic is working First:
+a servicec  regsiter to backend server and it suscribe to my sever for each device id to receive the real time events of that event 
