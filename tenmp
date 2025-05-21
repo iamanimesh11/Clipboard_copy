@@ -1,30 +1,7 @@
-Here’s a tailored Data Engineer-focused version of your project for the resume, with measurable impact and strong tech emphasis:
-
-
----
-
-Real-Time Traffic & Weather Data Pipeline (Personal Project)
-Tools: Python, Apache Kafka, Apache Airflow, PostgreSQL, Docker, Grafana Loki, Discord Webhooks
-
-Built an end-to-end real-time data engineering pipeline that collects and processes 250+ live API responses daily from Overpass, TomTom Traffic, and WeatherAPI.
-
-Designed a decoupled ingestion architecture using Apache Kafka, enabling scalable, asynchronous data streaming into PostgreSQL.
-
-Orchestrated ETL workflows using Apache Airflow, ensuring timely scheduling and fault-tolerant task execution.
-
-Achieved ~80% improvement in reliability and observability through centralized logging using Grafana Loki and Discord alerting for system monitoring.
-
-Implemented optimized database schema and bulk insert strategies for efficient storage and high-performance querying.
-
-Utilized Docker Compose to containerize all services with persistent storage and simplified deployment.
-
-Applied best practices like externalized configuration (config.yaml) and secure credential handling for scalable development.
-
-Demonstrated strong data engineering principles across ingestion, transformation, scheduling, logging, and monitoring.
-
-
-
----
-
-Let me know if you want a shorter version or tailored version for freshers vs experienced roles.
-
+{
+  "date": "2025-05-21",
+  "title": "Two Sum Problem",
+  "problem_statement": "Given an array of integers ...",
+  "solution_code": "def two_sum(nums, target): ...",
+  "tags": ["arrays", "hashmap", "leetcode-easy"]
+}
