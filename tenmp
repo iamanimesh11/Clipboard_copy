@@ -1,7 +1,9 @@
-{
-  "date": "2025-05-21",
-  "title": "Two Sum Problem",
-  "problem_statement": "Given an array of integers ...",
-  "solution_code": "def two_sum(nums, target): ...",
-  "tags": ["arrays", "hashmap", "leetcode-easy"]
-}
+# Write your MySQL query statement below
+select customer_id,delivery_id,
+min(order_date),
+CASE
+    when order_date= customer_pref_delivery_date then "immediate"
+    else "scheduled"
+END AS TYPE
+from  Delivery
+group by customer_id
