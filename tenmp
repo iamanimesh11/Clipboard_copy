@@ -1,26 +1,27 @@
-# Write your MySQL query statement below
-select customer_id,delivery_id,
-min(order_date),
-CASE
-    when order_date= customer_pref_delivery_date then "immediate"
-    else "scheduled"
-END AS TYPE
-from  Delivery
-group by customer_id
+nums=[1,1,1,2,2,3]
+k=2
+output=[1,2]
 
-
-WITH FirstOrders AS (
-  SELECT
-    customer_id,
-    order_date,
-    customer_pref_delivery_date,
-    ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date) AS order_rank
-  FROM
-    Delivery
-)
-select 
-round(avg( CASE
-    when order_date= customer_pref_delivery_date then 1 else 0 
-END )*100 ,2)AS immediate_percentage 
-from firstorders
-where order_rank=1
+d={}
+for i in nums:
+  if i in d:
+    d[i]+=1
+  else:
+    d[i]=1
+    
+print(d)
+max_list=[]
+# for key,value in d.items():
+#   if value>max:
+#     max =value
+  
+sorted_d=sorted(d.items(),key=lambda item: item[1],reverse=True)
+print(sorted_d)
+max_list=[]
+i=0
+while k>0:
+  max_list.append(sorted_d[i][0])
+  k=k-1
+  i+=1
+  
+print(max_list)
