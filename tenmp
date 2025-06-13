@@ -1,134 +1,26 @@
-### 🚀 Project Launch: Real-Time IoT ETL for Reactive and Predictive Maintenance 🔧📊
-
-
-
-Sharing my latest project — a **fully containerized, real-time IoT ETL system** for **smart maintenance workflows** 🚨🤖
-
-
-
-📌 **Architecture diagram** attached below for a complete technical overview 👇
-
----
-
-
-
-### 🌐 What’s This About?
-
-
-
-🔧 **Reactive Maintenance** (✅ Implemented):
-
-
-
-Simulated the entire ecosystem from device to client with:
-
-🛰️ IoT Devices publishing real-time error events via MQTT, simulating a real-world connected infrastructure
-
-🧠 Backend Services (FastAPI + Flask) to:
-
-Register devices and issue auth tokens
-
-Validate incoming events and route them for processing
-
-🔄 Apache Kafka pipelines for event stream processing and decoupling components
-
-🗃️ PostgreSQL (Modular Schema Design) to store:
-
-- Device metadata
-
-- Customer information
-
-- Auth tokens
-
-- Subscriptions
-
-- Services
-
-- Logged error events
-
-🛎️ Error alerts sent instantly to the registered service CRM system (simulated via internal API call) for service team action
-
-📈 Grafana Loki used to aggregate logs from all services and micro-backends
-
-👁️‍🗨️ Grafana Dashboards show real-time logs, events, and service health for observability
-
-🐳 Fully containerized setup to simulate a production-like environment
-
-🔔 Discord integration for incident alerting to dev/ops teams
-
-
-
-🔮 **Predictive Maintenance** (🚧 Coming Soon):
-
-
-
-* **Anomaly detection** from historical logs
-
-* Machine Learning to send **proactive alerts before breakdowns**
-
-
-
----
-
-
-
-### 🛠️ Tech Stack Highlights
-
-
-
-📡 **Data Source:** Python-generated mock IoT data
-
-⏰ **Scheduler:** Apache Airflow
-
-🔄 **Streaming:** Apache Kafka
-
-💾 **Database:** PostgreSQL
-
-📊 **Monitoring & Logging:** Grafana + Loki
-
-🧠 **Memory Storage:** Redis
-
-📲 **IoT Protocol:** MQTT
-
-⚙️ **Backend APIs:** FastAPI + Flask
-
-💻 **Frontend Dashboard:** Streamlit
-
-🐳 **Deployment:** Docker + Docker Compose
-
-📢 **Notifications:** Discord
-
-🐍 **Language:** Python (of course! 🐍)
-
-
-
----
-
-
-
-### 🧩 Want to Explore It?
-
-
-
-🔗 **Live Project Website:**
-
-[https://my-profile-iamanimesh11s-projects.vercel.app/ETL\_IOT\_PROJECT/](https://my-profile-iamanimesh11s-projects.vercel.app/ETL_IOT_PROJECT/)
-
-
-
-📂 **GitHub Repo (Fully Documented & Open for Feedback):**
-
-👉 [https://github.com/iamanimesh11/IOT\_Project](https://github.com/iamanimesh11/IOT_Project)
-
-
-
-I’d love your feedback, questions, and ideas on extending this to predictive ML pipelines or edge computing 🚀
-
-
-
----
-
-
-
-#IoT #ETL #DataEngineering #Kafka #MQTT #PostgreSQL #Python #Grafana #Airflow #Streamlit #FastAPI #Docker #PredictiveMaintenance #ReactiveMaintenance #DevOps
+wrote this and getting  moviescte doesn't exist :
+# Write your MySQL query stat
+with s as (
+select count(movie_id) as count_movie_id,user_id
+from movierating
+group by user_id
+
+),
+moviescte as  (
+    select movie_id ,avg(rating) as rating
+    from movierating
+    where month(created_at)=2 and rating =(select max(rating) from moviescte) 
+    group by movie_id
+    order by rating desc
+
+)
+
+select u.name as results from s
+join users u 
+on s.user_id=u.user_id
+Union all
+select mo.title as results from moviescte  m
+join movies mo
+on m.movie_id=mo.movie_id
+order by title
 
