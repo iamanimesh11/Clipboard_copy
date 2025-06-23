@@ -1,26 +1,84 @@
-You are tasked with representing and performing a series of one-time, sequential operations on a small, pre-defined set of product data for a hypothetical micro-store. Your solution must demonstrate a robust understanding of the following W3Schools Python tutorial concepts:
 
-Variables & Data Types: Create distinct variables for at least three different products. Each product must have its product_name (string), sku (string), price (float), and quantity_in_stock (integer) clearly defined and assigned using appropriate data types.
-Operators:
-Calculate the total value of one specific product (e.g., product_A_value = product_A_price * product_A_quantity_in_stock) using arithmetic operators.
-Perform a comparison using a relational operator (e.g., is_product_A_expensive = product_A_price > 100.00).
-Use a logical operator to determine if a product is both 'expensive' and 'low in stock' (e.g., is_critical = is_expensive and is_low_stock).
-Casting:
-Initialize a quantity for one product as a string (e.g., initial_qty_str = "25").
-Explicitly cast this string quantity to an integer before using it in any numeric calculations.
-Strings:
-For one product's sku, demonstrate string slicing to extract the first three characters.
-For another product's name, use a string method (e.g., .upper(), .lower(), .replace()) to modify its case or content.
-Concatenate two string variables (e.g., full_description = product_name + " - " + sku).
-Booleans: Define several Boolean variables to represent specific states or conditions for your products (e.g., product_B_available = True, product_C_on_sale = False).
-Lists & List Methods:
-Create a single Python list named all_products_data.
-Store all four attributes (name, SKU, price, quantity) for each of your three products within this all_products_data list. You can choose to store them as individual elements (e.g., ['Laptop', 'LT001', 1200.00, 10, 'Mouse', 'MS002', 25.50, 50, ...]) or, to demonstrate more advanced list usage, you could represent each product as a sub-list or tuple within the main list (e.g., [['Laptop', 'LT001', 1200.00, 10], ['Mouse', 'MS002', 25.50, 50], ...]). Preferably, use sub-lists for each product to show better organization.
-Access List Items: Retrieve and print the name of the second product and the quantity of the first product using list indexing.
-Change List Items: Directly modify the quantity of one product in your all_products_data list.
-Add List Items: Add data for a fourth new product to your all_products_data list using an appropriate list method (append() or insert()).
-Remove List Items: Remove one product's data from your all_products_data list using an appropriate list method (remove() or pop()).
-List Comprehension: (This is tricky without loops, but can be done on a static list). Create a new list containing only the SKUs of all products currently in your all_products_data list, using list comprehension syntax on a pre-defined list.
-Sort Lists: Create a copy of your all_products_data list and sort this copy alphabetically by product name (the second item in each sub-list, assuming you used sub-lists). Print the sorted copy.
-Copy Lists: Explicitly use a list method to create a distinct copy before sorting (as mentioned above).
-Join Lists: Create a small separate list of 'bestseller' product names (e.g., ['Laptop', 'Keyboard']). Then, join this list with a list containing only the names of your current products from all_products_data (you'll need to manually extract them or create a new list for this demonstration). Print the joined list.
+
+## 🔰 **Beginner Level (Basic Syntax, Types, and Strings)**
+
+1. Create variables to store your name, age, and height. Print them with proper labels.
+2. Add two integer variables and print the result.
+3. Take a string input and print it in uppercase and lowercase.
+4. Store a decimal number in a variable. Cast it to an integer and print both.
+5. Check and print the data type of each: `10`, `"hello"`, `3.5`, `True`.
+
+---
+
+## 🧠 **Understanding Boolean & If-Else Logic**
+
+6. Set a variable `is_sunny = True`. Use if-else to print “Go outside” or “Stay inside”.
+7. Take two numbers. Print the bigger one using if-else.
+8. Check if a number is even or odd.
+9. Given `age`, print “Adult” if 18 or more, else “Minor”.
+10. Check if a number is positive, negative, or zero.
+
+---
+
+## 📝 **String-Based If-Else Questions**
+
+11. If a name starts with “A”, print “Awesome!” else print “Hello!”.
+12. Check if two strings are the same (case-sensitive).
+13. If a string contains `"@"` and ends with `".com"`, print “Valid Email”, else “Invalid”.
+14. Print “Short” if the string has less than 5 characters, else “Long”.
+15. If a string ends with `.py`, print “Python file”, else “Not a Python file”.
+
+---
+
+## 🔍 **Operators and Expressions**
+
+16. Take two numbers and print their sum, difference, product, and division.
+17. Use comparison operators to compare two numbers and print the result.
+18. Use `and` / `or` to check:
+    If `age > 18` **and** `has_id = True` → Print “Entry Allowed”
+19. Calculate the square of a number using exponent operator.
+20. Use floor division and modulus and explain the difference in output.
+
+---
+
+## 🧪 **Mixed Condition Questions**
+
+21. Check if a user is eligible for a loan:
+
+    * age > 21
+    * income > 25,000
+    * Print “Eligible” or “Not Eligible”
+
+22. If a string contains space, print “Invalid username”.
+
+23. Ask for a password. If it’s less than 8 characters, print “Too short”.
+
+24. Check if the first and last letters of a string are the same.
+
+25. Print “Vowel” if a character is one of `a, e, i, o, u`, else print “Consonant”.
+
+---
+
+## 🎯 **Scenario-Based Practice**
+
+26. Input name and age. Print:
+    “Hello \[name], you are eligible to vote.” if age ≥ 18.
+27. Create a variable `marks = 80`. Print:
+
+* “Excellent” if ≥ 90
+* “Good” if 70–89
+* “Needs Improvement” otherwise
+
+28. Input a string and check if it’s a palindrome (ignore reverse logic — just check: `if str == "madam"`)
+29. Ask user to enter a color. If it's red, blue, or green → print “Primary color”
+30. Input a string. If it only contains alphabets, print “Valid Name” else “Invalid”.
+
+---
+
+Would you like me to turn this into:
+
+* ✅ A printable **PDF worksheet**
+* ✅ An interactive **quiz** with answers
+* ✅ A **code file** for student to run directly
+
+Let me know how you want to use it for teaching.
