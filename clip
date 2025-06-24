@@ -1,1 +1,16 @@
-f
+CREATE TABLE user_purchases (
+    purchase_id INT PRIMARY KEY,
+    user_id VARCHAR(50),
+    purchase_date DATE
+);
+
+INSERT INTO user_purchases (purchase_id, user_id, purchase_date) VALUES
+    (1, 'U1', '2024-01-01'),
+    (2, 'U1', '2024-01-10'),
+    (3, 'U1', '2024-02-15'),
+    (4, 'U2', '2024-01-05'),
+    (5, 'U2', '2024-04-01'),
+    (6, 'U3', '2024-02-01'),
+    (7, 'U3', '2024-02-20'),
+    (8, 'U4', '2024-03-10');
+
