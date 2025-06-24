@@ -1,0 +1,14 @@
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id VARCHAR(50),
+    order_date DATE
+);
+
+INSERT INTO orders (order_id, customer_id, order_date) VALUES
+    (1, 'C001', '2024-01-01'),
+    (2, 'C002', '2024-01-10'),
+    (3, 'C001', '2024-01-20'),
+    (4, 'C003', '2024-01-25'),
+    (5, 'C004', '2024-02-01'),
+    (6, 'C002', '2024-02-05'),
+    (7, 'C005', '2024-02-15');
