@@ -18,7 +18,6 @@ INSERT INTO customer_orders (order_id, customer_id, product_name, order_date) VA
     (10, 'C003', 'Butter', '2024-03-01'),
     (11, 'C003', 'Milk', '2024-03-10');
 
-    
 with cte as(
 select count(customer_id) as product_bought_often ,customer_id,
         product_name
@@ -28,7 +27,8 @@ select count(customer_id) as product_bought_often ,customer_id,
       )
 ,
 cte2 as ( select product_bought_often,customer_id,product_name,
-row_number() over ( partition by customer_id  order by product_bought_often desc) as rownum
+rank() over ( partition by customer_id  order by product_bought_often desc) as rn
 from cte)
 
 select * from cte2
+where rn=1
