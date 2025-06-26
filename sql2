@@ -1,14 +1,43 @@
-CREATE TABLE orders (
-    order_id INT PRIMARY KEY,
-    customer_id VARCHAR(50),
-    order_date DATE
+CREATE TABLE user_logins (
+    login_id INT PRIMARY KEY,
+    user_id VARCHAR(50),
+    login_date DATE
 );
 
-INSERT INTO orders (order_id, customer_id, order_date) VALUES
-    (1, 'C001', '2024-01-01'),
-    (2, 'C002', '2024-01-10'),
-    (3, 'C001', '2024-01-20'),
-    (4, 'C003', '2024-01-25'),
-    (5, 'C004', '2024-02-01'),
-    (6, 'C002', '2024-02-05'),
-    (7, 'C005', '2024-02-15');
+INSERT INTO user_logins (login_id, user_id, login_date) VALUES
+    (1, 'U1', '2024-06-01'),
+    (2, 'U1', '2024-06-02'),
+    (3, 'U1', '2024-06-03'),
+    (4, 'U1', '2024-06-04'),
+    (5, 'U1', '2024-06-05'),
+    (6, 'U1', '2024-06-06'),
+    (7, 'U1', '2024-06-07'),
+    (8, 'U2', '2024-06-01'),
+    (9, 'U2', '2024-06-03'),
+    (10, 'U3', '2024-06-10'),
+    (11, 'U3', '2024-06-11'),
+    (12, 'U3', '2024-06-12'),
+    (13, 'U3', '2024-06-13'),
+    (14, 'U3', '2024-06-14'),
+    (15, 'U3', '2024-06-15'),
+    (16, 'U3', '2024-06-16');
+
+
+with cte as (select user_id ,login_date,
+
+datediff(login_date,
+
+lag(login_date) over(
+
+partition by user_id
+
+order by login_date
+
+) 
+
+)as last_Date
+
+from user_logins
+
+)
+
