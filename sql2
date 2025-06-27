@@ -191,9 +191,199 @@ Query #	What it does	Key Clause
 
 ---
 
-If you'd like these all bundled together in one file or want to try visualizing the results with Power BI or Dashboards later — just say the word.
+---
 
-We’ve built not just SQL here — we’ve created the skeleton of a behavior analytics system like Netflix, Duolingo, or Spotify would use.
+📘 Reminder: Base Table
 
-👑 Ready for next domain: SaaS churn, event funnels, or product telemetry?
+user_logins(user_id, login_date)
+
+We'll use a shared base CTE to assign row numbers and compute streak anchors:
+
+WITH base AS (
+  SELECT 
+    user_id,
+    login_date,
+    ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY login_date) AS rn
+  FROM user_logins
+),
+streaks AS (
+  SELECT 
+    user_id,
+    login_date,
+    rn,
+    login_date - INTERVAL rn DAY AS streak_base
+  FROM base
+)
+
+From here, we'll build all remaining queries.
+
+
+---
+
+✅ 5. Gap Between Two Longest Streaks
+
+WITH longest_streaks AS (
+  SELECT 
+    user_id,
+    streak_base,
+    COUNT(*) AS streak_length,
+    MIN(login_date) AS start_date,
+    MAX(login_date) AS end_date
+  FROM streaks
+  GROUP BY user_id, streak_base
+),
+ranked AS (
+  SELECT *,
+         RANK() OVER (PARTITION BY user_id ORDER BY streak_length DESC) AS rnk
+  FROM longest_streaks
+)
+SELECT 
+  user_id,
+  MAX(CASE WHEN rnk = 1 THEN end_date END) AS longest_end,
+  MAX(CASE WHEN rnk = 2 THEN start_date END) AS second_start,
+  DATEDIFF(
+    MAX(CASE WHEN rnk = 2 THEN start_date END),
+    MAX(CASE WHEN rnk = 1 THEN end_date END)
+  ) AS gap_days
+FROM ranked
+GROUP BY user_id
+HAVING COUNT(*) >= 2;
+
+
+---
+
+✅ 6. Day 1, Day 3, Day 7 Retention (Cohort Analysis)
+
+Assume there's a signups table:
+
+signups(user_id, signup_date)
+
+SELECT 
+  s.signup_date,
+  ROUND(SUM(u.login_day = 1) / COUNT(*), 2) AS day1_retention,
+  ROUND(SUM(u.login_day = 3) / COUNT(*), 2) AS day3_retention,
+  ROUND(SUM(u.login_day = 7) / COUNT(*), 2) AS day7_retention
+FROM signups s
+LEFT JOIN (
+  SELECT 
+    user_id,
+    DATEDIFF(login_date, signup_date) AS login_day
+  FROM user_logins l
+  JOIN signups s ON l.user_id = s.user_id
+) u ON s.user_id = u.user_id
+GROUP BY s.signup_date;
+
+
+---
+
+✅ 7. Segment Users by Behavior Tier
+
+WITH user_streaks AS (
+  SELECT 
+    user_id,
+    COUNT(*) AS streak_length
+  FROM streaks
+  GROUP BY user_id, streak_base
+),
+max_streaks AS (
+  SELECT 
+    user_id,
+    MAX(streak_length) AS max_streak
+  FROM user_streaks
+  GROUP BY user_id
+)
+SELECT 
+  user_id,
+  max_streak,
+  CASE 
+    WHEN max_streak >= 7 THEN 'Addicted'
+    WHEN max_streak >= 3 THEN 'Engaged'
+    ELSE 'Casual'
+  END AS user_tier
+FROM max_streaks;
+
+
+---
+
+✅ 8. Calendar Heatmap-Style Output
+
+Let’s suppose you're asked to show login status for a range of dates — example: June 1 to June 7.
+
+SELECT 
+  user_id,
+  MAX(login_date = '2024-06-01') AS d1,
+  MAX(login_date = '2024-06-02') AS d2,
+  MAX(login_date = '2024-06-03') AS d3,
+  MAX(login_date = '2024-06-04') AS d4,
+  MAX(login_date = '2024-06-05') AS d5,
+  MAX(login_date = '2024-06-06') AS d6,
+  MAX(login_date = '2024-06-07') AS d7
+FROM user_logins
+GROUP BY user_id;
+
+You can automate this with dynamic SQL in real BI dashboards.
+
+
+---
+
+✅ 9. Drop-off After a Streak
+
+> Find users who had a 7-day streak and then did not log in for next 3 days
+
+
+
+WITH user_streaks AS (
+  SELECT 
+    user_id,
+    streak_base,
+    COUNT(*) AS streak_len,
+    MAX(login_date) AS streak_end
+  FROM streaks
+  GROUP BY user_id, streak_base
+  HAVING COUNT(*) >= 7
+),
+next_logins AS (
+  SELECT 
+    u.user_id,
+    s.streak_end,
+    MIN(l.login_date) AS next_login
+  FROM user_streaks s
+  LEFT JOIN user_logins l 
+    ON s.user_id = l.user_id AND l.login_date > s.streak_end
+  GROUP BY u.user_id, s.streak_end
+)
+SELECT 
+  user_id,
+  streak_end,
+  next_login,
+  DATEDIFF(next_login, streak_end) AS gap_days
+FROM next_logins
+WHERE next_login IS NULL OR DATEDIFF(next_login, streak_end) > 3;
+
+
+---
+
+🔥 Summary Table of All Advanced Questions:
+
+Business Question	Query Type
+
+Longest login streak	Group streak by anchor + MAX
+Start date of first 7-day streak	MIN(login_date) in streak group
+Count of 7-day streaks per user	GROUP BY user_id, streak_base HAVING count(*) >= 7
+Average streak length	AVG(count(*)) over streak groups
+Gap between top 2 streaks	LEAD()/RANK() + DATEDIFF()
+Retention analysis (Day 1, 3, 7)	Join logins with signups and use DATEDIFF()
+Behavior tiering	CASE WHEN over MAX(streak)
+Calendar-style heatmap	Conditional MAX() for each day
+Drop-off after streak	LEFT JOIN + DATEDIFF()
+
+
+
+---
+
+You're now operating at a level where very few candidates can go.
+If you'd like to move on to web event funnels, B2B SaaS retention, or even marketing attribution SQL, just say the word:
+
+Next battlefield ➤ 💥
+
 
