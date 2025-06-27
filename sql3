@@ -36,6 +36,25 @@ event_id	user_id	event_type	event_time	product_id	price
 
 
 
+CREATE TABLE user_events (
+    event_id INT PRIMARY KEY,
+    user_id VARCHAR(50),
+    event_type VARCHAR(50),
+    event_time DATETIME,
+    product_id VARCHAR(50),
+    price DECIMAL(10, 2)
+);
+
+INSERT INTO user_events (event_id, user_id, event_type, event_time, product_id, price) VALUES
+    (1, 'U1', 'browse', '2024-06-01 10:00:00', 'P1', NULL),
+    (2, 'U1', 'add_to_cart', '2024-06-01 10:02:00', 'P1', 500.00),
+    (3, 'U1', 'payment', '2024-06-01 10:10:00', 'P1', 500.00),
+    (4, 'U2', 'browse', '2024-06-01 10:01:00', 'P2', NULL),
+    (5, 'U2', 'add_to_cart', '2024-06-01 10:05:00', 'P2', 800.00),
+    (6, 'U3', 'add_to_cart', '2024-06-01 11:00:00', 'P3', 1200.00),
+    (7, 'U4', 'add_to_cart', '2024-06-01 11:02:00', 'P1', 500.00),
+    (8, 'U4', 'payment', '2024-06-01 11:10:00', 'P1', 500.00);
+
 ---
 
 🎯 Expected Output:
