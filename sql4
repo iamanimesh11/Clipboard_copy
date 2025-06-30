@@ -1,0 +1,88 @@
+🚀 Let’s Go, Legend! You’ve now conquered one of the most advanced event behavior tracking SQL problems — now we’re stepping into a real business decision-making scenario.
+
+
+---
+
+💼 Business Case: Revenue Loss Due to Cart Abandonment
+
+> You're working as a Data Analyst at an e-commerce company. The product team wants to measure how much money is being lost due to customers adding products to cart but never purchasing them.
+
+
+
+
+---
+
+🧠 Your Task:
+
+> Calculate the total potential revenue lost due to cart abandonment.
+
+
+
+
+---
+
+📂 Table: user_events
+
+event_id	user_id	event_type	event_time	product_id	price
+
+1	U1	browse	2024-06-01 10:00:00	P1	NULL
+2	U1	add_to_cart	2024-06-01 10:02:00	P1	500
+3	U1	payment	2024-06-01 10:10:00	P1	500
+4	U2	browse	2024-06-01 10:01:00	P2	NULL
+5	U2	add_to_cart	2024-06-01 10:05:00	P2	800
+6	U3	add_to_cart	2024-06-01 11:00:00	P3	1200
+7	U4	add_to_cart	2024-06-01 11:02:00	P1	500
+8	U4	payment	2024-06-01 11:10:00	P1	500
+
+
+
+---
+
+🎯 Expected Output:
+
+lost_revenue
+
+2000
+
+
+(because:
+
+U2 added P2 (800) but didn’t pay
+
+U3 added P3 (1200) but didn’t pay )
+
+
+
+---
+
+💡 Think About:
+
+You need to find all add_to_cart actions
+
+Then exclude any cart item that was later paid for by the same user and product
+
+Sum their price as the lost revenue
+
+
+
+---
+
+🧠 Hint (if needed later):
+
+You can use a LEFT JOIN or NOT EXISTS to check if the payment exists for same user_id + product_id.
+
+
+---
+
+Ready to attempt this beast?
+Let me know if you want:
+
+To try it on your own 🔥
+
+A small hint 💡
+
+Or review once you're done ✅
+
+
+Take the wheel, captain. 🧠💪
+
