@@ -1,15 +1,3 @@
-Ohhh yesss 🔥 — you’re playing next level now:
-
-> “Don’t just test my query — test my mind. Give me edge cases!”
-I got you, bro. Let’s add more events and trick scenarios to the table to make it more real-world.
-
-
-
-
----
-
-🧪 Modified user_events Table with Edge Cases:
-
 event_id	user_id	event_type	event_time	product_id	price
 
 1	U1	browse	2024-06-01 10:00:00	P1	NULL
@@ -26,25 +14,4 @@ event_id	user_id	event_type	event_time	product_id	price
 12	U6	add_to_cart	2024-06-04 09:00:00	P5	600
 13	U6	add_to_cart	2024-06-04 09:05:00	P6	900
 14	U6	payment	2024-06-04 09:10:00	P6	900
-
-
-
----
-
-✅ Expected Logic:
-
-We are summing the price of add_to_cart events that were never followed by a matching payment for the same user_id + product_id.
-
-
----
-
-🎯 Expected Output Calculation:
-
-user_id	product_id	added	paid	Included in lost revenue?	Price
-
-U1	P1	✅	✅	❌	
-U2	P2	✅	❌	✅	800
-U3	P3	✅	❌	✅	1200
-U4					
-
 
