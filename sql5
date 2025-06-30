@@ -46,3 +46,22 @@ INSERT INTO user_orders (order_id, user_id, product_id, order_date, price) VALUE
     (108, 'U3', 'P4', '2024-06-02', 900.00);
 
 
+
+
+ 
+
+with cte as (
+select user_id,product_id,count(*) as total_orders
+from user_orders
+group by user_id,product_id
+
+)
+,
+ranked_cte as(
+select user_id,product_id,total_orders,
+rank() over (partition by user_id order by total_orders desc) as rn 
+from cte 
+)
+
+select * from ranked_cte
+where rn=1
