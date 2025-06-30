@@ -74,6 +74,7 @@ Think like a data detective. 🕵️‍♂️
 Ready to try, or want a hint/structure?
 
 
+
 CREATE TABLE product_sales (
     sale_id INT PRIMARY KEY,
     product_id VARCHAR(50),
@@ -90,5 +91,24 @@ INSERT INTO product_sales (sale_id, product_id, sale_date, units_sold) VALUES
     (6, 'P2', '2024-06-02', 4),
     (7, 'P2', '2024-06-03', 16),
     (8, 'P3', '2024-06-01', 6);
+    
+    
+with cte as (
+select 
+       product_id,sale_date,units_sold,
+       sum(units_sold) over (
+        partition  by product_id
+       ) as total_sum,
+       count(*) over (partition by product_id) as total_count
+    from product_sales 
+  ),
+spie_check as (
+select product_id,
+      sale_date,
+      units_sold,
+      round(total_sum*1.0/total_count,2) as avg_Daily_units
+from cte 
+)
 
-
+select * from spie_check
+where units_sold>=3*avg_Daily_units
