@@ -26,3 +26,57 @@ lost_revenue :2000
 You can use a LEFT JOIN or NOT EXISTS to check if the payment exists for same user_id + product_id.
 
 
+
+CREATE TABLE user_events (
+    event_id INT PRIMARY KEY,
+    user_id VARCHAR(50),
+    event_type VARCHAR(50),
+    event_time DATETIME,
+    product_id VARCHAR(50),
+    price DECIMAL(10, 2)
+);
+
+INSERT INTO user_events (event_id, user_id, event_type, event_time, product_id, price) VALUES
+    (1, 'U1', 'browse', '2024-06-01 10:00:00', 'P1', NULL),
+    (2, 'U1', 'add_to_cart', '2024-06-01 10:02:00', 'P1', 500.00),
+    (3, 'U1', 'payment', '2024-06-01 10:10:00', 'P1', 500.00),
+    (4, 'U2', 'browse', '2024-06-01 10:01:00', 'P2', NULL),
+    (5, 'U2', 'add_to_cart', '2024-06-01 10:05:00', 'P2', 800.00),
+    (6, 'U3', 'add_to_cart', '2024-06-01 11:00:00', 'P3', 1200.00),
+    (7, 'U4', 'add_to_cart', '2024-06-01 11:02:00', 'P1', 500.00),
+    (8, 'U4', 'payment', '2024-06-01 11:10:00', 'P1', 500.00),
+    (9, 'U5', 'add_to_cart', '2024-06-01 12:00:00', 'P4', 700.00),
+    (10, 'U5', 'payment', '2024-06-02 12:10:00', 'P4', 700.00),
+    (11, 'U5', 'add_to_cart', '2024-06-03 13:00:00', 'P4', 700.00),
+    (12, 'U6', 'add_to_cart', '2024-06-04 09:00:00', 'P5', 600.00),
+    (13, 'U6', 'add_to_cart', '2024-06-04 09:05:00', 'P6', 900.00),
+    (14, 'U6', 'payment', '2024-06-04 09:10:00', 'P6', 900.00);
+    
+    
+with add_to_cart_events AS (
+
+select * from user_events
+where event_type="add_to_cart"
+
+)
+, payment_EVENTS  as (
+select distinct user_id,product_id
+from user_events
+where event_type='payment'
+
+)
+,
+abandoned_Carts as (
+select a.user_id,a.product_id,a.price
+from add_to_cart_events a 
+left join payment_EVENTS p 
+on a.user_id=p.user_id and a.product_id=p.product_id
+where p.user_id is NULL
+
+)
+
+-- select sum(price) from fcte
+
+select  sum(price) as last_revenue from abandoned_Carts
+
+
