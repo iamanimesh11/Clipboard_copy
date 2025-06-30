@@ -20,7 +20,7 @@ event_id	user_id	event_type	event_time	product_id	price
 
 🎯 Expected Output:
 lost_revenue :2000
-(because:U2 added P2 (800) but didn’t pay U3 added P3 (1200) but didn’t pay )
+(because:U2 added P2 (800) but didn’t pay ,U3 added P3 (1200) but didn’t pay )
 
 🧠 Hint (if needed later):
 You can use a LEFT JOIN or NOT EXISTS to check if the payment exists for same user_id + product_id.
