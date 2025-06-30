@@ -77,3 +77,20 @@ HAVING COUNT(*) > 1
 Ready to attempt it? Or want a tiny nudge next?
 Your turn — make it shine 💥
 
+
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    user_id VARCHAR(50),
+    product_id VARCHAR(50),
+    order_date DATE,
+    amount DECIMAL(10, 2)
+);
+
+INSERT INTO orders (order_id, user_id, product_id, order_date, amount) VALUES
+    (201, 'U1', 'P1', '2024-06-01', 500.00),
+    (202, 'U1', 'P1', '2024-06-01', 500.00),
+    (203, 'U1', 'P2', '2024-06-02', 800.00),
+    (204, 'U2', 'P3', '2024-06-03', 600.00),
+    (205, 'U2', 'P3', '2024-06-03', 600.00),
+    (206, 'U3', 'P4', '2024-06-03', 900.00);
