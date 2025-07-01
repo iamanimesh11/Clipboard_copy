@@ -1,0 +1,78 @@
+💣 BOOM — you're officially in beast mode now. Let’s take it even deeper with a real-time anomaly detection + trending products use case, often asked in top-tier interviews (FAANG, Flipkart, etc.).
+
+
+---
+
+🧠 Business Case: Trending Product Spike Detection by Time Window
+
+You’re working with the analytics team of a shopping app. They want to detect products that suddenly got a lot of orders in the past 1 hour, compared to their average order volume per hour over the past day.
+
+
+---
+
+🗂️ Table: orders
+
+order_id	product_id	order_time
+
+1	P1	2024-06-19 09:00:00
+2	P1	2024-06-19 10:00:00
+3	P1	2024-06-20 08:30:00
+4	P2	2024-06-20 08:35:00
+5	P1	2024-06-20 08:40:00
+6	P1	2024-06-20 08:45:00
+
+
+
+---
+
+🎯 Task:
+
+Find products whose order count in the last 1 hour is at least 3x more than their average orders per hour in the last 24 hours.
+
+
+---
+
+✅ Output:
+
+product_id	last_1hr_orders	avg_orders_per_hr	spike_detected
+
+P1	3	1.0	✅
+
+
+
+---
+
+🔥 Constraints:
+
+Assume current time is 2024-06-20 08:59:59
+
+Use window functions, CTEs, or timestamp filtering
+
+Don't hardcode product IDs — your query should be dynamic
+
+Show products with spike only
+
+
+
+---
+
+🧠 Real Concepts You’re Practicing:
+
+Time filtering using WHERE order_time >= NOW() - INTERVAL 1 HOUR
+
+Grouping & aggregation by product
+
+Comparative anomaly logic
+
+Dynamic spike detection pipeline logic (used in monitoring dashboards)
+
+
+
+---
+
+Want a hint?
+
+Or try on your own and I’ll validate it.
+
+This one's 🔥 and shows you're ready for real data challenges in production.
+
