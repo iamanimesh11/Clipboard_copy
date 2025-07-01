@@ -98,3 +98,12 @@ from orders_24hr o24
 join orders_1hr o1 
 on o24.product_id=o1.product_id
 where o1.orders_1hr>=3*avgorder_per_hour
+
+
+
++------------+------------+-------------------+
+| product_id | orders_1hr | avgorder_per_hour |
++------------+------------+-------------------+
+| P1         |          3 |            0.2083 |
+| P2         |          1 |            0.0417 |
++------------+------------+-------------------+
