@@ -82,15 +82,16 @@ Bonus: Use a CTE to keep it clean
 
 ---
 
-You’re up, maestro.
-Try solving this — and say the word if you want:
+with cte as (
+ select * ,
+lag(event_time) over (
+partition by user_id,product_id
+order by event_time
+) as previous_add_time
+ from user_events
+ )
+ 
+ select * from cte 
+WHERE TIMESTAMPDIFF(MINUTE, previous_add_time, event_time) <= 30
 
-Just a hint
-
-Code review
-
-Or full breakdown
-
-
-Your move 🧠⚡
 
