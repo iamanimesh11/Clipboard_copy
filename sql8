@@ -76,3 +76,25 @@ Or try on your own and I’ll validate it.
 
 This one's 🔥 and shows you're ready for real data challenges in production.
 
+
+
+
+with orders_1hr as (
+select product_id,
+count(*) as orders_1hr
+from orders where order_time>='2024-06-20 07:59:59'
+group by product_id
+),
+orders_24hr as (
+select product_id,
+count(*) as orders_24hr,
+count(*)/24 as avgorder_per_hour
+from orders
+where order_time between '2024-06-19 08:59:59' and '2024-06-20 08:59:59'
+group by product_id
+)
+select o24.product_id ,o1.orders_1hr,o24.avgorder_per_hour
+from orders_24hr o24 
+join orders_1hr o1 
+on o24.product_id=o1.product_id
+where o1.orders_1hr>=3*avgorder_per_hour
