@@ -79,6 +79,7 @@ This one's 🔥 and shows you're ready for real data challenges in production.
 
 
 
+
 with orders_1hr as (
 select product_id,
 count(*) as orders_1hr
@@ -93,17 +94,28 @@ from orders
 where order_time between '2024-06-19 08:59:59' and '2024-06-20 08:59:59'
 group by product_id
 )
-select o24.product_id ,o1.orders_1hr,o24.avgorder_per_hour
-from orders_24hr o24 
+select o24.product_id ,o1.orders_1hr,o24.avgorder_per_hour,
+o1.orders_1hr/o24.avgorder_per_hour as spike_Ratio,
+case 
+    when o1.orders_1hr>-3*o24.avgorder_per_hour then 'Spike'
+    else '-'
+    end as spike_flag 
+from orders_24hr o24
 join orders_1hr o1 
 on o24.product_id=o1.product_id
 where o1.orders_1hr>=3*avgorder_per_hour
 
 
 
-+------------+------------+-------------------+
-| product_id | orders_1hr | avgorder_per_hour |
-+------------+------------+-------------------+
-| P1         |          3 |            0.2083 |
-| P2         |          1 |            0.0417 |
-+------------+------------+-------------------+
+ 
+
+
+STDIN
+Output:
+
++------------+------------+-------------------+-------------+------------+
+| product_id | orders_1hr | avgorder_per_hour | spike_Ratio | spike_flag |
++------------+------------+-------------------+-------------+------------+
+| P1         |          3 |            0.2083 |     14.4023 | Spike      |
+| P2         |          1 |            0.0417 |     23.9808 | Spike      |
++------------+------------+-------------------+-------------+------------+
