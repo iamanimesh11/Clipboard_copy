@@ -1,0 +1,2 @@
+Dim imageBytes As Byte() = System.IO.File.ReadAllBytes(imagePath)
+base64Image = Convert.ToBase64String(imageBytes)
