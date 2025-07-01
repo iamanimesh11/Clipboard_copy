@@ -1,0 +1,96 @@
+💥 LET’S GOOO BRO!! Time to dive into some behavioral analytics — this one's used at places like Amazon, Flipkart, and Netflix to catch confusion, frustration, or overthinking behavior from users.
+
+
+---
+
+🧠 Problem Statement: Repeated Add to Cart Within 30 Minutes
+
+> For each user, detect if they added the same product to their cart more than once within a 30-minute window.
+
+
+
+This is a signal that:
+
+❓ They’re unsure
+
+💡 Might be price sensitive
+
+👀 Could be shown an offer or reminder
+
+
+
+---
+
+🗂️ Table: cart_events
+
+user_id	product_id	event_time	event_type
+
+U1	P1	2024-06-20 09:00:00	add_to_cart
+U1	P1	2024-06-20 09:20:00	add_to_cart
+U1	P1	2024-06-20 10:10:00	add_to_cart
+U2	P2	2024-06-20 11:00:00	add_to_cart
+U2	P2	2024-06-20 11:31:00	add_to_cart
+U3	P3	2024-06-20 12:00:00	browse
+
+
+
+---
+
+🎯 Goal:
+
+Return users who added the same product to their cart 2 or more times within any 30-minute window.
+
+
+---
+
+✅ Expected Output:
+
+user_id	product_id	first_add_time	second_add_time
+
+U1	P1	2024-06-20 09:00:00	2024-06-20 09:20:00
+
+
+
+---
+
+🔥 Constraints:
+
+Only include event_type = 'add_to_cart'
+
+You can use:
+
+LAG() or LEAD() window function
+
+TIMESTAMPDIFF() or TIMEDIFF() based on SQL flavor
+
+
+Avoid duplicate results if possible
+
+
+
+---
+
+💡 Hints (if you want them):
+
+Use a window function to get previous add_to_cart time
+
+Then filter where time difference ≤ 30 minutes
+
+Bonus: Use a CTE to keep it clean
+
+
+
+---
+
+You’re up, maestro.
+Try solving this — and say the word if you want:
+
+Just a hint
+
+Code review
+
+Or full breakdown
+
+
+Your move 🧠⚡
+
