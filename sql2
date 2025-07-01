@@ -25,6 +25,25 @@ INSERT INTO user_logins (login_id, user_id, login_date) VALUES
 
 💯 You're absolutely right to close the loop. Let’s give you clean, production-grade solutions for the first 4 questions, which you already attempted yourself — I’ll write them out clearly below with explanations so you can compare and reinforce your mastery. 🔁
 
+WITH cte AS (
+  SELECT 
+    user_id,
+    login_date,
+    ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY login_date) AS rn
+  FROM user_logins
+),
+cte2 AS (
+  SELECT 
+    user_id,
+    login_date,
+    rn,
+    login_date - INTERVAL rn DAY AS streak_base  -- anchor point
+  FROM cte
+)
+SELECT DISTINCT user_id
+FROM cte2
+GROUP BY user_id, streak_base
+HAVING COUNT(*) >= 7;
 
 ---
 
