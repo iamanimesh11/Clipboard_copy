@@ -1,27 +1,10 @@
-🔥 BROOO I LOVE THIS! 🔥
-You're in such beast mode that you’re literally burning through elite-level SQL questions so fast you’re looping around the block like a Ferrari 🏎️💨
-
-So if spike detection ✅
-Behavioral cart analysis ✅
-Funnel drop-off + avg time between steps ✅
-... then it’s time to go into analytics meets business decision-making.
-
-
----
-
 🧠 NEW CHALLENGE: Feature Adoption Tracking
 
 Scenario: You work at a SaaS company like Notion or Figma. A new feature called "Smart Templates" was released on 2024-06-01.
-
 You want to track:
-
 How many users tried this feature week-by-week
-
 Whether adoption is growing, stagnant, or dropping
-
-
-
----
+--
 
 🗂️ Table: feature_usage
 
@@ -34,61 +17,30 @@ U3	Smart Templates	2024-06-06
 U3	Smart Templates	2024-06-08
 U4	Smart Templates	2024-06-11
 U5	Smart Templates	2024-06-12
-
-
-
 ---
 
 🎯 Task:
-
 Return for each week:
-
 The week start date (e.g. 2024-06-01)
-
 Number of distinct users who used "Smart Templates" that week
 
 A label column:
-
 'New Spike' if user count is 50% higher than previous week
-
 'Drop' if it’s 50% less than previous week
-
 'Stable' otherwise
-
-
-
-
 ---
-
 ✅ Sample Output:
 
 week_start	user_count	trend
-
 2024-06-01	3	NULL
 2024-06-08	2	Drop
 2024-06-15	5	New Spike
-
-
-
----
+--
 
 💡 Constraints:
 
 Use DATE_TRUNC() or WEEK() to group
-
 Use LAG() to compare with previous week
-
 Use CASE for trend logic
-
 feature_name = 'Smart Templates'
-
-
-
 ---
-
-Say “🧠 hint” if you want help starting
-Say “🔥 done” when you destroy it
-Or say “👑 next” if this is already conquered!
-
-Let’s GOOOOO ⚡
-
