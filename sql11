@@ -41,64 +41,68 @@ You're working for an **ed-tech platform**. Users must follow this funnel to com
 * Output should be 1 row per dropped user
 
 
-answer:
+✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅ Answer:
 
-with arranged_event_type as (SELECT * ,
-row_number() over (
-partition by user_id
-order by field(event_type,"start_course","complete_video","quiz_start","quiz_submit")) as priority_rank ,
-lag(event_time) over(
-partition by user_id
-order  by event_time)
-as et,
-coalesce(timestampdiff(minute,lag(event_time) over(
-partition by user_id
-order  by event_time),event_time),0)
-as time_diff 
-from user_events
-)
 
-,max_Avg_cte as  ( SELECT *,
+
+with arranged_event_type as (
+       SELECT * ,
+            row_number() over (
+                  partition by user_id
+                  order by field(event_type,"start_course","complete_video","quiz_start","quiz_submit")) as priority_rank ,
+              lag(event_time) over(
+                  partition by user_id
+                  order  by event_time
+                  ) as previous_Event_time,
+              coalesce(timestampdiff(minute,
+                                  lag(event_time) over(
+                                    partition by user_id
+                                    order  by event_time),event_time)
+                      ,0)
+                      as time_diff 
+                                  from user_events
+                )
+
+,max_Avg_cte as  (
+      SELECT *,
                 max(priority_rank) over (
-                partition by user_id
-                ) as m,
+                  partition by user_id
+                ) as max_Step,
                 avg(time_diff) over (
-                partition by user_id) as avg_time_between_each_stem
-                from arranged_event_type
-              )
-,excluding_4_Cte as (
-      select distinct user_id ,m  ,avg_time_between_each_stem
+                  partition by user_id) as avg_time_between_each_step
+          from arranged_event_type
+      )
+,user_Status_cte as (
+      select distinct user_id ,max_Step  ,avg_time_between_each_step
       from max_Avg_cte
-      where m!=4
       )
 -- question 1 .
-,user_missed_step as (
-select user_id ,
-case m
-when 3 then "quiz_start"
-when 2 then "complete_video"
-when 1 then "start_course"
-end  
-as last_step ,
-case m
-when 3 then "missing quiz_submit"
-when 2 then "missing quiz_start"
-when 1 then "missing complete_video"
-end  
-as next_missing_step,
-avg_time_between_each_stem
-from excluding_4_Cte
+,user_funnel_summary as (
+select 
+  user_id ,
+  case max_Step
+    when 4 then "Completed"
+    when 3 then "Dropeed after quiz_Start"
+    when 2 then "stuck after complete_video"
+    when 1 then "stuck after start_course"
+    else 'No Progress'
+    end  
+    as funnel_Status ,
+  case max_Step
+    when 3 then "quiz_start"
+    when 2 then "complete_video"
+    when 1 then "start_course"
+    else NULL 
+    end  
+    as last_Step ,
+  case max_Step
+    when 3 then "missing quiz_submit"
+    when 2 then "missing quiz_start"
+    when 1 then "missing complete_video"
+    end  
+    as next_missing_step,
+  avg_time_between_each_step
+from user_Status_cte
 )
 
-,category as (
-select distinct user_id,
-    CASE 
-    WHEN (SELECT DISTINCT sub.m FROM max_Avg_cte AS sub WHERE sub.user_id = m.user_id AND sub.m = 4) IS NOT NULL THEN 'Completed'
-    WHEN (SELECT DISTINCT sub.m FROM max_Avg_cte AS sub WHERE sub.user_id = m.user_id AND sub.m = 2) IS NOT NULL THEN 'stuck after completed video'
-    WHEN (SELECT DISTINCT sub.m FROM max_Avg_cte AS sub WHERE sub.user_id = m.user_id AND sub.m= 3) IS NOT NULL THEN ' droppped after quiz start '
-
-    END AS result
- 
-from max_Avg_cte m 
-)
-select * from category 
+select * from user_funnel_summary 
