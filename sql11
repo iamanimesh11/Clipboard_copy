@@ -95,7 +95,7 @@ select distinct user_id,
     CASE 
     WHEN (SELECT DISTINCT sub.m FROM max_Avg_cte AS sub WHERE sub.user_id = m.user_id AND sub.m = 4) IS NOT NULL THEN 'Completed'
     WHEN (SELECT DISTINCT sub.m FROM max_Avg_cte AS sub WHERE sub.user_id = m.user_id AND sub.m = 2) IS NOT NULL THEN 'stuck after completed video'
-    WHEN (SELECT DISTINCT sub.m FROM max_Avg_cte AS sub WHERE sub.user_id = m.user_id AND sub.m != 4) IS NOT NULL THEN ' after completed video'
+    WHEN (SELECT DISTINCT sub.m FROM max_Avg_cte AS sub WHERE sub.user_id = m.user_id AND sub.m= 3) IS NOT NULL THEN ' droppped after quiz start '
 
     END AS result
  
