@@ -1,0 +1,83 @@
+## 🧠 Problem: **User Conversion Funnel Drop-off Reason**
+You're working for an **ed-tech platform**. Users must follow this funnel to complete a course:
+```
+1. start_course  
+2. complete_video  
+3. quiz_start  
+4. quiz_submit
+``'
+---
+## 🗂️ Table: `course_events`
+
+| user\_id | event\_type     | event\_time         |
+| -------- | --------------- | ------------------- |
+| U1       | start\_course   | 2024-06-20 08:00:00 |
+| U1       | complete\_video | 2024-06-20 08:15:00 |
+| U1       | quiz\_start     | 2024-06-20 08:20:00 |
+| U1       | quiz\_submit    | 2024-06-20 08:25:00 |
+| U2       | start\_course   | 2024-06-20 08:30:00 |
+| U2       | quiz\_start     | 2024-06-20 08:45:00 |
+| U3       | complete\_video | 2024-06-20 09:00:00 |
+| U3       | quiz\_start     | 2024-06-20 09:10:00 |
+---
+
+## 🎯 Task:
+**For every user who did *not* complete the funnel**, return:
+* `user_id`
+* The **last step they reached**
+* The **next step they missed** (i.e. the reason they dropped)
+---
+### ✅ Expected Output:
+
+| user\_id | last\_step  | next\_missing\_step |
+| -------- | ----------- | ------------------- |
+| U2       | quiz\_start | quiz\_submit        |
+| U3       | quiz\_start | quiz\_submit        |
+---
+
+### ⚠️ Constraints:
+
+* Users who reached **all 4 steps** should be **excluded**
+* Output should be 1 row per dropped user
+
+
+answer:
+
+
+with arranged_event_type as (SELECT * ,
+row_number() over (
+partition by user_id
+order by field(event_type,"start_course","complete_video","quiz_start",
+"quiz_submit")
+) as priority_rank 
+from user_events
+)
+
+,maximum as  (SELECT *,
+max(priority_rank) over (
+partition by user_id
+) as ma
+from arranged_event_type
+)
+,f as (
+select distinct user_id ,ma  
+from maximum
+where ma!=4
+)
+
+select user_id ,
+case ma 
+when 3 then "quiz_start"
+when 2 then "complete_video"
+when 1 then "start_course"
+end  
+as last_step ,
+case ma 
+when 3 then "missing quiz_submit"
+when 2 then "missing quiz_start"
+when 1 then "missing complete_video"
+end  
+as next_missing_step
+from f 
+
+---
