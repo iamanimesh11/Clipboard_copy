@@ -1,16 +1,51 @@
--- Create the students table
-CREATE TABLE nums (
-    id INT PRIMARY KEY AUTO_INCREMENT, -- id as the primary key, auto-incremented
-    val VARCHAR(255) NOT NULL -- student name (variable length string, not null)
-);
+The issue you're encountering—getting the last value as null—is due to how the LEFT JOIN works in your swapped_pairs CTE. Let me explain and show how to fix it.
 
--- Insert sample data
-INSERT INTO nums (val) VALUES
-('Alice'),
-('Bob'),
-('Charlie'),
-('David'),
-('Eve');
+
+---
+
+🔍 Problem Breakdown
+
+In your dataset:
+
+id	val
+
+1	Alice
+2	Bob
+3	Charlie
+4	David
+5	Eve
+
+
+You want to swap every pair of adjacent rows, i.e.:
+
+Alice ↔ Bob
+
+Charlie ↔ David
+
+Eve ↔ ???
+
+
+But Eve has no partner (no even-numbered row after her). Your LEFT JOIN includes her in the swapped_pairs, but val1 (even row value) becomes NULL.
+
+So this results in:
+
+id	val
+
+1	Bob
+2	Alice
+3	David
+4	Charlie
+5	NULL
+
+
+
+---
+
+✅ Fix
+
+To handle the unpaired last row properly, we need to union in any unmatched rows from the odd_rows that didn’t get a match.
+
+Here's a revised version of your query:
 
 WITH numbered AS (
   SELECT
@@ -35,10 +70,35 @@ swapped_pairs AS (
   LEFT JOIN even_rows e ON o.rn + 1 = e.rn
 ),
 flattened AS (
-  SELECT id1 AS id, val1 AS val FROM swapped_pairs
+  SELECT id1 AS id, val1 AS val FROM swapped_pairs WHERE val1 IS NOT NULL
   UNION ALL
-  SELECT id2 AS id, val2 AS val FROM swapped_pairs WHERE id2 IS NOT NULL
+  SELECT id2 AS id, val2 AS val FROM swapped_pairs
+  UNION ALL
+  -- Handle unmatched last odd row (e.g., 'Eve')
+  SELECT id1 AS id, val2 AS val FROM swapped_pairs WHERE val1 IS NULL
 )
 SELECT id, val
 FROM flattened
 ORDER BY id;
+
+
+---
+
+✅ Output
+
+With this fix, the output will be:
+
+id	val
+
+1	Bob
+2	Alice
+3	David
+4	Charlie
+5	Eve
+
+
+
+---
+
+Let me know if you want to generalize this to other column types or more complex pairing!
+
