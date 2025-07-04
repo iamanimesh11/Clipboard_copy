@@ -1,115 +1,16 @@
-Perfect — let’s break it down step by step using multiple CTEs, so it’s easier to follow.
+-- Create the students table
+CREATE TABLE nums (
+    id INT PRIMARY KEY AUTO_INCREMENT, -- id as the primary key, auto-incremented
+    val VARCHAR(255) NOT NULL -- student name (variable length string, not null)
+);
 
-
----
-
-🎯 Goal Reminder
-
-We want to swap every two rows in a SELECT, based on a specific order (e.g., id ascending).
-
-
----
-
-🧱 Step-by-Step Using CTEs
-
-✅ Step 1: Add Row Numbers for Ordering
-
-WITH numbered AS (
-  SELECT
-    id,
-    val,
-    ROW_NUMBER() OVER (ORDER BY id) AS rn
-  FROM nums
-)
-
-This assigns a ROW_NUMBER() to each row. So if your table is:
-
-id	val
-
-1	10
-2	20
-3	30
-4	40
-5	50
-
-
-You now get:
-
-id	val	rn
-
-1	10	1
-2	20	2
-3	30	3
-4	40	4
-5	50	5
-
-
-
----
-
-✅ Step 2: Create CTEs for Odd and Even Rows
-
-Split the rows by their row number parity:
-
-, odd_rows AS (
-  SELECT rn, id, val FROM numbered WHERE MOD(rn, 2) = 1
-),
-even_rows AS (
-  SELECT rn, id, val FROM numbered WHERE MOD(rn, 2) = 0
-)
-
-
----
-
-✅ Step 3: Swap Values by Joining Odd and Even Rows
-
-Now match each odd row with the next even row (and vice versa):
-
-, swapped_pairs AS (
-  SELECT
-    o.id AS id1,
-    e.val AS val1,
-    e.id AS id2,
-    o.val AS val2
-  FROM odd_rows o
-  LEFT JOIN even_rows e ON o.rn + 1 = e.rn
-)
-
-Now you'll get something like:
-
-id1	val1	id2	val2
-
-1	20	2	10
-3	40	4	30
-5	NULL	NULL	50
-
-
-
----
-
-✅ Step 4: Flatten Back Into Rows
-
-Now combine these into a single row list with swapped values:
-
-, flattened AS (
-  SELECT id1 AS id, val1 AS val FROM swapped_pairs
-  UNION ALL
-  SELECT id2 AS id, val2 AS val FROM swapped_pairs WHERE id2 IS NOT NULL
-)
-
-
----
-
-✅ Final SELECT
-
-SELECT id, val
-FROM flattened
-ORDER BY id;
-
-
----
-
-🧩 Full Query Together
+-- Insert sample data
+INSERT INTO nums (val) VALUES
+('Alice'),
+('Bob'),
+('Charlie'),
+('David'),
+('Eve');
 
 WITH numbered AS (
   SELECT
@@ -141,9 +42,3 @@ flattened AS (
 SELECT id, val
 FROM flattened
 ORDER BY id;
-
-
----
-
-Let me know if you want to sort by something other than id, or swap more than two at a time (e.g., every 3 rows).
-
