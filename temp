@@ -1,5 +1,71 @@
-=IFERROR(
-   IF(ISNUMBER(VLOOKUP(A6, INDIRECT("'AU wise shot'!A:C"), 3, 0)),
-      VLOOKUP(A6, INDIRECT("'AU wise shot'!A:C"), 3, 0),
-      0),
-   "")
+Dim sb As New System.Text.StringBuilder()
+
+' Start table with class
+sb.Append("<table class='custom-table'>")
+
+' Add table headers with conditional formatting
+sb.Append("<tr class='header-row'>")
+For Each col As System.Data.DataColumn In dtData.Columns
+    Dim headerText As String = col.ColumnName
+    Dim headerClass As String = ""
+	    Dim headerTextLower As String = headerText.ToLower() ' Convert to lowercase once for efficiency
+
+
+  ' Check the conditions for coloring
+    If headerTextLower.Contains("yellow")
+        headerClass = "header-yellow"
+   	ElseIf  headerTextLower.Contains("red") Then
+        headerClass = "header-red"
+    Else
+        headerClass = "header-grey"
+    End If
+
+    sb.Append("<th class='" & headerClass & "'>" & headerText & "</th>")
+Next
+sb.Append("</tr>")
+
+' Add table rows with alternating colors and conditional formatting for Status
+Dim rowIndex As Integer = 0
+
+For Each row As DataRow In dtData.Rows
+    Dim rowClass As String = If(rowIndex Mod 2 = 0, "even-row", "odd-row")
+    sb.Append("<tr class='" & rowClass & "'>")
+
+    For Each col As System.Data.DataColumn In dtData.Columns
+        Dim cellValue As String = row(col.ColumnName).ToString()
+        Dim cellClass As String = ""
+
+        ' Apply class if the column is 'Status'
+        If col.ColumnName.ToLower() = "status" Then
+            cellClass = If(cellValue.ToLower() = "success", "status-success", "status-failed")
+        End If
+
+        ' Apply class if the column is 'topic'
+        If col.ColumnName.ToLower() = "topic" Then
+            cellClass &= " topic-column" ' Append the new class
+        End If
+		' Apply conditional formatting for '% Preventive Maintenance Delay Ratio Target: 0%' column
+        If col.ColumnName.contains("Guarantee") or col.ColumnName.contains("Maintenance")Then
+            ' Attempt to parse the cell value as a decimal
+            Dim percentageValue As Decimal
+            ' Remove "%" and any leading/trailing whitespace before parsing
+            Dim cleanedCellValue As String = cellValue
+
+            If cleanedCellValue.contains("RED") Then
+                    cellClass &= " cell-red " ' Apply red background class
+			ElseIf  cleanedCellValue.contains("YELLOW") Then
+                    cellClass &= " cell-yellow " ' Apply red background class
+              
+            Else
+
+            End If
+        End If
+        sb.Append("<td class='" & cellClass & "'>" & cellValue & "</td>")
+    Next
+
+    sb.Append("</tr>")
+    rowIndex += 1
+Next
+
+sb.Append("</table>")
+htmlTable = sb.ToString()
