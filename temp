@@ -1,2 +1,5 @@
-
-=IFERROR(IF(VLOOKUP(A6,INDIRECT("'AU wise shot'!A:C"),3,0) = "-", 0, VLOOKUP(A6,INDIRECT("'AU wise shot'!A:C"),3,0)), "")
+=IFERROR(
+   IF(ISNUMBER(VLOOKUP(A6, INDIRECT("'AU wise shot'!A:C"), 3, 0)),
+      VLOOKUP(A6, INDIRECT("'AU wise shot'!A:C"), 3, 0),
+      0),
+   "")
