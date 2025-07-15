@@ -1,92 +1,34 @@
-from pyspark.sql.types import StringType
-from pyspark.sql.functions import col, when
-
-for col_name in df.columns:
-    if isinstance(df.schema[col_name].dataType, StringType):
-        print(f"{col_name}: ❗ string — checking if it should be numeric")
-
-        # Try to clean & cast (you can skip some columns manually if needed)
-        df = df.withColumn(
-            col_name,
-            when(col(col_name).isin("NA", "NaN", ""), None)
-            .otherwise(col(col_name))
-            .cast("double")
-        )
-        print(f"{col_name}: ✅ Type of {col_name} is now {df.schema[col_name].dataType} ")
-    else:
-        print(f"{col_name}: ✅ already numeric or not target for conversion")
-
-Year: ✅ already numeric or not target for conversion
-Month: ✅ already numeric or not target for conversion
-DayofMonth: ✅ already numeric or not target for conversion
-DayOfWeek: ✅ already numeric or not target for conversion
-DepTime: ❗ string — checking if it should be numeric
-DepTime: ✅ Type of DepTime is now DoubleType() 
-CRSDepTime: ✅ already numeric or not target for conversion
-ArrTime: ❗ string — checking if it should be numeric
-ArrTime: ✅ Type of ArrTime is now DoubleType() 
-CRSArrTime: ✅ already numeric or not target for conversion
-UniqueCarrier: ❗ string — checking if it should be numeric
-UniqueCarrier: ✅ Type of UniqueCarrier is now DoubleType() 
-FlightNum: ✅ already numeric or not target for conversion
-TailNum: ❗ string — checking if it should be numeric
-TailNum: ✅ Type of TailNum is now DoubleType() 
-ActualElapsedTime: ❗ string — checking if it should be numeric
-ActualElapsedTime: ✅ Type of ActualElapsedTime is now DoubleType() 
-CRSElapsedTime: ✅ already numeric or not target for conversion
-AirTime: ❗ string — checking if it should be numeric
-AirTime: ✅ Type of AirTime is now DoubleType() 
-ArrDelay: ❗ string — checking if it should be numeric
-ArrDelay: ✅ Type of ArrDelay is now DoubleType() 
-DepDelay: ❗ string — checking if it should be numeric
-DepDelay: ✅ Type of DepDelay is now DoubleType() 
-Origin: ❗ string — checking if it should be numeric
-Origin: ✅ Type of Origin is now DoubleType() 
-Dest: ❗ string — checking if it should be numeric
-Dest: ✅ Type of Dest is now DoubleType() 
-Distance: ❗ string — checking if it should be numeric
-Distance: ✅ Type of Distance is now DoubleType() 
-TaxiIn: ❗ string — checking if it should be numeric
-TaxiIn: ✅ Type of TaxiIn is now DoubleType() 
-TaxiOut: ❗ string — checking if it should be numeric
-TaxiOut: ✅ Type of TaxiOut is now DoubleType() 
-Cancelled: ✅ already numeric or not target for conversion
-CancellationCode: ❗ string — checking if it should be numeric
-CancellationCode: ✅ Type of CancellationCode is now DoubleType() 
-Diverted: ✅ already numeric or not target for conversion
-CarrierDelay: ❗ string — checking if it should be numeric
-CarrierDelay: ✅ Type of CarrierDelay is now DoubleType() 
-WeatherDelay: ❗ string — checking if it should be numeric
-WeatherDelay: ✅ Type of WeatherDelay is now DoubleType() 
-NASDelay: ❗ string — checking if it should be numeric
-NASDelay: ✅ Type of NASDelay is now DoubleType() 
-SecurityDelay: ❗ string — checking if it should be numeric
-SecurityDelay: ✅ Type of SecurityDelay is now DoubleType() 
-LateAircraftDelay: ❗ string — checking if it should be numeric
-LateAircraftDelay: ✅ Type of LateAircraftDelay is now DoubleType() 
-IsArrDelayed: ❗ string — checking if it should be numeric
-IsArrDelayed: ✅ Type of IsArrDelayed is now DoubleType() 
-IsDepDelayed: ❗ string — checking if it should be numeric
-IsDepDelayed: ✅ Type of IsDepDelayed is now DoubleType() 
-Arrdelay_cleaned: ✅ already numeric or not target for conversion
-
-
-
 from pyspark.sql.functions import col, isnan, when, count
-from pyspark.sql.types import NumericType
+from pyspark.sql.types import StringType
 
-null_counts = []
-
-for column in df.columns:
-    if isinstance(df.schema[column].dataType, NumericType):
-        null_expr = count(when(col(column).isNull() | isnan(column), column)).alias(column)
-    else:
-        null_expr = count(when(col(column).isNull(), column)).alias(column)
+def is_column_Safe_To_cast(df,col_name):
+    if not isinstance(df.schema[col_name].dataType,StringType):
+        return False
     
-    null_counts.append(null_expr)
+    #cldan temp column treat 'NA' ,"NAN","" as null
+    clean_col=when(
+                col(col_name).isin("NA","NaN",""),
+                None
+                ).otherwise(col(col_name))
+    
+    #count non null entreis before cating after cleaning 
+    total_valid_before=df.withColumn("temp_cleaned",clean_col).filter(col("temp_cleaned").isNotNull()).count()
+    print(f"total_Valid_bfroe {col_name} is {total_valid_before}")
+    #cast the column
+    try:
+        casted_col=clean_col.cast("double")
+        total_valid_after= df.withColumn("temp_Casted",casted_col).filter(col("temp_Casted").isNotNull()).count()
 
-display(df.select(null_counts))
-[CAST_INVALID_INPUT] The value 'NW' of the type "STRING" cannot be cast to "DOUBLE" because it is malformed. Correct the value as per the syntax, or change its target type. Use `try_cast` to tolerate malformed input and return NULL instead. SQLSTATE: 22018
+    except Exception as e:
+        print(f"error casting {col_name} to double:")
+        return False
+    
+    return total_valid_after >= 0.95 *total_valid_before
 
 
-
+safe_numeric_col=[]
+for col_name in df.columns:
+    if is_column_Safe_To_cast(df,col_name):
+        print(col_name)
+        safe_numeric_col.append(col_name)
+print("columns safely castable to double: ",safe_numeric_col)
