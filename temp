@@ -1,28 +1,13 @@
-' Apply conditional formatting for '% Preventive Maintenance Delay Ratio Target: 0%' column
-        If col.ColumnName.contains("Preventive Ratio") Then
-            ' Attempt to parse the cell value as a decimal
-            Dim percentageValue As Decimal
-            ' Remove "%" and any leading/trailing whitespace before parsing
-            Dim cleanedCellValue As String = cellValue.Replace("%", "").Trim()
+\resumeItemListStart
+  \resumeItem{Architected and deployed a fully containerized, horizontally scalable \textbf{real-time IoT telemetry pipeline} simulating 10M+ smart appliances (e.g., Refrigerator, Washing Machine, TV), inspired by LG ThinQ's microservice architecture.}
 
-            If Decimal.TryParse(cleanedCellValue, percentageValue) Then
-                If percentageValue > 0.0D Then
-                    cellClass &= " cell-yellow  cell-center" 
-               
-                End If
-            Else
-				
-                ' Handle cases where the cell value isn't a valid number (e.g., set a default class or log an error)
-                ' For now, we'll just not apply any specific color class if parsing fails
-            End If
-			cellClass &= "cell-center" ' Apply red background class
-        End If
-		If isnumeric(cellValue) Then
- cellClass &= "cell-center " ' Apply red background class
-End If        
-        sb.Append("<td class='" & cellClass & "'>" & cellValue & "</td>")
-    Next
+  \resumeItem{Built a lightweight, fault-tolerant \textbf{MQTT → Kafka ingestion bridge} achieving sub-100ms end-to-end latency, powering high-throughput event streaming and near real-time responsiveness.}
 
-    sb.Append("</tr>")
-    rowIndex += 1
-Next
+  \resumeItem{Developed a high-throughput distributed data processing layer using \textbf{PySpark Structured Streaming} to perform real-time ETL and feature computation on Kafka streams ingesting \textbf{10M+ IoT device events}, enabling scalable analytics and anomaly detection with sub-second latency SLAs.}
+
+  \resumeItem{Implemented \textbf{dynamic service orchestration} with Docker Compose and health-aware auto-provisioning per device type, reducing resource waste and achieving \textbf{95\%+ infrastructure efficiency}.}
+
+  \resumeItem{Established centralized observability with Fluent Bit, Prometheus, and Grafana, integrating real-time Discord alerts to improve MTTR and increase system visibility by \textbf{85\%}.}
+
+  \resumeItem{Designed modular PostgreSQL schemas to support multi-tenant device provisioning, authentication, and customer lifecycle management, ensuring \textbf{horizontal scalability and strong data isolation}.}
+\resumeItemListEnd
