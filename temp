@@ -1,34 +1,98 @@
-from pyspark.sql.functions import col, isnan, when, count
-from pyspark.sql.types import StringType
+Dim sb As New System.Text.StringBuilder()
 
-def is_column_Safe_To_cast(df,col_name):
-    if not isinstance(df.schema[col_name].dataType,StringType):
-        return False
-    
-    #cldan temp column treat 'NA' ,"NAN","" as null
-    clean_col=when(
-                col(col_name).isin("NA","NaN",""),
-                None
-                ).otherwise(col(col_name))
-    
-    #count non null entreis before cating after cleaning 
-    total_valid_before=df.withColumn("temp_cleaned",clean_col).filter(col("temp_cleaned").isNotNull()).count()
-    print(f"total_Valid_bfroe {col_name} is {total_valid_before}")
-    #cast the column
-    try:
-        casted_col=clean_col.cast("double")
-        total_valid_after= df.withColumn("temp_Casted",casted_col).filter(col("temp_Casted").isNotNull()).count()
+' Start table with class
+sb.Append("<table class='custom-table'>")
 
-    except Exception as e:
-        print(f"error casting {col_name} to double:")
-        return False
-    
-    return total_valid_after >= 0.95 *total_valid_before
+' Add table headers with conditional formatting
+Dim headerClassMap As New Dictionary(Of String, String)() ' Stores the header class for each column by name
+
+sb.Append("<tr class='header-row'>")
+For Each col As System.Data.DataColumn In dtData.Columns
+    Dim headerText As String = col.ColumnName
+    Dim headerClass As String = ""
+	Dim headerTextLower As String = headerText.ToLower() ' Convert to lowercase once for efficiency
 
 
-safe_numeric_col=[]
-for col_name in df.columns:
-    if is_column_Safe_To_cast(df,col_name):
-        print(col_name)
-        safe_numeric_col.append(col_name)
-print("columns safely castable to double: ",safe_numeric_col)
+  ' Check the conditions for coloring
+    If headerTextLower.Contains("full") AndAlso  headerTextLower.Contains("pm") AndAlso  headerTextLower.Contains("plan") Then
+        headerClass = "header-yellow"
+    ElseIf headerTextLower.Contains("light") AndAlso  headerTextLower.Contains("pm")  AndAlso  headerTextLower.Contains("plan") AndAlso  not headerTextLower.Contains("red")  Then
+		        headerClass = "header-yellow"
+
+	ElseIf  headerTextLower.Contains("red") Then
+        headerClass = "header-red"
+    ElseIf headerTextLower.Contains("lg support manager") Then
+        headerClass = "header-yellow"
+    Else
+        headerClass = "header-grey"
+    End If
+
+    sb.Append("<th class='" & headerClass & "'>" & headerText & "</th>")
+	headerClasses.Add(headerClass) ' Store the header class for later use
+
+Next
+sb.Append("</tr>")
+
+' Add table rows with alternating colors and conditional formatting for Status
+Dim rowIndex As Integer = 0
+
+For Each row As DataRow In dtData.Rows
+    Dim rowClass As String = If(rowIndex Mod 2 = 0, "even-row", "odd-row")
+    sb.Append("<tr class='" & rowClass & "'>")
+
+    For Each col As System.Data.DataColumn In dtData.Columns
+        Dim cellValue As String = row(col.ColumnName).ToString()
+        Dim cellClass As String = ""
+
+        ' Apply class if the column is 'Status'
+' Apply yellow font color if the header was yellow using the column name
+        If headerClassMap.ContainsKey(col.ColumnName) AndAlso headerClassMap(col.ColumnName) = "header-yellow" Then
+            cellClass &= " cell-yellow-text" ' Add a class to apply yellow font color
+        End If
+		' Apply conditional formatting for '% Preventive Maintenance Delay Ratio Target: 0%' column
+        If col.ColumnName.contains("Maintenance") Then
+            ' Attempt to parse the cell value as a decimal
+            Dim percentageValue As Decimal
+            ' Remove "%" and any leading/trailing whitespace before parsing
+            Dim cleanedCellValue As String = cellValue.Replace("%", "").Trim()
+
+            If Decimal.TryParse(cleanedCellValue, percentageValue) Then
+                If percentageValue > 0.0D Then
+                    cellClass &= " cell-red cell-white-text cell-center" ' Apply red background class
+                Else
+                    cellClass &= " cell-green cell-white-text cell-center" ' Apply green background class
+                End If
+            Else
+                ' Handle cases where the cell value isn't a valid number (e.g., set a default class or log an error)
+                ' For now, we'll just not apply any specific color class if parsing fails
+            End If
+        End If
+		  If col.ColumnName.contains("Shot Input Ratio") Then
+            ' Attempt to parse the cell value as a decimal
+            Dim percentageValue As Decimal
+            ' Remove "%" and any leading/trailing whitespace before parsing
+            Dim cleanedCellValue As String = cellValue.Replace("%", "").Trim()
+
+            If Decimal.TryParse(cleanedCellValue, percentageValue) Then
+                If percentageValue < 100.0D Then
+                    cellClass &= " cell-red cell-white-text cell-center" ' Apply red background class
+                Else
+                    cellClass &= " cell-green cell-white-text cell-center" ' Apply green background class
+                End If
+            Else
+                ' Handle cases where the cell value isn't a valid number (e.g., set a default class or log an error)
+                ' For now, we'll just not apply any specific color class if parsing fails
+            End If
+        End If
+		If isnumeric(cellValue) Then
+ cellClass &= "cell-center " ' Apply red background class
+End If        
+        sb.Append("<td class='" & cellClass & "'>" & cellValue & "</td>")
+    Next
+
+    sb.Append("</tr>")
+    rowIndex += 1
+Next
+
+sb.Append("</table>")
+htmlTable = sb.ToString()
