@@ -1,9 +1,1 @@
-\resumeItemListStart
-  \resumeItem{Architected a fully containerized, horizontally scalable \textbf{real-time IoT telemetry pipeline} simulating 10M+ smart appliances, inspired by LG ThinQ's microservice architecture.}
-  
-  \resumeItem{Built a fault-tolerant \textbf{MQTT → Kafka ingestion bridge} with sub-100ms latency and implemented \textbf{PySpark Structured Streaming} for real-time ETL and anomaly detection.}
-  
-  \resumeItem{Orchestrated services with Docker Compose and dynamic provisioning, achieving \textbf{95\%+ infra efficiency} and streamlined device-type scalability.}
-  
-  \resumeItem{Enabled centralized observability with Fluent Bit, Prometheus, Grafana, and Discord alerts, reducing MTTR and boosting system visibility by \textbf{85\%}.}
-\resumeItemListEnd
+https://drive.google.com/file/d/1iTWQ7jEJHK1ULzh1OKbzuumFuYjKUmq1/view?usp=drivesdk
