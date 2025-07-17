@@ -1,13 +1,9 @@
 \resumeItemListStart
-  \resumeItem{Architected and deployed a fully containerized, horizontally scalable \textbf{real-time IoT telemetry pipeline} simulating 10M+ smart appliances (e.g., Refrigerator, Washing Machine, TV), inspired by LG ThinQ's microservice architecture.}
-
-  \resumeItem{Built a lightweight, fault-tolerant \textbf{MQTT → Kafka ingestion bridge} achieving sub-100ms end-to-end latency, powering high-throughput event streaming and near real-time responsiveness.}
-
-  \resumeItem{Developed a high-throughput distributed data processing layer using \textbf{PySpark Structured Streaming} to perform real-time ETL and feature computation on Kafka streams ingesting \textbf{10M+ IoT device events}, enabling scalable analytics and anomaly detection with sub-second latency SLAs.}
-
-  \resumeItem{Implemented \textbf{dynamic service orchestration} with Docker Compose and health-aware auto-provisioning per device type, reducing resource waste and achieving \textbf{95\%+ infrastructure efficiency}.}
-
-  \resumeItem{Established centralized observability with Fluent Bit, Prometheus, and Grafana, integrating real-time Discord alerts to improve MTTR and increase system visibility by \textbf{85\%}.}
-
-  \resumeItem{Designed modular PostgreSQL schemas to support multi-tenant device provisioning, authentication, and customer lifecycle management, ensuring \textbf{horizontal scalability and strong data isolation}.}
+  \resumeItem{Architected a fully containerized, horizontally scalable \textbf{real-time IoT telemetry pipeline} simulating 10M+ smart appliances, inspired by LG ThinQ's microservice architecture.}
+  
+  \resumeItem{Built a fault-tolerant \textbf{MQTT → Kafka ingestion bridge} with sub-100ms latency and implemented \textbf{PySpark Structured Streaming} for real-time ETL and anomaly detection.}
+  
+  \resumeItem{Orchestrated services with Docker Compose and dynamic provisioning, achieving \textbf{95\%+ infra efficiency} and streamlined device-type scalability.}
+  
+  \resumeItem{Enabled centralized observability with Fluent Bit, Prometheus, Grafana, and Discord alerts, reducing MTTR and boosting system visibility by \textbf{85\%}.}
 \resumeItemListEnd
