@@ -1,53 +1,28 @@
-For Each col As System.Data.DataColumn In dtData.Columns
-    Dim cellValue As String = row(col.ColumnName).ToString()
-    Dim cellClass As String = ""
+' Apply conditional formatting for '% Preventive Maintenance Delay Ratio Target: 0%' column
+        If col.ColumnName.contains("Preventive Ratio") Then
+            ' Attempt to parse the cell value as a decimal
+            Dim percentageValue As Decimal
+            ' Remove "%" and any leading/trailing whitespace before parsing
+            Dim cleanedCellValue As String = cellValue.Replace("%", "").Trim()
 
-    ' Apply styling based on the column's header class, only if cell is not blank
-    If Not String.IsNullOrWhiteSpace(cellValue) Then
-        If headerClassMap.ContainsKey(col.ColumnName) Then
-            Select Case headerClassMap(col.ColumnName)
-                Case "header-yellow"
-                    cellClass &= " cell-yellow cell-white-text cell-center"
-                Case "header-red"
-                    cellClass &= " cell-red cell-white-text cell-center"
-                Case "header-grey"
-                    cellClass &= " cell-grey cell-black-text"
-            End Select
-        End If
-    End If
-
-    ' Conditional formatting for Maintenance % column
-    If col.ColumnName.Contains("Maintenance") AndAlso Not String.IsNullOrWhiteSpace(cellValue) Then
-        Dim percentageValue As Decimal
-        Dim cleanedCellValue As String = cellValue.Replace("%", "").Trim()
-
-        If Decimal.TryParse(cleanedCellValue, percentageValue) Then
-            If percentageValue > 0.0D Then
-                cellClass &= " cell-red cell-white-text cell-center"
+            If Decimal.TryParse(cleanedCellValue, percentageValue) Then
+                If percentageValue > 0.0D Then
+                    cellClass &= " cell-yellow  cell-center" 
+               
+                End If
             Else
-                cellClass &= " cell-green cell-white-text cell-center"
+				
+                ' Handle cases where the cell value isn't a valid number (e.g., set a default class or log an error)
+                ' For now, we'll just not apply any specific color class if parsing fails
             End If
+			cellClass &= "cell-center" ' Apply red background class
         End If
-    End If
+		If isnumeric(cellValue) Then
+ cellClass &= "cell-center " ' Apply red background class
+End If        
+        sb.Append("<td class='" & cellClass & "'>" & cellValue & "</td>")
+    Next
 
-    ' Conditional formatting for Shot Input Ratio column
-    If col.ColumnName.Contains("Shot Input Ratio") AndAlso Not String.IsNullOrWhiteSpace(cellValue) Then
-        Dim percentageValue As Decimal
-        Dim cleanedCellValue As String = cellValue.Replace("%", "").Trim()
-
-        If Decimal.TryParse(cleanedCellValue, percentageValue) Then
-            If percentageValue < 100.0D Then
-                cellClass &= " cell-red cell-white-text cell-center"
-            Else
-                cellClass &= " cell-green cell-white-text cell-center"
-            End If
-        End If
-    End If
-
-    ' Center-align numeric values
-    If IsNumeric(cellValue) Then
-        cellClass &= " cell-center"
-    End If
-
-    sb.Append("<td class='" & cellClass.Trim() & "'>" & cellValue & "</td>")
+    sb.Append("</tr>")
+    rowIndex += 1
 Next
