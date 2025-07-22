@@ -1,1 +1,2 @@
-https://drive.google.com/file/d/1iTWQ7jEJHK1ULzh1OKbzuumFuYjKUmq1/view?usp=drivesdk
+dst= df.groupBy("Dest").agg(count("UniqueCarrier").alias("count of airlines")).orderBy("count of airlines",ascending=False).limit(3)
+display(dst)
