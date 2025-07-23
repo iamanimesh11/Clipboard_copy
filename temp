@@ -1,2 +1,22 @@
-dst= df.groupBy("Dest").agg(count("UniqueCarrier").alias("count of airlines")).orderBy("count of airlines",ascending=False).limit(3)
-display(dst)
+Dear Young a kim,
+
+
+
+
+
+I have made the conversion of one of developing project titled as : "India_LGEIL_Shipment_Tracking" from windows legacy to windows as suggested by you and so currently project taking much  time in error validation and analyzing.
+
+It will take time in fixing critical errors for now.
+
+
+
+One of error I'm getting is in SMTP Activity which is highly necessary part of project.
+
+SMTP activity has been updated now and asking for connection in new update while previously it was working fine with passing Parameter : Server,Port and so on.
+
+While adding connection getting error a requested page not found on "https://orch.lge.com/restricted-access?tid=1&fid=154" may be restricted to access the page.
+
+
+
+Kindly support on this issue as we are using smtp in almost all projects.
+
