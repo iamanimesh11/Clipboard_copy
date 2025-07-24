@@ -1,8 +1,6 @@
-from pyspark.sql.functions import row_number,col
+from pyspark.sql.functions import sum,col,concat_ws,to_date
 from pyspark.sql.window import Window
-total_flight_per_airline_month=df.groupBy("UniqueCarrier","Month").agg(count("*").alias("total_flight"))
 
-w=Window.partitionBy("UniqueCarrier").orderBy("total_flight")
-
-final=total_flight_per_airline_month.withColumn("rank",row_number().over(w)).filter(col("rank")==1)
-display(final)
+w=Window.partitionBy("Origin","Flightdate").orderBy("Arrdelay").rowsBetween(Window.unboundedPreceding,0)
+df_with_lag=df.withColumn("cumDepDelay",sum("ArrDelay").over(w))
+display(df_with_lag.select("origin","Flightdate","ArrDelay","cumDepDelay"))
