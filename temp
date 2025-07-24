@@ -1,3 +1,8 @@
-from pyspark.sql.functions import avg,round
-t=df.groupby("UniqueCarrier").agg(round(avg("DepDelay"),2).alias("avg_depdelay")).orderBy("avg_depdelay",ascending=False).limit(1)
-display(t)
+from pyspark.sql.functions import row_number,col
+from pyspark.sql.window import Window
+total_flight_per_airline_month=df.groupBy("UniqueCarrier","Month").agg(count("*").alias("total_flight"))
+
+w=Window.partitionBy("UniqueCarrier").orderBy("total_flight")
+
+final=total_flight_per_airline_month.withColumn("rank",row_number().over(w)).filter(col("rank")==1)
+display(final)
