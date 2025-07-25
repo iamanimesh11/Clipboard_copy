@@ -1,3 +1,15 @@
+SELECT
+  fullVisitorId,
+  visitId,
+  hit.hitNumber,
+  hit.type,
+  hit.page.pagePath,
+  hit.eventInfo.eventCategory
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`,
+UNNEST(hits) AS hit
+LIMIT 20;
+
+
 [{
   "fullVisitorId": "3418334011779872055",
   "VisitId": "1501591568",
