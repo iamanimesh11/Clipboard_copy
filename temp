@@ -1,28 +1,86 @@
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import to_timestamp
-from pyspark.sql.types import StructType, StructField, StringType, TimestampType
-
-data = [
-    ("user1", "2025-07-11 09:00:00", "/home"),
-    ("user1", "2025-07-11 09:10:00", "/products"),
-    ("user1", "2025-07-11 10:00:00", "/checkout"),
-    ("user2", "2025-07-11 11:00:00", "/home"),
-    ("user2", "2025-07-11 11:40:00", "/cart"),
-    ("user2", "2025-07-11 12:20:00", "/checkout"),
-    ("user3", "2025-07-11 09:15:00", "/home"),
-    ("user3", "2025-07-11 09:45:00", "/products"),
-    ("user3", "2025-07-11 10:20:00", "/checkout"),
-]
-
-schema = StructType([
-    StructField("user_id", StringType(), True),
-    StructField("event_time", StringType(), True),
-    StructField("page_url", StringType(), True)
-])
-
-spark = SparkSession.builder.getOrCreate()
-
-raw_df = spark.createDataFrame(data, schema)
-df = raw_df.withColumn("event_time", to_timestamp("event_time"))
-
-display(df)
+[{
+  "fullVisitorId": "3418334011779872055",
+  "VisitId": "1501591568",
+  "visitStartTime": "1501591568",
+  "hitNumber": "1",
+  "type": "PAGE",
+  "page": {
+    "pagePath": "/google+redesign/bags/google+zipper+front+sports+bag.axd",
+    "hostname": "shop.googlemerchandisestore.com",
+    "pageTitle": "Page Unavailable",
+    "searchKeyword": null,
+    "searchCategory": null,
+    "pagePathLevel1": "/google+redesign/",
+    "pagePathLevel2": "/bags/",
+    "pagePathLevel3": "/google+zipper+front+sports+bag.axd",
+    "pagePathLevel4": ""
+  }
+}, {
+  "fullVisitorId": "2474397855041322408",
+  "VisitId": "1501589647",
+  "visitStartTime": "1501589647",
+  "hitNumber": "1",
+  "type": "PAGE",
+  "page": {
+    "pagePath": "/google+redesign/shop+by+brand/youtube",
+    "hostname": "shop.googlemerchandisestore.com",
+    "pageTitle": "Page Unavailable",
+    "searchKeyword": null,
+    "searchCategory": null,
+    "pagePathLevel1": "/google+redesign/",
+    "pagePathLevel2": "/shop+by+brand/",
+    "pagePathLevel3": "/youtube",
+    "pagePathLevel4": ""
+  }
+}, {
+  "fullVisitorId": "5870462820713110108",
+  "VisitId": "1501616621",
+  "visitStartTime": "1501616621",
+  "hitNumber": "1",
+  "type": "PAGE",
+  "page": {
+    "pagePath": "/google+redesign/shop+by+brand/youtube",
+    "hostname": "shop.googlemerchandisestore.com",
+    "pageTitle": "Page Unavailable",
+    "searchKeyword": null,
+    "searchCategory": null,
+    "pagePathLevel1": "/google+redesign/",
+    "pagePathLevel2": "/shop+by+brand/",
+    "pagePathLevel3": "/youtube",
+    "pagePathLevel4": ""
+  }
+}, {
+  "fullVisitorId": "9397809171349480379",
+  "VisitId": "1501601200",
+  "visitStartTime": "1501601200",
+  "hitNumber": "1",
+  "type": "PAGE",
+  "page": {
+    "pagePath": "/google+redesign/shop+by+brand/youtube",
+    "hostname": "shop.googlemerchandisestore.com",
+    "pageTitle": "Page Unavailable",
+    "searchKeyword": null,
+    "searchCategory": null,
+    "pagePathLevel1": "/google+redesign/",
+    "pagePathLevel2": "/shop+by+brand/",
+    "pagePathLevel3": "/youtube",
+    "pagePathLevel4": ""
+  }
+}, {
+  "fullVisitorId": "6089902943184578335",
+  "VisitId": "1501615525",
+  "visitStartTime": "1501615525",
+  "hitNumber": "1",
+  "type": "PAGE",
+  "page": {
+    "pagePath": "/google+redesign/shop+by+brand/youtube",
+    "hostname": "shop.googlemerchandisestore.com",
+    "pageTitle": "Page Unavailable",
+    "searchKeyword": null,
+    "searchCategory": null,
+    "pagePathLevel1": "/google+redesign/",
+    "pagePathLevel2": "/shop+by+brand/",
+    "pagePathLevel3": "/youtube",
+    "pagePathLevel4": ""
+  }
+}]
