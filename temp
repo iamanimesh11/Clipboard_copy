@@ -1,11 +1,5 @@
-#json extraction
-CREATE TEMP FUNCTION get_page_url(details_json string) as (
-coalesce(json_Value(details_json,'$.page_url'))
-);
-with event_logs as (
-select 1 as event_id ,'{"event_type":"page_view","user_id":"u123","page_url":"URL1"}' as event_Details Union ALL
-select 2 as event_id ,'{"event_type":"ATTCAR","user_id":"u243","page_url":"URL2"}' as event_Details Union ALL
-select 3 as event_id ,'{"event_type":"page_view","user_id":"u123","page_url":"URL3"}' as event_Details 
+WITH user_profiles AS (
+  SELECT 'u123' AS user_id, '{"name": "Animesh", "shipping_addresses": [{"city": "Delhi", "zip": "110001"}, {"city": "Mumbai", "zip": "400001"}]}' AS profile_json UNION ALL
+  SELECT 'u456' AS user_id, '{"name": "Priya", "shipping_addresses": []}' AS profile_json, -- Empty array
+  SELECT 'u789' AS user_id, '{"name": "Amit", "shipping_addresses": null}' AS profile_json -- NULL value
 )
-select event_id,get_page_url(event_Details) as url_visited
-from event_logs ;
