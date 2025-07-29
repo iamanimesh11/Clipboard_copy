@@ -1,14 +1,11 @@
-
-CREATE TEMP FUNCTION CALC_DISCOUNT(base_price NUMERIC ,discount FLOAT64) as (
-final_price=base_price*(1-discount)
+#json extraction
+CREATE TEMP FUNCTION get_page_url(details_json string) as (
+coalesce(json_Value(details_json,'$.page_url'))
 );
-
-
-With products as (
-SELECT 'LAPTOP' AS product_id,Numeric '1200.00' as base_price,0.10 as discount_pct UNION ALL
-SELECT 'mouse' AS product_id,Numeric '25.50' as base_price,0.0 as discount_pct UNION ALL
-SELECT 'keyboard' AS product_id,Numeric '79.99' as base_price,0.15 as discount_pct 
+with event_logs as (
+select 1 as event_id ,'{"event_type":"page_view","user_id":"u123","page_url":"URL1"}' as event_Details Union ALL
+select 2 as event_id ,'{"event_type":"ATTCAR","user_id":"u243","page_url":"URL2"}' as event_Details Union ALL
+select 3 as event_id ,'{"event_type":"page_view","user_id":"u123","page_url":"URL3"}' as event_Details 
 )
-SELECT CALC_DISCOUNT(products.base_price,products.discount_pct)
-FROM products 
-
+select event_id,get_page_url(event_Details) as url_visited
+from event_logs ;
