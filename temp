@@ -1,98 +1,80 @@
-SELECT
-  fullVisitorId,
-  visitId,
-  hit.hitNumber,
-  hit.type,
-  hit.page.pagePath,
-  hit.eventInfo.eventCategory
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`,
-UNNEST(hits) AS hit
-LIMIT 20;
+Dim sb As New System.Text.StringBuilder()
+
+' Start table with class
+sb.Append("<table class='custom-table'>")
+Dim headerClassMap As New Dictionary(Of String, String)() ' Stores the header class for each column by name
+
+' Add table headers with conditional formatting
+sb.Append("<tr class='header-row'>")
+For Each col As System.Data.DataColumn In dtData.Columns
+    Dim headerText As String = col.ColumnName
+    Dim headerClass As String = ""
+	    Dim headerTextLower As String = headerText.ToLower() ' Convert to lowercase once for efficiency
 
 
-[{
-  "fullVisitorId": "3418334011779872055",
-  "VisitId": "1501591568",
-  "visitStartTime": "1501591568",
-  "hitNumber": "1",
-  "type": "PAGE",
-  "page": {
-    "pagePath": "/google+redesign/bags/google+zipper+front+sports+bag.axd",
-    "hostname": "shop.googlemerchandisestore.com",
-    "pageTitle": "Page Unavailable",
-    "searchKeyword": null,
-    "searchCategory": null,
-    "pagePathLevel1": "/google+redesign/",
-    "pagePathLevel2": "/bags/",
-    "pagePathLevel3": "/google+zipper+front+sports+bag.axd",
-    "pagePathLevel4": ""
-  }
-}, {
-  "fullVisitorId": "2474397855041322408",
-  "VisitId": "1501589647",
-  "visitStartTime": "1501589647",
-  "hitNumber": "1",
-  "type": "PAGE",
-  "page": {
-    "pagePath": "/google+redesign/shop+by+brand/youtube",
-    "hostname": "shop.googlemerchandisestore.com",
-    "pageTitle": "Page Unavailable",
-    "searchKeyword": null,
-    "searchCategory": null,
-    "pagePathLevel1": "/google+redesign/",
-    "pagePathLevel2": "/shop+by+brand/",
-    "pagePathLevel3": "/youtube",
-    "pagePathLevel4": ""
-  }
-}, {
-  "fullVisitorId": "5870462820713110108",
-  "VisitId": "1501616621",
-  "visitStartTime": "1501616621",
-  "hitNumber": "1",
-  "type": "PAGE",
-  "page": {
-    "pagePath": "/google+redesign/shop+by+brand/youtube",
-    "hostname": "shop.googlemerchandisestore.com",
-    "pageTitle": "Page Unavailable",
-    "searchKeyword": null,
-    "searchCategory": null,
-    "pagePathLevel1": "/google+redesign/",
-    "pagePathLevel2": "/shop+by+brand/",
-    "pagePathLevel3": "/youtube",
-    "pagePathLevel4": ""
-  }
-}, {
-  "fullVisitorId": "9397809171349480379",
-  "VisitId": "1501601200",
-  "visitStartTime": "1501601200",
-  "hitNumber": "1",
-  "type": "PAGE",
-  "page": {
-    "pagePath": "/google+redesign/shop+by+brand/youtube",
-    "hostname": "shop.googlemerchandisestore.com",
-    "pageTitle": "Page Unavailable",
-    "searchKeyword": null,
-    "searchCategory": null,
-    "pagePathLevel1": "/google+redesign/",
-    "pagePathLevel2": "/shop+by+brand/",
-    "pagePathLevel3": "/youtube",
-    "pagePathLevel4": ""
-  }
-}, {
-  "fullVisitorId": "6089902943184578335",
-  "VisitId": "1501615525",
-  "visitStartTime": "1501615525",
-  "hitNumber": "1",
-  "type": "PAGE",
-  "page": {
-    "pagePath": "/google+redesign/shop+by+brand/youtube",
-    "hostname": "shop.googlemerchandisestore.com",
-    "pageTitle": "Page Unavailable",
-    "searchKeyword": null,
-    "searchCategory": null,
-    "pagePathLevel1": "/google+redesign/",
-    "pagePathLevel2": "/shop+by+brand/",
-    "pagePathLevel3": "/youtube",
-    "pagePathLevel4": ""
-  }
-}]
+	
+  ' Check the conditions for coloring
+    If headerTextLower.Contains("yellow")
+        headerClass = "header-yellow"
+	    headerClassMap.Add(headerText, headerClass)
+
+   	ElseIf  headerTextLower.Contains("red") Then
+        headerClass = "header-red"
+	    headerClassMap.Add(headerText, headerClass)
+
+		Else
+        headerClass = "header-grey"
+    End If
+
+    sb.Append("<th class='" & headerClass & " header-centre'>" & headerText & "</th>")
+
+Next
+sb.Append("</tr>")
+
+' Add table rows with alternating colors and conditional formatting for Status
+Dim rowIndex As Integer = 0
+
+For Each row As DataRow In dtData.Rows
+	 Dim rowClass As String = If(rowIndex Mod 2 = 0, "even-row", "odd-row")
+    sb.Append("<tr class='" & rowClass & "'>")
+
+    For Each col As System.Data.DataColumn In dtData.Columns
+        Dim cellValue As String = row(col.ColumnName).ToString()
+        Dim cellClass As String = ""
+				If isnumeric(cellValue)  or cellValue.contains("-")Then
+ cellClass &= "cell-center " ' Apply red background class
+End If  
+		' Apply conditional formatting for '% Preventive Maintenance Delay Ratio Target: 0%' column
+        If col.ColumnName.contains("Preventive Ratio") Then
+			If Not String.IsNullOrWhiteSpace(cellValue) Then
+            ' Attempt to parse the cell value as a decimal
+              cellClass &= " cell-yellow cell-center" 
+	    	End If	
+        End If
+       If col.ColumnName.Contains("AU(Account Unit)") Or col.ColumnName.Contains("Model") Then
+                cellClass &= " cell-nowrap"
+           
+    End If
+	If headerClassMap.ContainsKey(col.ColumnName) And CInt(cellValue)>0 Then
+            Select Case headerClassMap(col.ColumnName)
+                Case "header-yellow"
+                    cellClass &= " cell-yellow cell-center"
+                Case "header-red"
+                    cellClass &= " cell-red  cell-center"
+                Case "header-grey"
+                    cellClass &= " cell-grey cell-black-text"
+            End Select
+       End If
+		
+	If  cellValue.contains("-")Then
+ cellValue ="" ' Apply red background class
+End If  
+        sb.Append("<td class='" & cellClass & "'>" & cellValue & "</td>")
+    Next
+
+    sb.Append("</tr>")
+    rowIndex += 1
+Next
+
+sb.Append("</table>")
+htmlTable = sb.ToString()
