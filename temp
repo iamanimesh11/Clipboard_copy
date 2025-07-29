@@ -1,80 +1,14 @@
-Dim sb As New System.Text.StringBuilder()
 
-' Start table with class
-sb.Append("<table class='custom-table'>")
-Dim headerClassMap As New Dictionary(Of String, String)() ' Stores the header class for each column by name
-
-' Add table headers with conditional formatting
-sb.Append("<tr class='header-row'>")
-For Each col As System.Data.DataColumn In dtData.Columns
-    Dim headerText As String = col.ColumnName
-    Dim headerClass As String = ""
-	    Dim headerTextLower As String = headerText.ToLower() ' Convert to lowercase once for efficiency
+CREATE TEMP FUNCTION CALC_DISCOUNT(base_price NUMERIC ,discount FLOAT64) as (
+final_price=base_price*(1-discount)
+);
 
 
-	
-  ' Check the conditions for coloring
-    If headerTextLower.Contains("yellow")
-        headerClass = "header-yellow"
-	    headerClassMap.Add(headerText, headerClass)
+With products as (
+SELECT 'LAPTOP' AS product_id,Numeric '1200.00' as base_price,0.10 as discount_pct UNION ALL
+SELECT 'mouse' AS product_id,Numeric '25.50' as base_price,0.0 as discount_pct UNION ALL
+SELECT 'keyboard' AS product_id,Numeric '79.99' as base_price,0.15 as discount_pct 
+)
+SELECT CALC_DISCOUNT(products.base_price,products.discount_pct)
+FROM products 
 
-   	ElseIf  headerTextLower.Contains("red") Then
-        headerClass = "header-red"
-	    headerClassMap.Add(headerText, headerClass)
-
-		Else
-        headerClass = "header-grey"
-    End If
-
-    sb.Append("<th class='" & headerClass & " header-centre'>" & headerText & "</th>")
-
-Next
-sb.Append("</tr>")
-
-' Add table rows with alternating colors and conditional formatting for Status
-Dim rowIndex As Integer = 0
-
-For Each row As DataRow In dtData.Rows
-	 Dim rowClass As String = If(rowIndex Mod 2 = 0, "even-row", "odd-row")
-    sb.Append("<tr class='" & rowClass & "'>")
-
-    For Each col As System.Data.DataColumn In dtData.Columns
-        Dim cellValue As String = row(col.ColumnName).ToString()
-        Dim cellClass As String = ""
-				If isnumeric(cellValue)  or cellValue.contains("-")Then
- cellClass &= "cell-center " ' Apply red background class
-End If  
-		' Apply conditional formatting for '% Preventive Maintenance Delay Ratio Target: 0%' column
-        If col.ColumnName.contains("Preventive Ratio") Then
-			If Not String.IsNullOrWhiteSpace(cellValue) Then
-            ' Attempt to parse the cell value as a decimal
-              cellClass &= " cell-yellow cell-center" 
-	    	End If	
-        End If
-       If col.ColumnName.Contains("AU(Account Unit)") Or col.ColumnName.Contains("Model") Then
-                cellClass &= " cell-nowrap"
-           
-    End If
-	If headerClassMap.ContainsKey(col.ColumnName) And CInt(cellValue)>0 Then
-            Select Case headerClassMap(col.ColumnName)
-                Case "header-yellow"
-                    cellClass &= " cell-yellow cell-center"
-                Case "header-red"
-                    cellClass &= " cell-red  cell-center"
-                Case "header-grey"
-                    cellClass &= " cell-grey cell-black-text"
-            End Select
-       End If
-		
-	If  cellValue.contains("-")Then
- cellValue ="" ' Apply red background class
-End If  
-        sb.Append("<td class='" & cellClass & "'>" & cellValue & "</td>")
-    Next
-
-    sb.Append("</tr>")
-    rowIndex += 1
-Next
-
-sb.Append("</table>")
-htmlTable = sb.ToString()
