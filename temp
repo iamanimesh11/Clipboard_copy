@@ -1,11 +1,18 @@
-fullvisitorid	visitStartTime	pageviews	previous_pageviews	next_pageviews
-1.26612E+17	1501606687	32		
-5.15699E+16	1501584199	3		
-5.88935E+17	1501646840	1		
-1.09493E+18	1501611597	14		
-1.30749E+18	1501614739	9		
-2.01613E+18	1501574021	1		
-2.42173E+18	1501650912	1		
-2.67496E+17	1501580699	21		
-2.97685E+18	1501597485	1		
-3.74477E+18	1501596357	1		
+with more_Session_count as (
+select fullvisitorid,count(*) as c
+      FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801` 
+            where fullvisitorid is not null
+      group by fullvisitorid
+      having c >1
+),
+previous_days as (
+Select w.fullVisitorId,w.visitStartTIme,
+      LAG(w.visitStartTime) over (
+        PARTITION by w.fullVisitorId order by w.visitstarttime
+      ) as previous_visit
+      FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801` w join more_Session_count m on  w.fullvisitorid = m.fullvisitorid
+where m.fullvisitorid  is not null
+)
+select fullvisitorid,timestamp_Seconds(visitstarttime),timestamp_Seconds(previous_visit),
+      timestamp_diff(timestamp_Seconds(visitstarttime),timestamp_Seconds(previous_visit),DAY) as d_btw_visits
+      from previous_days
