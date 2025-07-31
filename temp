@@ -1,2 +1,11 @@
-select distinct p.productRevenue FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801` ,
-unnest(hits) as h ,unnest(h) as p
+SELECT
+  fullVisitorId,
+  visitStartTime,
+  ARRAY(
+    SELECT DISTINCT h.product.productName
+    FROM UNNEST(hits) AS h
+    WHERE h.type = 'TRANSACTION'
+  ) AS product_names
+FROM
+  `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
+LIMIT 100
