@@ -1,18 +1,31 @@
-with more_Session_count as (
-select fullvisitorid,count(*) as c
-      FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801` 
-            where fullvisitorid is not null
-      group by fullvisitorid
-      having c >1
-),
-previous_days as (
-Select w.fullVisitorId,w.visitStartTIme,
-      LAG(w.visitStartTime) over (
-        PARTITION by w.fullVisitorId order by w.visitstarttime
-      ) as previous_visit
-      FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801` w join more_Session_count m on  w.fullvisitorid = m.fullvisitorid
-where m.fullvisitorid  is not null
-)
-select fullvisitorid,timestamp_Seconds(visitstarttime),timestamp_Seconds(previous_visit),
-      timestamp_diff(timestamp_Seconds(visitstarttime),timestamp_Seconds(previous_visit),DAY) as d_btw_visits
-      from previous_days
+
+
+
+---
+
+📊 Real Business Case Where Subquery Is Better:
+
+Goal: For each session, check if its pageviews > average pageviews across all sessions.
+
+This scalar subquery is perfect here because it returns a single value that you compare inline — a CTE would make this more verbose.
+
+SELECT
+  fullVisitorId,
+  visitStartTime,
+  totals.pageviews,
+  (
+    SELECT AVG(totals.pageviews)
+    FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
+    WHERE totals.pageviews IS NOT NULL
+  ) AS avg_pageviews
+FROM
+  `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
+WHERE
+  totals.pageviews IS NOT NULL
+LIMIT 100;
+
+
+---
+
+Shall we now try this small one first, and then move to correlated subquery, which is even more interesting and harder to replace with a CTE?
+
