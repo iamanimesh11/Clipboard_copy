@@ -1,5 +1,10 @@
-WITH user_profiles AS (
-  SELECT 'u123' AS user_id, '{"name": "Animesh", "shipping_addresses": [{"city": "Delhi", "zip": "110001"}, {"city": "Mumbai", "zip": "400001"}]}' AS profile_json UNION ALL
-  SELECT 'u456' AS user_id, '{"name": "Priya", "shipping_addresses": []}' AS profile_json, -- Empty array
-  SELECT 'u789' AS user_id, '{"name": "Amit", "shipping_addresses": null}' AS profile_json -- NULL value
-)
+select
+     fullvisitorid,
+     visitStartTime,
+     totals.pageviews,
+     sum(totals.pageviews) over (
+        partition by fullVisitorId order by visitStartTime 
+        ROWS BETWEEN 4 PRECEDING AND CURRENT ROW ) AS moving_pageviews_3_Sessions
+     FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+     WHERE  _TABLE_SUFFIX = '20170801' and  fullVisitorId is not Null and totals.pageviews>=4
+LIMIT 100
