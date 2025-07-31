@@ -9,3 +9,6 @@ SELECT
 FROM
   `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
 LIMIT 100
+
+
+giving error: Cannot access field productName on a value with type ARRAY<STRUCT<productSKU STRING, v2ProductName STRING, v2ProductCategory STRING, ...>> at [5:31]
