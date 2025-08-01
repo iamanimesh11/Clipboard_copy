@@ -1,11 +1,15 @@
-Kindly Ignore last mail.
+SELECT
+  fullVisitorId,
+ ( select count(*)
+FROM   UNNEST(hits) AS h
+WHERE  h.type = 'EVENT'
+ ) as ev
+from 
+  `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
+where fullVisitorId='3963931733144286855'
 
-
-
-In any case when there is no data on singlex system in any of four files ,RPA will send the Error_Status mail as shown below.
-
-
-
-Regards,
-
-Animesh
+SELECT
+fullvisitorid
+from 
+  `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
+where fullVisitorId='3963931733144286855'
