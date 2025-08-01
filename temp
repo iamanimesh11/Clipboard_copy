@@ -1,9 +1,25 @@
-If Not pm_bool OrElse Not fpm_bool OrElse Not shot_count_Reg_bool OrElse Not shot_count_Status_bool Then
-    result = "data doesnt exist in place"
+Dim file As String = "Status: {0}, Check: {1}, Reg: {2}, Shot: {3}"
+
+If pm_bool Then
+    file = file.Replace("{0}", "data exist")
 Else
-    result = Saved.Values(Of String)("file") _
-        .Replace("{0}", pm_bool.ToString()) _
-        .Replace("{1}", fpm_bool.ToString()) _
-        .Replace("{2}", shot_count_Reg_bool.ToString()) _
-        .Replace("{3}", shot_count_Status_bool.ToString())
+    file = file.Replace("{0}", "data doesn't exist")
+End If
+
+If fpm_bool Then
+    file = file.Replace("{1}", "data exist")
+Else
+    file = file.Replace("{1}", "data doesn't exist")
+End If
+
+If shot_count_Reg_bool Then
+    file = file.Replace("{2}", "data exist")
+Else
+    file = file.Replace("{2}", "data doesn't exist")
+End If
+
+If shot_count_Status_bool Then
+    file = file.Replace("{3}", "data exist")
+Else
+    file = file.Replace("{3}", "data doesn't exist")
 End If
