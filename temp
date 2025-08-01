@@ -1,25 +1,20 @@
-Dim file As String = "Status: {0}, Check: {1}, Reg: {2}, Shot: {3}"
-
-If pm_bool Then
-    file = file.Replace("{0}", "data exist")
-Else
-    file = file.Replace("{0}", "data doesn't exist")
-End If
-
-If fpm_bool Then
-    file = file.Replace("{1}", "data exist")
-Else
-    file = file.Replace("{1}", "data doesn't exist")
-End If
-
-If shot_count_Reg_bool Then
-    file = file.Replace("{2}", "data exist")
-Else
-    file = file.Replace("{2}", "data doesn't exist")
-End If
-
-If shot_count_Status_bool Then
-    file = file.Replace("{3}", "data exist")
-Else
-    file = file.Replace("{3}", "data doesn't exist")
-End If
+        .status-success {
+            color: green;
+        }
+        .status-failed {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <p>Dear All,</p>
+    <p style="color: red;">RPA Caught DATA NotFound Error</p>
+	<p>Data status as shown below.</p>
+	<p> 1. PM FILE : {0} </p>
+   	<p> 2. FPM FILE : {1}</p>
+	<p> 3. SHOT COUNT REG.FILE : {2}</p>
+	<p> 4. SHOT COUNT STATUS FILE  : {3}</p>
+	
+    <p>※ This email has been sent from Self RPA automation robot.</p>
+</body>
+</html>
