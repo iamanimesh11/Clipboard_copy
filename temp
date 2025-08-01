@@ -1,20 +1,11 @@
-        .status-success {
-            color: green;
-        }
-        .status-failed {
-            color: red;
-        }
-    </style>
-</head>
-<body>
-    <p>Dear All,</p>
-    <p style="color: red;">RPA Caught DATA NotFound Error</p>
-	<p>Data status as shown below.</p>
-	<p> 1. PM FILE : {0} </p>
-   	<p> 2. FPM FILE : {1}</p>
-	<p> 3. SHOT COUNT REG.FILE : {2}</p>
-	<p> 4. SHOT COUNT STATUS FILE  : {3}</p>
-	
-    <p>※ This email has been sent from Self RPA automation robot.</p>
-</body>
-</html>
+Kindly Ignore last mail.
+
+
+
+In any case when there is no data on singlex system in any of four files ,RPA will send the Error_Status mail as shown below.
+
+
+
+Regards,
+
+Animesh
