@@ -1,15 +1,11 @@
 SELECT
   fullVisitorId,
- ( select count(*)
-FROM   UNNEST(hits) AS h
-WHERE  h.type = 'EVENT'
- ) as ev
-from 
-  `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
-where fullVisitorId='3963931733144286855'
-
-SELECT
-fullvisitorid
-from 
-  `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
-where fullVisitorId='3963931733144286855'
+  visitStartTime,
+  max(p.productPrice) over(
+    partition by fullVisitorId,visitStartTime order by visitStartTime
+  )
+  FROM
+  `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`,
+  UNNEST(hits) AS h,
+  UNNEST(h.product) AS p
+limit 100
