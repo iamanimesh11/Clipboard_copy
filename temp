@@ -1,2 +1,9 @@
-how to make if condition in it if value of any bool is false then wirte "data doesnt exist in place":
-Saved.Values(Of System.String)("file").replace("{0}",pm_bool.ToString).replace("{1}",fpm_bool.tostring).replace("{2}",shot_count_Reg_bool.ToString.replace("{3}",shot_count_Status_bool.ToString))
+If Not pm_bool OrElse Not fpm_bool OrElse Not shot_count_Reg_bool OrElse Not shot_count_Status_bool Then
+    result = "data doesnt exist in place"
+Else
+    result = Saved.Values(Of String)("file") _
+        .Replace("{0}", pm_bool.ToString()) _
+        .Replace("{1}", fpm_bool.ToString()) _
+        .Replace("{2}", shot_count_Reg_bool.ToString()) _
+        .Replace("{3}", shot_count_Status_bool.ToString())
+End If
