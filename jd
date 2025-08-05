@@ -1,26 +1,92 @@
-
-구분	주요 작업	CDP 필요 역량 수준 및 경험	관련 서비스/솔루션	CDP Local운영인력 R&R
-1	Data Modeling
-- 데이터요건에 기반한 필요데이터 정의 및 가용성분석
-- L1(통합)/L2(insight) 데이터 엔터티/어트리뷰트 도출
-- L1(통합)/L2(insight) 데이터 논리/물리 모델링	 - 고객의 분석니즈와 적용 솔루션에 효율적인 데이터 모델링을 수행할 수 있다.
-
- - DW 데이터모델링 경험	 - BigQuery	 - 신규 Local Data 수집시 관련 L0(수집)/L1(통합)/L2(요약) 모델설계
-2	ETL (Extract, Load & Transform)
-- 데이터 수집/제공 흐름 정의 및 ETL 전략수립
-- 데이터 수집,처리,저장 프로그램 설계 및 개발
-- 데이터 수집,처리,저장 프로그램 실행 및 운영, 튜닝	 - 데이터수집/처리개발프레임워크 및 데이터처리설계/개발 표준에 따라 ETL프로그램을 설계/개발할 수 있다.
- - 구현된 데이터처리Job에 대한 작업 모니터링 및 작업 실패시 대응할 수 있다
-
- - BigData/DW ETL개발 경험 또는 Back-end batch프로그램 개발 경험 	 - Airflow/Python
- - BigQuery Procedure	 - 신규 Local Data 수집시 Local Data 수집/처리 프로그램 설계/개발
-
- - Local Data를 위한 데이터처리Job 모니터링/운영
-3	Data Goverance관리
-- 데이터 거버넌스 관리(메타데이터, 데이터품질, 데이터 LifeCycle)
-- 데이터 품질관리
-- ETL 통합로그관리	전자 CDP 데이터 거버넌스와 관련 시스템(Global OneData Portal)을 이해하여 메타데이터 관리 및 데이터 파기 프로그램을 운영할 수 있다.	 - Airflow/Python
- - BigQuery Procedure	 - Local Data관련  데이터거버넌스 기능 설계/개발/운영
-4	데이터관련 문제해결	고객의 데이터 문의사항이나 데이터관련 이슈사항을 이해하고 이를 토대로 관련 ETL작업 결과나 데이터 리니지 및 데이터 정합성 등을 확인하여 데이터관련 문제에 대한 원인 및 대응방안을 정의하여 해결할 수 있다.	 - BigQuery	운영 대상 법인의 CDP 데이터관련 데이터 문의/이슈 대응
-5	Data Architecturing
-- 데이터 아키텍처 정의(데이터 파이프라인 개념적,논리적,물리적 설계) 	고객의 요구사항에 적합한 데이터모델링, 데이터처리아키텍처 데이터품질관리방안 등을 컨설팅 할 수 있다.	N/A	신규 Local Data 수집시 D2C 데이터플랫폼 데이터 아키텍처 가이드에 따른 이행
+<html><head><style>p {margin:0;padding:0;} body, td, button, p { color:#000000; font-size:10pt; font-family:Segoe UI; line-height:normal; }</style></head><body style="color:#000000; font-size:10pt; font-family:Segoe UI; line-height:normal;"><p><br>
+</p><table border="0" cellpadding="0" cellspacing="0" width="1220" style="border-collapse:
+ collapse;width:916pt">
+ 
+ 
+ 
+ 
+ 
+ <tbody><tr height="18" style="height:13.5pt">
+  <td height="18" width="58" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; text-align: center; border: 1px solid windowtext; background: rgb(192, 230, 245); height: 13.5pt; width: 44pt;">구분</td>
+  <td width="412" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; background: rgb(192, 230, 245); border-left: none; width: 309pt;">주요 작업</td>
+  <td width="290" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; background: rgb(192, 230, 245); border-left: none; width: 218pt;">CDP 필요 역량 수준 및
+  경험</td>
+  <td width="159" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; background: rgb(192, 230, 245); border-left: none; width: 119pt;">관련 서비스/솔루션</td>
+  <td width="301" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-top: 1px solid windowtext; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; background: rgb(192, 230, 245); border-left: none; width: 226pt;">CDP Local운영인력
+  R&amp;R</td>
+ </tr>
+ <tr height="85" style="height:63.75pt">
+  <td height="85" width="58" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 63.75pt; border-top: none; width: 44pt;">1</td>
+  <td width="412" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 309pt;">Data
+  Modeling<br>
+    - 데이터요건에 기반한 필요데이터 정의 및 가용성분석<br>
+    - L1(통합)/L2(insight) 데이터 엔터티/어트리뷰트 도출<br>
+    - L1(통합)/L2(insight) 데이터 논리/물리 모델링</td>
+  <td width="290" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 218pt;">&nbsp;- 고객의 분석니즈와 적용 솔루션에 효율적인 데이터 모델링을 수행할 수
+  있다.<br>
+    <br>
+    &nbsp;- DW 데이터모델링 경험</td>
+  <td width="159" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 119pt;">&nbsp;- BigQuery</td>
+  <td width="301" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 226pt;">&nbsp;- 신규 Local Data 수집시 관련 L0(수집)/L1(통합)/L2(요약)
+  모델설계</td>
+ </tr>
+ <tr height="185" style="height:138.75pt">
+  <td height="185" width="58" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 138.75pt; border-top: none; width: 44pt;">2</td>
+  <td width="412" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 309pt;">ETL
+  (Extract, Load &amp; Transform)<br>
+    - 데이터 수집/제공 흐름 정의 및 ETL 전략수립<br>
+    - 데이터 수집,처리,저장 프로그램 설계 및 개발<br>
+    - 데이터 수집,처리,저장 프로그램 실행 및 운영, 튜닝</td>
+  <td width="290" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 218pt;">&nbsp;- 데이터수집/처리개발프레임워크 및 데이터처리설계/개발 표준에 따라
+  ETL프로그램을 설계/개발할 수 있다.<br>
+    &nbsp;- 구현된 데이터처리Job에 대한 작업 모니터링 및 작업 실패시
+  대응할 수 있다<br>
+    <br>
+    &nbsp;- BigData/DW ETL개발 경험 또는 Back-end
+  batch프로그램 개발 경험&nbsp;</td>
+  <td width="159" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 119pt;">&nbsp;- Airflow/Python<br>
+    &nbsp;- BigQuery Procedure</td>
+  <td width="301" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 226pt;">&nbsp;- 신규 Local Data 수집시 Local Data 수집/처리 프로그램
+  설계/개발<br>
+    <br>
+    &nbsp;- Local Data를 위한 데이터처리Job 모니터링/운영</td>
+ </tr>
+ <tr height="124" style="height:93.0pt">
+  <td height="124" width="58" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 93pt; border-top: none; width: 44pt;">3</td>
+  <td width="412" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 309pt;">Data
+  Goverance관리<br>
+    - 데이터 거버넌스 관리(메타데이터, 데이터품질, 데이터 LifeCycle)<br>
+    - 데이터 품질관리<br>
+    - ETL 통합로그관리</td>
+  <td width="290" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 218pt;">전자
+  CDP 데이터 거버넌스와 관련 시스템(Global OneData Portal)을 이해하여 메타데이터 관리 및 데이터 파기 프로그램을 운영할
+  수 있다.</td>
+  <td width="159" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 119pt;">&nbsp;- Airflow/Python<br>
+    &nbsp;- BigQuery Procedure</td>
+  <td width="301" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 226pt;">&nbsp;- Local Data관련&nbsp; 데이터거버넌스 기능 설계/개발/운영</td>
+ </tr>
+ <tr height="106" style="height:79.5pt">
+  <td height="106" width="58" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 79.5pt; border-top: none; width: 44pt;">4</td>
+  <td width="412" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 309pt;">데이터관련
+  문제해결</td>
+  <td width="290" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 218pt;">고객의
+  데이터 문의사항이나 데이터관련 이슈사항을 이해하고 이를 토대로 관련 ETL작업 결과나 데이터 리니지 및 데이터 정합성 등을 확인하여
+  데이터관련 문제에 대한 원인 및 대응방안을 정의하여 해결할 수 있다.</td>
+  <td width="159" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 119pt;">&nbsp;- BigQuery</td>
+  <td width="301" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 226pt;">운영
+  대상 법인의 CDP 데이터관련 데이터 문의/이슈 대응</td>
+ </tr>
+ <tr height="99" style="height:74.25pt">
+  <td height="99" width="58" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; text-align: center; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-left: 1px solid windowtext; border-image: initial; height: 74.25pt; border-top: none; width: 44pt;">5</td>
+  <td width="412" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 309pt;">Data
+  Architecturing<br>
+    - 데이터 아키텍처 정의(데이터 파이프라인 개념적,논리적,물리적 설계)&nbsp;</td>
+  <td width="290" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 218pt;">고객의
+  요구사항에 적합한 데이터모델링, 데이터처리아키텍처 데이터품질관리방안 등을 컨설팅 할 수 있다.</td>
+  <td width="159" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 119pt;">N/A</td>
+  <td width="301" style="padding-top: 1px; padding-right: 1px; padding-left: 1px; vertical-align: middle; font-size: 10.5pt; font-family: &quot;LG스마트체 Regular&quot;, monospace; border-right: 1px solid windowtext; border-bottom: 1px solid windowtext; border-image: initial; border-top: none; border-left: none; width: 226pt;">신규
+  Local Data 수집시 D2C 데이터플랫폼 데이터 아키텍처 가이드에 따른 이행</td>
+ </tr>
+</tbody></table><p>
+<br></p><p><br></p><p>Regards</p><p style="text-align: left;"><a href="http://space.lge.com/collpack/collaboration/main/Workspace.do?workspaceId=200168514073" target="_blank" class="tx-link"><img width="601" height="114" style="clear: none; float: none;" id="tx_entry_96587_" src="/mail0/YIL16830.nsf/0/67b164ebb66c696148258cdd0025bc2e/Body/M2?OpenElement" class="txc-image"></a></p><p><br></p><p><br></p><p><br></p>
+</body></html>
