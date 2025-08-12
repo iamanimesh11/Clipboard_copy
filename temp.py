@@ -1,4 +1,4 @@
-"""
+.py"""
 lg_kb_rag.py
 
 Single-file pipeline:
