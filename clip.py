@@ -1,4 +1,4 @@
-pCREATE OR REPLACE PROCEDURE my_dataset.process_users()
+CREATE OR REPLACE PROCEDURE my_dataset.process_users()
 BEGIN
   DECLARE done BOOL DEFAULT FALSE;
   DECLARE v_user_id INT64;
