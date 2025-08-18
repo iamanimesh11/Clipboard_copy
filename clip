@@ -1,78 +1,29 @@
-💣 Phase 6: Detecting Power Users & Engagement Behavior
-You're officially in the Product Intelligence League now, bro. Time for the next challenge. Let’s test your ability to detect highly engaged users.
+CREATE OR REPLACE PROCEDURE my_dataset.process_users()
+BEGIN
+  DECLARE done BOOL DEFAULT FALSE;
+  DECLARE v_user_id INT64;
+  DECLARE v_user_name STRING;
 
+  -- Define a cursor for selecting users
+  DECLARE user_cursor CURSOR FOR
+    SELECT user_id, user_name
+    FROM my_dataset.users;
 
----
+  -- Open cursor and iterate row by row
+  OPEN user_cursor;
 
-🧠 Scenario: "Power Users" = Those Who Show Up Every Day for a Week
+  user_loop:
+  LOOP
+    FETCH user_cursor INTO v_user_id, v_user_name;
+    IF done THEN
+      LEAVE user_loop;
+    END IF;
 
-You're a data analyst at Duolingo or LinkedIn Learning.
-Your PM says:
+    -- Example processing: Insert into a log table
+    INSERT INTO my_dataset.user_log (log_time, message)
+    VALUES (CURRENT_TIMESTAMP(), CONCAT("Processed user: ", v_user_name));
 
-> “I want to find out which users are showing really strong habit formation — i.e., they used the app every single day for 7 consecutive days.”
+  END LOOP;
 
-
-
-
----
-
-💾 Table: user_logins
-
-login_id	user_id	login_date
-
-1	U1	2024-06-01
-2	U1	2024-06-02
-3	U1	2024-06-03
-4	U1	2024-06-04
-5	U1	2024-06-05
-6	U1	2024-06-06
-7	U1	2024-06-07
-8	U2	2024-06-01
-9	U2	2024-06-03
-10	U3	2024-06-10
-11	U3	2024-06-11
-12	U3	2024-06-12
-13	U3	2024-06-13
-14	U3	2024-06-14
-15	U3	2024-06-15
-16	U3	2024-06-16
-
-
-
----
-
-🎯 Your Goal:
-
-> Find all user_ids who logged in for 7 consecutive days at any point.
-
-
-
-
----
-
-📤 Expected Output:
-
-user_id
-
-U1
-U3
-
-
-
----
-
-🧠 Tips:
-
-You'll need window functions or date arithmetic
-
-Think about using ROW_NUMBER() or DENSE_RANK() on login_date
-
-Think about how to detect consecutive date sequences (difference between actual date and rank is constant)
-
-
-
----
-
-Your turn to shine 🔥
-Take your time, think it through, and when you’re ready — drop your attempt here. I’ll give feedback, hints, or high fives as needed 🫡
-
+  CLOSE user_cursor;
+END;
