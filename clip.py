@@ -1,29 +1,18 @@
-CREATE OR REPLACE PROCEDURE my_dataset.process_users()
-BEGIN
-  DECLARE done BOOL DEFAULT FALSE;
-  DECLARE v_user_id INT64;
-  DECLARE v_user_name STRING;
+CREATE OR REPLACE PROCEDURE Practice.log_visitors()
+BEGIN 
+   DECLARE v_id STRING;
+  FOR cur in (
+          SELECT fullvisitorid  from `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
+          GROUP BY fullvisitorid
+          limit 5
+  )
+  DO 
+    INSERT INTO Practice.audit_log(visitor_id,processed_at)  
+    VALUES (v_id,CURRENT_TIMESTAMP());
 
-  -- Define a cursor for selecting users
-  DECLARE user_cursor CURSOR FOR
-    SELECT user_id, user_name
-    FROM my_dataset.users;
+    END FOR;
 
-  -- Open cursor and iterate row by row
-  OPEN user_cursor;
+    END;
 
-  user_loop:
-  LOOP
-    FETCH user_cursor INTO v_user_id, v_user_name;
-    IF done THEN
-      LEAVE user_loop;
-    END IF;
 
-    -- Example processing: Insert into a log table
-    INSERT INTO my_dataset.user_log (log_time, message)
-    VALUES (CURRENT_TIMESTAMP(), CONCAT("Processed user: ", v_user_name));
 
-  END LOOP;
-
-  CLOSE user_cursor;
-END;
