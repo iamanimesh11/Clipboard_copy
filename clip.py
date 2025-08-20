@@ -1,19 +1,14 @@
-CREATE OR REPLACE TABLE Practice.audit_log(
 
-  visitor_id string,processed_at TIMESTAMP
-)
-CREATE OR REPLACE PROCEDURE Practice.log_visitors()
-BEGIN 
-  FOR cur in (
-          SELECT fullvisitorid  from `bigquery-public-data.google_analytics_sample.ga_sessions_20170801`
-          GROUP BY fullvisitorid
-          limit 5
-  )
-  DO 
-    INSERT INTO Practice.audit_log(visitor_id,processed_at)  
-    VALUES (cur.fullvisitorid,CURRENT_TIMESTAMP());
 
-    END FOR;
-    END;
+CREATE OR REPLACE PROCEDURE Practice.top_pages(in_suffix String,out page_count int64)
+BEGIN
+  DECLARE sql STRING;
+  SET sql='''
+    SELECT count(*) from (
+      SELECT h.page.pagePath from `bigquery-public-data.google_analytics_sample.ga_sessions_*`,unnest(hits) h 
+    where _TABLE_SUFFIX= @suffix and h.type='PAGE'
+    )
+    ''';
 
-CALL Practice.log_visitors()
+EXECUTE IMMEDIATE sql USING suffix AS in_suffix INTO page_count;
+END;
