@@ -1,14 +1,32 @@
 
-
-CREATE OR REPLACE PROCEDURE Practice.top_pages(in_suffix String,out page_count int64)
+-- BigQuery script example
 BEGIN
-  DECLARE sql STRING;
-  SET sql='''
-    SELECT count(*) from (
-      SELECT h.page.pagePath from `bigquery-public-data.google_analytics_sample.ga_sessions_*`,unnest(hits) h 
-    where _TABLE_SUFFIX= @suffix and h.type='PAGE'
-    )
-    ''';
 
-EXECUTE IMMEDIATE sql USING suffix AS in_suffix INTO page_count;
+  CREATE TEMP TABLE demo_table (
+    totals STRUCT<pageviews INT64, transactions INT64>,
+    tags ARRAY<STRING>,
+    hits ARRAY<STRUCT<pagePath STRING, timeOnPage INT64>>
+  );
+
+  INSERT INTO demo_table (totals, tags, hits)
+  VALUES
+  (
+    STRUCT(5 AS pageviews, 2 AS transactions),
+    ['analytics', 'bigquery', 'demo'],
+    [STRUCT('/home' AS pagePath, 10 AS timeOnPage),
+     STRUCT('/about' AS pagePath, 5 AS timeOnPage)]
+  ),
+  (
+    STRUCT(12 AS pageviews, 0 AS transactions),
+    ['cloud', 'sql'],
+    [STRUCT('/pricing' AS pagePath, 8 AS timeOnPage)]
+  ),
+  (
+    STRUCT(0 AS pageviews, 0 AS transactions),
+    [],  -- empty array
+    []   -- empty array of structs
+  );
+
+  SELECT * FROM demo_table;
+
 END;
