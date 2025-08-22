@@ -1,22 +1,21 @@
-CREATE OR REPLACE PROCEDURE Practice.sp_check_pageviews(IN in_suffix string ,IN  min_pageviews int64,out out_msg string)
+
+-- PROCEDURE FOR LOOP ,CONDITIONALS AND DYNAMIC SQL
+CREATE OR REPLACE PROCEDURE Practice.check_visitor_engagement(
+  IN in_suffix string,
+  IN low threshold INT64,
+  IN high_threshold INT64,
+  out out_Summary STRING 
+  )
 BEGIN 
+ DECLARE sql STRING ;
+ DECLARE fullvisitorid array;
+ DECLARE pageviews array;
 
-  DECLARE sql STRING;
-  DECLARE n int64 default 0;
-  SET sql='''
-  SELECT count(totals.pageviews)  as count_pageViews from `bigquery-public-data.google_analytics_sample.ga_sessions_*` where _TABLE_SUFFIX =@suffix
-''' ; 
-  Execute IMMEDIATE SQL INTO n using in_suffix as suffix;
-  if n =0 then 
-  set out_msg="No data for this date";
-  elseif n<min_pageviews then
-    set out_msg=FORMAT("low activity:%d Pageviews",n);
-  else 
-    set out_msg=FORMAT("good traffic %d Pageviews",n);
-  
-  end if ;
+ SET sql= ''' SELECT fullvisitorid,totals.pageviews from `bigquery-public-data.google_analytics_sample.ga_sessions_*` where _TABLE_SUFFIX =@suffix ''';
+
+ EXECUTE IMMEDIATE sql INTO fullvisitorid,pageviews USING in_suffix as suffix;
+
+ select fullvisitorid,pageviews;
+ 
+
 END;
-
-DECLARE nt string;
-CALL  Practice.sp_check_pageviews('20170801',5,nt);
-select nt;
