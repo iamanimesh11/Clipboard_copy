@@ -1,18 +1,11 @@
+getting error:Cannot access field source on a value with type STRING at [1:150]
 
-CREATE OR REPLACE PROCEDURE Practice.log_high_traffic_sessions(IN start_Date DATE,IN end_date DATE,OUT dates STRING)
-BEGIN
-
- LOOP
- IF start_Date>end_Date then 
-  BREAK;
- END IF; 
- 
- set dates=","+string(start_Date);
- SET start_Date=DATE_ADD(start_Date,INTERVAL 1 DAY);
-
-END LOOP;
-END;
-
-declare d string;
-CALL Practice.log_high_traffic_sessions('2017-08-01','2017-08-05',d);
-select d
+CREATE OR REPLACE TABLE Practice.ga_Sessions_partitioned PARTITION BY DATE(TIMESTAMP_SECONDS(visitStartTime)) CLUSTER BY fullVisitorId,trafficSource.source
+AS 
+  SELECT fullvisitorId,
+          visitStartTime,
+          totals.pageviews,
+          hits.page.pagePAth as pagePAth,
+          trafficSource.source AS trafficsource
+  from   `bigquery-public-data.google_analytics_sample.ga_sessions_*`, UNNEST(hits) AS hits
+  WHERE _TABLE_SUFFIX BETWEEN '20170801' AND '20170831';
