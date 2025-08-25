@@ -1,15 +1,21 @@
-one thing i have noticed :when i create table normaly without partion by and cluster by clause then data got inserted into it successfully :
-CREATE OR REPLACE TABLE Practice.ga_Sessions_partitioned_temp
+I did this query as you said first create table then make another table(with partition by cluster by on that table_)but you see whats happening when i query my table 
+  ga_Sessions_partitioned -its says no data to display and if same thing i do on ga_Sessions_partitioned_temp i.e select  fullvisitorId from Practice.ga_Sessions_partitioned_temp;
+then it shows data ex expected,i dont know whats happening .pleas help
 
-but when i did CREATE OR REPLACE TABLE Practice.ga_Sessions_partitioned_temp2 PARTITION BY visit_date CLUSTER BY fullVisitorId,trafficsource as
-  SELECT fullvisitorId,visitStartTime,totals.pageviews as pv,hits.page.pagePAth as pagePAth,trafficSource.source AS trafficsource,
+CREATE OR REPLACE TABLE Practice.ga_Sessions_partitioned_temp as
+  SELECT fullvisitorId,
+          visitStartTime,
+          totals.pageviews as pv,
+          hits.page.pagePAth as pagePAth,
+          trafficSource.source AS trafficsource,
           DATE(TIMESTAMP_SECONDS(visitStartTime)) as visit_date
   from   `bigquery-public-data.google_analytics_sample.ga_sessions_*`, UNNEST(hits) AS hits
   WHERE _TABLE_SUFFIX BETWEEN '20170801' AND '20170831';
 
 
-table created as well but  problem is when i do  run
-select count(*) from Practice.ga_Sessions_partitioned_temp2 ;
 
-it SHOWS:This query will process 0 B when run.
-BUT WHEN EXECUTED IT SHOWS COUNT AS :13233
+CREATE OR REPLACE TABLE Practice.ga_Sessions_partitioned PARTITION BY visit_Date CLUSTER BY fullVisitorId,trafficsource as 
+select * from Practice.ga_Sessions_partitioned_temp
+
+
+select  fullvisitorId from Practice.ga_Sessions_partitioned;
