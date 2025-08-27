@@ -1,38 +1,70 @@
--- Step 1: Create a sample table with some fake sales data
-CREATE OR REPLACE TABLE Practice.sales_data_temp AS
-SELECT 
-  DATE '2023-01-01' AS order_date, 'A101' AS customer_id, 'Electronics' AS category, 500 AS amount UNION ALL
-SELECT DATE '2023-01-01', 'A102', 'Clothing', 150 UNION ALL
-SELECT DATE '2023-01-02', 'A101', 'Electronics', 200 UNION ALL
-SELECT DATE '2023-01-02', 'A103', 'Books', 80 UNION ALL
-SELECT DATE '2023-01-03', 'A104', 'Clothing', 220 UNION ALL
-SELECT DATE '2023-01-03', 'A102', 'Books', 120 UNION ALL
-SELECT DATE '2023-01-04', 'A105', 'Electronics', 900;
+Dim sb As New System.Text.StringBuilder()
+
+' Start table with class
+sb.Append("<table class='custom-table'>")
+
+' Add table headers with conditional formatting
+Dim headerClassMap As New Dictionary(Of String, String)() ' Stores the header class for each column by name
+
+sb.Append("<tr class='header-row'>")
+For Each col As System.Data.DataColumn In dtData.Columns
+    Dim headerText As String = col.ColumnName
+    Dim headerClass As String = ""
+    Dim headerTextLower As String = headerText.ToLower() ' Convert to lowercase once for efficiency
+
+    ' Check the conditions for coloring
+    If headerTextLower.Contains("full") AndAlso headerTextLower.Contains("pm") AndAlso headerTextLower.Contains("plan") Then
+        headerClass = "header-yellow"
+    ElseIf headerTextLower.Contains("light") AndAlso headerTextLower.Contains("pm") AndAlso headerTextLower.Contains("plan") AndAlso Not headerTextLower.Contains("red") Then
+        headerClass = "header-yellow"
+    ElseIf headerTextLower.Contains("red") Then
+        headerClass = "header-red"
+    ElseIf headerTextLower.Contains("lg support manager") Then
+        headerClass = "header-yellow"
+    Else
+        headerClass = "header-grey"
+    End If
+
+    sb.Append("<th class='" & headerClass & " header-centre'>" & headerText & "</th>")
+ If headerTextLower.Contains("count") Then
+        headerClass = "header-red"
+	End If
+    ' Store the header class for this column
+    headerClassMap.Add(headerText, headerClass)
+Next
+sb.Append("</tr>")
+
+' Add table rows with alternating colors and conditional formatting for Status
+Dim rowIndex As Integer = 0
+
+For Each row As DataRow In dtData.Rows
+    Dim rowClass As String = If(rowIndex Mod 2 = 0, "even-row", "odd-row")
+    sb.Append("<tr class='" & rowClass & "'>")
+
+    For Each col As System.Data.DataColumn In dtData.Columns
+    Dim cellValue As String = row(col.ColumnName).ToString()
+    Dim cellClass As String = ""
+
+ 
+
+ If rowIndex=dtDATA.Rows.Count -1 Then 
+		cellClass &= " bold_txt"
+		
+	End If 
+	
+
+    ' Center-align numeric values
+    If IsNumeric(cellValue)Then
+        cellClass &= " cell-center"
+    End If
 
 
+    sb.Append("<td class='" & cellClass.Trim() & "'>" & cellValue & "</td>")
+Next
 
--- Step 2: Create a PARTITIONED + CLUSTERED table
-CREATE OR REPLACE TABLE Practice.sales_data
-PARTITION BY order_date
-CLUSTER BY customer_id, category AS
-SELECT * FROM Practice.sales_data_temp;
+    sb.Append("</tr>")
+    rowIndex += 1
+Next
 
-
-
-
-
--- Step 3: Query with partition pruning (only scans one partition)
-SELECT *
-FROM Practice.sales_data
-WHERE order_date = '2023-01-02';
-
-
-
-
-
-
--- Step 4: Query with clustering benefit
-SELECT *
-FROM Practice.sales_data
-WHERE customer_id = 'A101'
-  AND order_date BETWEEN '2023-01-01' AND '2023-01-03';
+sb.Append("</table>")
+htmlTable = sb.ToString()
