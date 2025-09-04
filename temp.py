@@ -1,3 +1,5 @@
-There is a tournament organized between football clubs from different major cities in India. You need to create a fixtures sheet with columns Opponent_A and Opponent_B with the cities competing against each other. All the cities have to play exactly one game with the rest of the cities participating in the tournament.
+There is a tournament organized between football clubs from different major cities in India. You need to create a fixtures sheet with columns 
+Opponent_A and Opponent_B with the cities competing against each other. All the cities have to play exactly one game with the rest of the cities 
+participating in the tournament.
 
 Write a query to give the fixtures list in the Alphabetical Order of Opponent_A and Opponent_B.
