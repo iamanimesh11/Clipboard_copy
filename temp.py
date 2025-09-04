@@ -1,5 +1,15 @@
-There is a tournament organized between football clubs from different major cities in India. You need to create a fixtures sheet with columns 
-Opponent_A and Opponent_B with the cities competing against each other. All the cities have to play exactly one game with the rest of the cities 
-participating in the tournament.
+. [1222040] Continent with third higher Hunger affected population percentage
 
-Write a query to give the fixtures list in the Alphabetical Order of Opponent_A and Opponent_B.
+You have been provided following data by the WHO to understand the details of world hunger.
+
+Table: World_hunger_data
+
+Continent (VARCHAR) - Name of the Continent
+
+Country (VARCHAR) - Name of the country for which details are given
+
+Population (INTEGER) - Total population of the country
+
+Affected Population (INTEGER) - Total population which is affected by hunger issues
+
+Message
