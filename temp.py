@@ -1,17 +1,10 @@
+Respected Ma’am,
 
-Respected Ma'am,
+Currently, no root cause has been identified for the issue.
 
+The Self-RPA-HELPDESK team informed me that the UiPath Windows version is still under upgrade. At present, they don’t have a solution for the unexpected crashes occurring while developing processes in the Windows environment. Additionally, there is no known way to debug the differences between the bot-PC and cloud-PC environments.
 
-
-Actually, there is no known source of issue right now.
-
-Self-RPA-HELPDESK told me that UIPATH windows version is still upgrading, and they don't have any solution for unexpected crashes of UiPath while developing process in Windows version. Also, no known way is there to debug what's difference in bot-pc and cloud-pc environment.
-
-In the meantime, A unexpected system exception happens randomly for which I'll get in touch with Preetam Sir. In a case if it resolves the problem
-
-
+Meanwhile, the unexpected system exception continues to occur intermittently. Preetam Sir suggested that I try reinstalling UiPath once to see if it resolves the issue, so I will check this.
 
 Best regards,
-
-animesh 
-
+Animesh
