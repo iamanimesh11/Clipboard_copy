@@ -1,18 +1,15 @@
-curl -X POST http://localhost:5005/webhooks/rest/webhook -H "Content-Type: application/json" -d '{"sender": "test_user", "message": "Hello"}'
+Dear All,
 
 
-#initlaize rasa folder:
-docker run -it -v $(pwd):/app rasa/rasa:3.6.20 init --no-prompt
+
+Sorry for any inconvenience caused to you,
+
+The RPA output for today have been shared. 
+
+Kindly note that today output ran on Unprocessed Invoice Checking_12092025.xlsx file and Worksheet in HQ_RPA_Un_Booked Expense tracking system_10092025.xlsx file  exist on FTP server .So in case if there is any miscalculation then last pendency file need to be updated as well as AP movement file due to gap of two days failure of RPA.
 
 
-		docker run -it -v $(pwd):/app -p 5055:5055 rasa/rasa-sdk:3.6.20 run actions
-docker run -it -v $(pwd):/app -p 5005:5005 rasa/rasa:3.6.20 run
-class ActionCheckWeather(Action):
-    def name(self) -> Text:
-        return "action_check_weather"
 
-    def run(self, dispatcher, tracker, domain):
-        city = tracker.get_slot("city")
-        weather = call_weather_api(city)
-        dispatcher.utter_message(f"The weather in {city} is {weather}")
-        return []
+Thanks & best Regards,
+
+Animesh
