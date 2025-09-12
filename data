@@ -1,15 +1,10 @@
 Dear All,
 
+Apologies for any inconvenience caused.
 
+The RPA output for today has been shared. Please note that today’s output was generated using the file Unprocessed Invoice Checking_12092025.xlsx. The worksheet in HQ_RPA_Un_Booked Expense Tracking System_10092025.xlsx is also available on the FTP server.
 
-Sorry for any inconvenience caused to you,
+In case of any miscalculations, kindly ensure that the last pendency file is updated, along with the AP movement file, as the two-day RPA failure may have created a gap.
 
-The RPA output for today have been shared. 
-
-Kindly note that today output ran on Unprocessed Invoice Checking_12092025.xlsx file and Worksheet in HQ_RPA_Un_Booked Expense tracking system_10092025.xlsx file  exist on FTP server .So in case if there is any miscalculation then last pendency file need to be updated as well as AP movement file due to gap of two days failure of RPA.
-
-
-
-Thanks & best Regards,
-
+Thanks & Best Regards,
 Animesh
