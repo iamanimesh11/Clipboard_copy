@@ -1,0 +1,20 @@
+🔹 Correct Order
+
+Initialize project (one time):
+
+docker run -it -v $(pwd):/app -w /app rasa/rasa:3.6.21-full init --no-prompt
+
+
+Train your model (optional, rasa init trains a default model):
+
+docker run -it -v $(pwd):/app -w /app rasa/rasa:3.6.21-full train
+
+
+Run Rasa server:
+
+docker run -it -v $(pwd):/app -w /app -p 5005:5005 rasa/rasa:3.6.21-full run --enable-api
+
+
+Run Action Server (custom actions):
+
+docker run -it -v $(pwd):/app -w /app -p 5055:5055 rasa/rasa-sdk:latest run actions
