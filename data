@@ -1,17 +1,11 @@
--- Create the table
-CREATE TABLE page_visits (
-    user_id VARCHAR(50),
-    page_id VARCHAR(50),
-    visit_time DATETIME
-);
-
--- Insert data into the table
-INSERT INTO page_visits (user_id, page_id, visit_time) VALUES
-('U1', 'Home', '2024-06-01 10:00:00'),
-('U1', 'Product', '2024-06-01 10:05:00'),
-('U1', 'Cart', '2024-06-01 10:07:00'),
-('U1', 'Checkout', '2024-06-01 10:10:00'),
-('U2', 'Home', '2024-06-01 11:00:00'),
-('U2', 'Product', '2024-06-01 11:10:00'),
-('U2', 'Home', '2024-06-01 11:15:00'),
-('U3', 'Home', '2024-06-01 12:00:00');
+with timediff_dt  as (
+select user_id,page_id,visit_time,
+TIMESTAMPDIFF(MINUTE,
+    lag(visit_time) over (partition by user_id order by visit_time),
+    visit_time) as t 
+from page_visits
+)
+select user_id,page_id,visit_time,t,
+case when t >15 then 1 else 0
+end as new_Session_flag
+from timediff_dt
