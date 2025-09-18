@@ -35,13 +35,35 @@ sum(new_Session_flag) over (partition by user_id order by visit_time) as s_id
 
 from session_flags
 )
-select user_id,s_id,min(visit_time) as s_Start,max(visit_time) as s_end,
-TIMESTAMPDIFF(MINUTE,min(visit_time),max(visit_time)) as 'duration(mins)',
+,
+-- per user stats
+per_user_stats as (
+ select user_id,s_id,min(visit_time) as s_Start,max(visit_time) as s_end,
+TIMESTAMPDIFF(MINUTE,min(visit_time),max(visit_time)) as duration_mins,
 count(page_id) as total_pages,
-group_concat(page_id) as gc 
+group_concat(page_id) as gc ,
+case when count(page_id) =1 then 1 else 0 end as is_bounce
 from finaldt
 group by user_id,s_id
+)
 
+-- system level stats
+-- avg session duration across all users
 
+-- select avg(duration_mins) from per_user_stats
 
+-- select distinct(s_id) from finaldt
+-- select (count(is_bounce=1)/count(is_bounce))*100  from per_user_stats
 
+-- select (sum(case when is_bounce=1 then 1 else 0 end) *100 /count(*)) 
+-- as bouce_Rate
+-- from per_user_stats
+
+-- top 5 session entry pages 
+select page_id,count(*) as session_Starts from (
+select user_id,s_id ,page_id,
+row_number() over (partition by user_id,s_id order by visit_time) as rn 
+from finaldt ) as t 
+where rn =1
+group by page_id
+order by session_Starts desc 
