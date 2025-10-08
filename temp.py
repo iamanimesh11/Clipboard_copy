@@ -1,3 +1,17 @@
+-- Create the tables first
+CREATE TABLE users (
+    user_id INT PRIMARY KEY,  signup_date DATE NOT NULL
+);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,user_id INT NOT NULL,order_date DATE NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+-- Insert data into the tables
+INSERT INTO users (user_id, signup_date) VALUES (101, '2024-01-01'), (102, '2024-01-10'),(103, '2024-02-15');
+INSERT INTO orders (order_id, user_id, order_date, amount) VALUES (1, 101, '2024-01-05', 200),(2, 101, '2024-02-10', 300),(3, 102, '2024-01-15', 150),
+(4, 103, '2024-03-01', 500),(5, 101, '2024-03-20', 250);
+
 with cte as(
 select u.*,o.order_date,o.amount from users u join orders o on u.user_id=o.user_id
 ),
@@ -15,4 +29,6 @@ case when sum(amount)>= 1000 then 'Gold' when sum(amount)<=500 then "silver"
 else 'Bronze' end as loyaly_tier
 from cte2
 group by user_id
+
+
 
