@@ -34,41 +34,53 @@ group by user_id
 
 
 
-
-†**************
-
--- Create the 'users' table
 CREATE TABLE users (
-    user_id INT PRIMARY KEY,
-    signup_date DATE
-);
+    user_id INT PRIMARY KEY,signup_date DATE );
 
 -- Insert data into the 'users' table
 INSERT INTO users (user_id, signup_date) VALUES
-(101, '2024-01-15'),
-(102, '2024-02-05'),
-(103, '2024-02-28'),
-(104, '2024-03-10');
+(101, '2024-01-15'),(102, '2024-02-05'),(103, '2024-02-28'),(104, '2024-03-10');
 
 -- Create the 'orders' table
 CREATE TABLE orders (
-    order_id INT PRIMARY KEY,
-    user_id INT,
-    order_date DATE,
-    amount DECIMAL(10, 2),
+    order_id INT PRIMARY KEY,user_id INT,order_date DATE,amount DECIMAL(10, 2),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 -- Insert data into the 'orders' table
 INSERT INTO orders (order_id, user_id, order_date, amount) VALUES
-(1, 101, '2024-01-20', 100),
-(2, 101, '2024-02-10', 120),
-(3, 101, '2024-03-05', 200),
-(4, 102, '2024-02-10', 80),
-(5, 102, '2024-03-12', 120),
-(6, 103, '2024-03-15', 90),
-(7, 104, '2024-03-18', 150),
-(8, 104, '2024-04-20', 160),
+(1, 101, '2024-01-20', 100),(2, 101, '2024-02-10', 120),(3, 101, '2024-03-05', 200),(4, 102, '2024-02-10', 80),
+(5, 102, '2024-03-12', 120),(6, 103, '2024-03-15', 90),(7, 104, '2024-03-18', 150),(8, 104, '2024-04-20', 160),
 (9, 104, '2024-05-22', 200);
+
+with user_cohort as (
+select user_id,
+signup_date,
+DATE_format(signup_date,'%Y-%m') as cohort_month from users
+)
+,user_orders as (
+select  o.user_id,o.order_date ,uc.cohort_month,
+timestampdiff(Month,uc.signup_date,o.order_date) as months_since_signup
+from orders o  join user_cohort uc on uc.user_id=o.user_id
+),
+
+cohort_activity as (
+select cohort_month,months_since_signup,
+count(distinct user_id) as active_users 
+from user_orders group by cohort_month,months_since_signup
+),
+
+cohort_size as (
+select cohort_month,
+count(distinct user_id) as  total_users
+from user_cohort
+group by cohort_month
+)
+
+select ca.*, cs.total_users,
+round((ca.active_users / cs.total_users) * 100, 2) as retention_Date_percent
+from cohort_activity ca
+join cohort_size cs
+on ca.cohort_month = cs.cohort_month
 
 
