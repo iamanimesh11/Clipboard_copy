@@ -1,35 +1,16 @@
-Sub ApplyBlankFilter(wsName As String, filterColumn As Long)
-    Dim ws As Worksheet
-    Dim calcMode As XlCalculation
 
-    ' Turn off things that slow Excel down
-    With Application
-        .ScreenUpdating = False
-        .EnableEvents = False
-        calcMode = .Calculation
-        .Calculation = xlCalculationManual
-    End With
+select restaurant_id,avg(base_price) as avg_bp,
+avg(dynamic_price)
+as avg_dp,avg(final_price) as avg_fp,
+(avg(dynamic_price)-avg(base_price))/avg(base_price) *100 as revenue_change,
+case when (avg(dynamic_price)-avg(base_price))/avg(base_price) *100 >=10 then "BENEFICIAL"
+WHEN (avg(dynamic_price)-avg(base_price))/avg(base_price) *100 <=10 then "lost revenue"
+else "neutral" 
+end as status
+from orders 
+group by restaurant_id
 
-    ' Safely set worksheet
-    On Error Resume Next
-    Set ws = ThisWorkbook.Sheets(wsName)
-    On Error GoTo 0
 
-    If ws Is Nothing Then GoTo Cleanup
 
-    ' Ensure there is an AutoFilter on the sheet
-    If Not ws.AutoFilterMode Then
-        ws.Range("A1").AutoFilter
-    End If
 
-    ' Apply filter to show only blanks in specified column
-    ws.AutoFilter.Range.AutoFilter Field:=filterColumn, Criteria1:="="
 
-Cleanup:
-    ' Restore Excel settings
-    With Application
-        .Calculation = calcMode
-        .EnableEvents = True
-        .ScreenUpdating = True
-    End With
-End Sub
