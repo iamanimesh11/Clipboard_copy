@@ -1,11 +1,27 @@
-Sub ClearFiltersbackup(wsName As String)
+Sub ClearFiltersBackup(wsName As String)
     Dim ws As Worksheet
-    
+    Dim calcMode As XlCalculation
+
+    ' Store current Excel settings
+    With Application
+        .ScreenUpdating = False
+        .EnableEvents = False
+        calcMode = .Calculation
+        .Calculation = xlCalculationManual
+    End With
+
     On Error Resume Next
     Set ws = ThisWorkbook.Sheets(wsName)
     On Error GoTo 0
-    
+
     If Not ws Is Nothing Then
         If ws.AutoFilterMode Then ws.AutoFilterMode = False
     End If
+
+    ' Restore original settings
+    With Application
+        .Calculation = calcMode
+        .EnableEvents = True
+        .ScreenUpdating = True
+    End With
 End Sub
