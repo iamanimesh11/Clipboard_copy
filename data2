@@ -1,27 +1,15 @@
-Sub ClearFiltersBackup(wsName As String)
+Sub ApplyBlankFilter(wsName As String, filterColumn As Long)
     Dim ws As Worksheet
-    Dim calcMode As XlCalculation
-
-    ' Store current Excel settings
-    With Application
-        .ScreenUpdating = False
-        .EnableEvents = False
-        calcMode = .Calculation
-        .Calculation = xlCalculationManual
-    End With
-
+    
     On Error Resume Next
     Set ws = ThisWorkbook.Sheets(wsName)
     On Error GoTo 0
-
-    If Not ws Is Nothing Then
-        If ws.AutoFilterMode Then ws.AutoFilterMode = False
+    
+    If ws Is Nothing Then Exit Sub
+    
+    If Not ws.AutoFilterMode Then
+        ws.Range("A1").AutoFilter
     End If
-
-    ' Restore original settings
-    With Application
-        .Calculation = calcMode
-        .EnableEvents = True
-        .ScreenUpdating = True
-    End With
+    
+    ws.AutoFilter.Range.AutoFilter Field:=filterColumn, Criteria1:="="
 End Sub
