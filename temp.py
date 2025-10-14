@@ -1,24 +1,20 @@
-
--- 2. Behavioral Funnels:
--- For each user, sequence their events.]
--- Identify users who dropped off at each funnel step.
--- Compute time spent between steps.
-WITH CTE AS(
-select user_id,event_type,event_time,
-case when event_type ='browse' then 1 
-when event_type='add_to_cart' then 2 
-when event_type ='purchase' then 3 
-end as  rn ,
-
-TIMESTAMPdiff(minute,lag(event_time) over (partition by user_id 
-                order by field(event_type,'browse','add_to_cart','purchase')
-),event_time ) as time_Diff
-from user_events
-)
-
-SELECT user_id,
-case when 1 not in (select rn where user_id=user_id) then 'browse',
-case when 2 not in (select rn where user_id=user_id) then 'add_to_Cart',
-case when 3 not in (select rn where user_id=user_id) then 'purchase'
-end as c 
-from cte 
++----------+---------+------------+------------------+--------+---------------+
+| order_id | user_id | order_date | product_category | amount | dynamic_price |
++----------+---------+------------+------------------+--------+---------------+
+|     5001 |     101 | 2024-01-16 | electronics      | 150.00 |        145.00 |
+|     5002 |     102 | 2024-01-21 | books            |  25.50 |         25.50 |
+|     5003 |     101 | 2024-02-01 | electronics      | 160.00 |        160.00 |
+|     5004 |     103 | 2024-02-06 | home_goods       |  75.00 |         70.00 |
+|     5005 |     101 | 2024-03-02 | books            |  30.00 |         31.00 |
+|     5006 |     105 | 2024-03-05 | electronics      | 200.00 |        210.00 |
+|     5007 |     106 | 2024-03-04 | home_goods       |  50.00 |         50.00 |
+|     5008 |     108 | 2024-04-02 | electronics      | 180.00 |        185.00 |
+|     5009 |     102 | 2024-04-03 | books            |  28.00 |         28.00 |
+|     5010 |     109 | 2024-04-06 | home_goods       |  85.00 |         80.00 |
+|     5011 |     102 | 2024-04-15 | books            |  28.00 |         35.00 |
+|     5012 |     104 | 2024-04-20 | electronics      | 300.00 |        305.00 |
+|     5013 |     101 | 2024-04-25 | electronics      | 155.00 |        160.00 |
+|     5014 |     107 | 2024-02-01 | widgets          |  10.00 |         10.00 |
+|     5015 |     107 | 2024-03-01 | widgets          |   5.00 |          5.00 |
+|     5016 |     108 | 2024-04-01 | gizmos           |  50.00 |         50.00 |
++----------+---------+------------+------------------+--------+---------------+
