@@ -1,17 +1,25 @@
-Sub RemoveDuplicates_AllColumns()
+Sub RemoveDuplicates_AllColumns_ActiveSheet()
     Dim ws As Worksheet
     Dim lastRow As Long
     Dim lastCol As Long
+    Dim colArray() As Long
+    Dim i As Long
     
-    ' Set your worksheet
-    Set ws = ThisWorkbook.Sheets("Sheet1") ' Change Sheet1 to your sheet name
+    ' Use the active sheet
+    Set ws = ActiveSheet
     
-    ' Find the last used row and column
+    ' Find last used row and column
     lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
     lastCol = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
     
-    ' Remove duplicates based on all columns
-    ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol)).RemoveDuplicates Columns:=Evaluate("ROW(1:" & lastCol & ")"), Header:=xlYes
+    ' Create an array of all column numbers
+    ReDim colArray(1 To lastCol)
+    For i = 1 To lastCol
+        colArray(i) = i
+    Next i
     
-    MsgBox "Duplicates removed successfully!", vbInformation
+    ' Remove duplicates based on all columns
+    ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol)).RemoveDuplicates Columns:=colArray, Header:=xlYes
+    
+    MsgBox "Duplicates removed successfully from the active sheet!", vbInformation
 End Sub
