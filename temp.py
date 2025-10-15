@@ -18,36 +18,57 @@ INSERT INTO user_events (event_id, user_id, event_type, event_time) VALUES (8001
 (8015, 102, 'add_to_cart', '2024-04-02 11:05:00'),(8016, 102, 'purchase', '2024-04-03 08:00:00'),(8017, 108, 'browse', '2024-04-01 10:00:00'),(8018, 108, 'purchase', '2024-04-02 10:00:00');
 
 
+-- 4. Top Retention Users per Plan:
+-- Users with highest repeat orders in last 90 days, rank them by frquency and total spend
+
+
+
+with cte as (
+select user_id,order_date,
+TIMESTAMPdiff(day,order_date,lag(order_date) over( partition by user_id order by order_date ))
+as prev_order_Date,
+amount
+from orders order by user_id
+)
+
+select user_id ,count(order_date)-1 as total_repeating_orders,sum(amount) as total_amount
+from cte 
+group by user_id
+order by count(order_date)- 1 desc  ,total_amount desc 
+
+
+
+
 -- 3. Revenue Anomalies:
 -- Compare dynamic price vs base price across products.
 -- Flag products where revenue per unit changed >50% vs last month.
 
-with monthly_Revenue as (
-select product_category,date_format(order_date,'%Y-%m') as order_month,
-round(avg(amount),2) as avg_Revenue_per_order,
-round(avg(dynamic_price),2) as avg_dynamic_price
-from orders
-group by product_category ,
-date_format(order_date,'%Y-%m')
-order by product_category
-),
+-- with monthly_Revenue as (
+-- select product_category,date_format(order_date,'%Y-%m') as order_month,
+-- round(avg(amount),2) as avg_Revenue_per_order,
+-- round(avg(dynamic_price),2) as avg_dynamic_price
+-- from orders
+-- group by product_category ,
+-- date_format(order_date,'%Y-%m')
+-- order by product_category
+-- ),
 
-compare_changes as (
-select * ,
-lag(avg_Revenue_per_order) over 
-  (partition by product_category
-  order by order_month) as prev_revenue_per_order
-  from monthly_Revenue )
+-- compare_changes as (
+-- select * ,
+-- lag(avg_Revenue_per_order) over 
+--   (partition by product_category
+--   order by order_month) as prev_revenue_per_order
+--   from monthly_Revenue )
 
-select *,
-round(((avg_Revenue_per_order-prev_revenue_per_order)/prev_revenue_per_order)*100
-,2)as pct_change,
-case when 
-abs((avg_Revenue_per_order-prev_revenue_per_order)/prev_revenue_per_order)>0.5 then 'anomaly'
-else 'normmal'end as anomaly_flag
-from compare_changes
-where prev_revenue_per_order is not null 
-order by product_category,order_month
+-- select *,
+-- round(((avg_Revenue_per_order-prev_revenue_per_order)/prev_revenue_per_order)*100
+-- ,2)as pct_change,
+-- case when 
+-- abs((avg_Revenue_per_order-prev_revenue_per_order)/prev_revenue_per_order)>0.5 then 'anomaly'
+-- else 'normmal'end as anomaly_flag
+-- from compare_changes
+-- where prev_revenue_per_order is not null 
+-- order by product_category,order_month
 
 
 
@@ -96,7 +117,7 @@ order by product_category,order_month
 
 
 -- --  cohort _analysis
-
+-- 1. 
 -- with user_cohort as (
 -- select distinct month(signup_date) from users 
 -- )
