@@ -1,9 +1,10 @@
-Sub RemoveDuplicates_ActiveSheet_AllColumns()
+Sub RemoveDuplicates_ActiveSheet_AutoHeader()
     Dim ws As Worksheet
     Dim lastRow As Long
     Dim lastCol As Long
     Dim colArray() As Long
     Dim i As Long
+    Dim hasHeader As Boolean
     
     ' Use the active sheet
     Set ws = ActiveSheet
@@ -18,21 +19,23 @@ Sub RemoveDuplicates_ActiveSheet_AllColumns()
         Exit Sub
     End If
     
+    ' Determine if sheet has headers (simple check: first row is text)
+    hasHeader = False
+    For i = 1 To lastCol
+        If Not IsNumeric(ws.Cells(1, i).Value) And ws.Cells(1, i).Value <> "" Then
+            hasHeader = True
+            Exit For
+        End If
+    Next i
+    
     ' Create an array of all column numbers
     ReDim colArray(1 To lastCol)
     For i = 1 To lastCol
         colArray(i) = i
     Next i
     
-    ' Remove duplicates safely
-    On Error Resume Next
-    ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol)).RemoveDuplicates Columns:=colArray, Header:=xlYes
-    If Err.Number <> 0 Then
-        MsgBox "Error removing duplicates. Possibly only one row or incorrect header setting.", vbCritical
-        Err.Clear
-        Exit Sub
-    End If
-    On Error GoTo 0
+    ' Remove duplicates
+    ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol)).RemoveDuplicates Columns:=colArray, Header:=IIf(hasHeader, xlYes, xlNo)
     
     MsgBox "Duplicates removed successfully!", vbInformation
 End Sub
