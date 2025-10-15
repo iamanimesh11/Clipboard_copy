@@ -1,4 +1,4 @@
-Sub RemoveDuplicates_AllColumns_ActiveSheet()
+Sub RemoveDuplicates_ActiveSheet_AllColumns()
     Dim ws As Worksheet
     Dim lastRow As Long
     Dim lastCol As Long
@@ -12,14 +12,27 @@ Sub RemoveDuplicates_AllColumns_ActiveSheet()
     lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
     lastCol = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
     
+    ' Check if there is data to process
+    If lastRow < 2 Or lastCol < 1 Then
+        MsgBox "Not enough data to remove duplicates.", vbExclamation
+        Exit Sub
+    End If
+    
     ' Create an array of all column numbers
     ReDim colArray(1 To lastCol)
     For i = 1 To lastCol
         colArray(i) = i
     Next i
     
-    ' Remove duplicates based on all columns
+    ' Remove duplicates safely
+    On Error Resume Next
     ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol)).RemoveDuplicates Columns:=colArray, Header:=xlYes
+    If Err.Number <> 0 Then
+        MsgBox "Error removing duplicates. Possibly only one row or incorrect header setting.", vbCritical
+        Err.Clear
+        Exit Sub
+    End If
+    On Error GoTo 0
     
-    MsgBox "Duplicates removed successfully from the active sheet!", vbInformation
+    MsgBox "Duplicates removed successfully!", vbInformation
 End Sub
