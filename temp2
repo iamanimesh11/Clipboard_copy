@@ -1,41 +1,113 @@
-Sub RemoveDuplicates_ActiveSheet_AutoHeader()
-    Dim ws As Worksheet
-    Dim lastRow As Long
-    Dim lastCol As Long
-    Dim colArray() As Long
-    Dim i As Long
-    Dim hasHeader As Boolean
-    
-    ' Use the active sheet
-    Set ws = ActiveSheet
-    
-    ' Find last used row and column
-    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
-    lastCol = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
-    
-    ' Check if there is data to process
-    If lastRow < 2 Or lastCol < 1 Then
-        MsgBox "Not enough data to remove duplicates.", vbExclamation
-        Exit Sub
-    End If
-    
-    ' Determine if sheet has headers (simple check: first row is text)
-    hasHeader = False
-    For i = 1 To lastCol
-        If Not IsNumeric(ws.Cells(1, i).Value) And ws.Cells(1, i).Value <> "" Then
-            hasHeader = True
-            Exit For
-        End If
-    Next i
-    
-    ' Create an array of all column numbers
-    ReDim colArray(1 To lastCol)
-    For i = 1 To lastCol
-        colArray(i) = i
-    Next i
-    
-    ' Remove duplicates
-    ws.Range(ws.Cells(1, 1), ws.Cells(lastRow, lastCol)).RemoveDuplicates Columns:=colArray, Header:=IIf(hasHeader, xlYes, xlNo)
-    
-    MsgBox "Duplicates removed successfully!", vbInformation
-End Sub
+
+PySpark Revision Topics
+
+1️⃣ PySpark Basics
+
+SparkSession creation and usage
+
+Reading/Writing data (CSV, JSON, Parquet, Hive tables)
+
+DataFrame vs RDD (when to use which)
+
+Schema inspection: .printSchema(), .dtypes, .schema
+
+
+2️⃣ DataFrame Operations
+
+Selecting columns: .select(), .withColumn()
+
+Filtering: .filter(), .where()
+
+Adding/modifying columns
+
+Dropping columns: .drop()
+
+Renaming columns: .withColumnRenamed()
+
+
+3️⃣ Joins
+
+Inner, left, right, full outer joins
+
+Self-joins and multi-table joins
+
+Broadcast joins (broadcast(df)) for small tables
+
+
+4️⃣ Aggregations
+
+groupBy() + agg()
+
+Common aggregations: sum(), count(), avg(), min(), max()
+
+Multiple aggregations at once
+
+distinct() and dropDuplicates()
+
+
+5️⃣ Window Functions
+
+row_number(), rank(), dense_rank()
+
+lead(), lag()
+
+Partitioning and ordering in windows
+
+Deduplication using window functions
+
+
+6️⃣ Transformations vs Actions
+
+Transformations: map(), flatMap(), filter(), select(), groupBy()
+
+Actions: show(), count(), collect(), take()
+
+
+7️⃣ Handling Nulls and Missing Data
+
+fillna(), dropna(), replace()
+
+
+8️⃣ Data Cleaning & Transformation
+
+withColumn() + when/otherwise
+
+split(), concat(), regexp_replace(), substring()
+
+Date & timestamp manipulation
+
+
+9️⃣ Optimization
+
+Caching & persistence: .cache(), .persist()
+
+Repartitioning vs coalescing: .repartition(), .coalesce()
+
+Avoiding shuffles in joins and aggregations
+
+Broadcast join for small tables
+
+
+🔟 User Defined Functions (UDFs)
+
+Writing Python/Scala UDFs
+
+Applying UDFs on DataFrames
+
+Using pandas_udf for better performance
+
+
+1️⃣1️⃣ Miscellaneous / Good to Review
+
+Sorting: .orderBy(), .sort()
+
+Collecting top-k results: .take(n), .head(n)
+
+Joining multiple DataFrames efficiently
+
+Using .alias() for column names
+
+Basic Spark SQL queries: spark.sql("SELECT ...")
+
+
+
