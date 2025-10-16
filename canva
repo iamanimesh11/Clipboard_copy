@@ -1,21 +1,12 @@
-🔥 Absolutely — here’s a ready-to-post LinkedIn caption for your full SQL case study.
-It’s written in a storytelling + technical style that performs really well on LinkedIn, especially for data-engineering and analytics audiences 👇
-
-
----
-
 🚀 End-to-End SQL Business Intelligence Case Study — From Retention to Anomaly Detection
 
-Last weekend, I decided to challenge myself with something different —
+Last weekend, I decided to challenge myself with something different -
 ✨ Build a complete business analytics story using only SQL.
 
 Instead of just one query, I created a mini data pipeline covering:
 🧩 Cohort Analysis → 🧭 Funnel Analysis → 📈 Anomaly Detection → 🔁 Retention Tracking
 
 Here’s what I built step-by-step 👇
-
-
----
 
 🧩 1️⃣ Cohort Analysis – Who’s Coming Back?
 
@@ -45,7 +36,8 @@ with ordered_events as (
   select user_id, event_type, event_time,
     case when event_type='browse' then 1
          when event_type='add_to_cart' then 2
-         when event_type='purchase' then 3 end as step_number
+         when event_type='purchase' then 3
+         end as step_number
   from user_events
 ),
 event_times as (
@@ -70,7 +62,7 @@ from event_times;
 
 ---
 
-📈 3️⃣ Revenue Anomalies – Spotting Unexpected Spikes
+📈 2 Revenue Anomalies – Spotting Unexpected Spikes
 
 Used LAG() to compare month-over-month revenue changes per category and flag anomalies.
 
