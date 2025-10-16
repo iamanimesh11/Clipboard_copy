@@ -1,1 +1,146 @@
+🔥 Absolutely — here’s a ready-to-post LinkedIn caption for your full SQL case study.
+It’s written in a storytelling + technical style that performs really well on LinkedIn, especially for data-engineering and analytics audiences 👇
+
+
+---
+
+🚀 End-to-End SQL Business Intelligence Case Study — From Retention to Anomaly Detection
+
+Last weekend, I decided to challenge myself with something different —
+✨ Build a complete business analytics story using only SQL.
+
+Instead of just one query, I created a mini data pipeline covering:
+🧩 Cohort Analysis → 🧭 Funnel Analysis → 📈 Anomaly Detection → 🔁 Retention Tracking
+
+Here’s what I built step-by-step 👇
+
+
+---
+
+🧩 1️⃣ Cohort Analysis – Who’s Coming Back?
+
+Calculated each user’s signup cohort and their monthly retention trend.
+→ Helps the marketing team see how long users stay engaged.
+
+with cohort_activity as (
+   select u.user_id, ue.event_time,
+          month(u.signup_date) as cohort_month,
+          timestampdiff(month, u.signup_date, ue.event_time) as month_since_signup
+   from users u
+   join user_events ue on ue.user_id=u.user_id
+)
+select cohort_month, month_since_signup, count(distinct user_id) as active_users
+from cohort_activity
+group by cohort_month, month_since_signup;
+
+
+---
+
+🧭 2️⃣ Funnel Analysis – Where Do Users Drop Off?
+
+Mapped user journeys from browse → cart → purchase,
+and labeled each with funnel status + time gaps between steps.
+
+with ordered_events as (
+  select user_id, event_type, event_time,
+    case when event_type='browse' then 1
+         when event_type='add_to_cart' then 2
+         when event_type='purchase' then 3 end as step_number
+  from user_events
+),
+event_times as (
+  select user_id,
+    max(case when event_type='browse' then event_time end) as browse_time,
+    max(case when event_type='add_to_cart' then event_time end) as add_to_cart,
+    max(case when event_type='purchase' then event_time end) as purchase_time
+  from ordered_events
+  group by user_id
+)
+select user_id,
+  case
+    when browse_time is null then 'no browse'
+    when add_to_cart is null then 'dropped after browse'
+    when purchase_time is null then 'dropped after add_to_cart'
+    else 'completed funnel'
+  end as funnel_status,
+  timestampdiff(minute, browse_time, add_to_cart) as time_browse_to_cart,
+  timestampdiff(minute, add_to_cart, purchase_time) as time_cart_to_purchase
+from event_times;
+
+
+---
+
+📈 3️⃣ Revenue Anomalies – Spotting Unexpected Spikes
+
+Used LAG() to compare month-over-month revenue changes per category and flag anomalies.
+
+with monthly_revenue as (
+  select product_category,
+         date_format(order_date,'%Y-%m') as order_month,
+         round(avg(amount),2) as avg_revenue_per_order
+  from orders
+  group by product_category, date_format(order_date,'%Y-%m')
+),
+compare_changes as (
+  select *,
+         lag(avg_revenue_per_order) over (partition by product_category order by order_month) as prev_revenue
+  from monthly_revenue
+)
+select *,
+   round(((avg_revenue_per_order - prev_revenue)/prev_revenue)*100,2) as pct_change,
+   case when abs((avg_revenue_per_order - prev_revenue)/prev_revenue) > 0.5 then 'anomaly' else 'normal' end as anomaly_flag
+from compare_changes
+where prev_revenue is not null;
+
+
+---
+
+🔁 4️⃣ Retention – Who Keeps Coming Back to Buy?
+
+Measured repeat orders per user (and can be extended per plan).
+
+with cte as (
+  select user_id, order_date,
+         timestampdiff(day, lag(order_date) over(partition by user_id order by order_date), order_date) as days_between_orders,
+         amount
+  from orders
+)
+select user_id,
+       count(order_date)-1 as total_repeating_orders,
+       sum(amount) as total_spent
+from cte
+group by user_id
+order by total_repeating_orders desc, total_spent desc;
+
+
+---
+
+🧠 Result?
+
+A single SQL case study that shows how data engineers think like analysts —
+connecting multiple business insights through clean, modular queries.
+
+From cohorts to funnels to anomalies — all done purely in SQL.
+No dashboards. No fancy tools. Just logic.
+
+
+---
+
+💬 Question for you:
+
+If you were to automate this analysis weekly —
+👉 would you schedule it in Airflow or trigger it through dbt + cron?
+
+Drop your thoughts 👇 — I’d love to hear how you’d productionize this!
+
+
+---
+
+🔖 #SQL #DataEngineering #Analytics #ETL #CohortAnalysis #FunnelAnalysis #BusinessIntelligence #AnomalyDetection #DataAnalytics #Airflow #DBT #PostgreSQL
+
+
+---
+
+Would you like me to make a shorter carousel-friendly version next (like 8 slides — one per section with visuals + captions)? It gets 3–5× more engagement on LinkedIn.
+
 
