@@ -136,3 +136,25 @@ Drop your thoughts 👇 — I’d love to hear how you’d productionize this!
 Would you like me to make a shorter carousel-friendly version next (like 8 slides — one per section with visuals + captions)? It gets 3–5× more engagement on LinkedIn.
 
 
+
+
+
+
+🚀 End-to-End SQL Business Intelligence Case Study - From Retention to Anomaly Detection
+
+In the last few days, I decided to challenge myself with something different -
+✨ Build a complete business analytics story using only SQL.
+
+Instead of just one query, I created a mini data pipeline covering:
+🧩 Cohort Analysis -> 🧭 Funnel Analysis -> 📈 Anomaly Detection -> 🔁 Retention Tracking
+
+Here’s what I built step-by-step 👇
+
+ 1.Cohort Analysis - Which users are coming      Back?
+ 2. Funnel Analysis - Where Do Users Drop Off?
+ 3. Revenue Anomalies - Spotting Unexpected Spikes
+ 4. Retention - Who Keeps Coming Back to Buy?
+
+🔖 #SQL #DataEngineering #Analytics #ETL #CohortAnalysis #FunnelAnalysis #BusinessIntelligence #AnomalyDetection #DataAnalytics #Airflow #PostgreSQL
+
+
