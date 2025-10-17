@@ -1,74 +1,16 @@
+# Bubble sort in Python
 
-Nested time-series analysis
+def bubbleSort(array):
 
-Multiple overlapping windows
+  for i in range(len(array)-1):
+    for j in range(0, len(array) - 1):
+      print("i:{},j:{}".format(array[i],array[j]))
+      if array[j] > array[j + 1]:
+        temp = array[j]
+        array[j] = array[j+1]
+        array[j+1] = temp
 
-Anomalies detection in behavior + revenue patterns
-
-Dynamic cohort evolution
-
-Event sequencing with conditional funnels
-
-
-Essentially a single problem with multiple layers of logic, where you’ll have to chain 5–6 CTEs, use window functions over multiple partitions, handle missing/null values carefully, and produce business KPIs.
-
-Here’s a sketch of a next-level monster problem:
-
-
----
-
-🔥 Problem: Dynamic Cohort + Behavior + Anomaly Detection
-
-Scenario:
-You’re at a large online marketplace. You have:
-
-1. users — signup_date, plan_type
-
-
-2. orders — order_date, product_category, amount, dynamic_price
-
-
-3. user_events — event_type (browse, add_to_cart, purchase, abandon_cart), event_time
-
-
-
-Tasks (all connected):
-
-1. Cohort Evolution:
-
-Monthly cohorts by signup_date.
-
-For each cohort, compute number of active users each month since signup.
-
-
-
-2. Behavioral Funnels:
-
-For each user, sequence their events.
-
-Identify users who dropped off at each funnel step.
-
-Compute time spent between steps.
-
-
-
-3. Revenue Anomalies:
-
-Compare dynamic price vs base price across products.
-
-Flag products where revenue per unit changed >50% vs last month.
-
-
-
-4. Top Retention Users per Plan:
-
-Users with highest repeat orders in last 90 days, per plan.
-
-
-
-5. Combined KPI Table:
-
-Cohort month, total users, churned %, avg LTV, avg funnel completion time, revenue anomaly %.
-
-
-
+data = [5, 3, 8, 4,2]
+bubbleSort(data)
+print('Sorted Array in Ascending Order:')
+print(data)
