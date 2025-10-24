@@ -1,4 +1,4 @@
-Absolutely 💪 — here’s the complete list of AWS S3 topics you should master to become an expert and cover for exams or real-world data engineering tasks. I’ve organized them logically from beginner → advanced.
+txtAbsolutely 💪 — here’s the complete list of AWS S3 topics you should master to become an expert and cover for exams or real-world data engineering tasks. I’ve organized them logically from beginner → advanced.
 
 
 ---
