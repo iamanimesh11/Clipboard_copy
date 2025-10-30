@@ -1,1 +1,6 @@
-Digital marketing efficiency fluctuated across the quarters. In Q2, ROAS declined by 22% despite a 16% reduction in CPL, indicating cheaper but less effective leads. Q3 marked a strong rebound, with ROAS increasing by 29% and CPL improving by 6%, highlighting optimization success. Q4 saw stability, with a slight 2% ROAS rise and a 9% CPL increase, suggesting costlier but higher-quality leads. The subsequent quarter maintained this improvement with steady gains in both metrics.”
+Row Labels	Sum of Number of order booking	Sum of order value	AVG VALUE	AOV Q-ON-Q%
+FY2018-Q1	75	46908141	625441.88	-
+FY2018-Q2	73	53697760	735585.7534	17.61%
+FY2018-Q3	58	42546660	733563.1034	-0.27%
+FY2018-Q4	90	63003020	700033.5556	-4.57%
+Grand Total	296	206155581	696471.5574	-0.51%
