@@ -1,6 +1,1 @@
-Row Labels	Sum of Number of order booking	Sum of order value	AVG VALUE	AOV Q-ON-Q%
-FY2018-Q1	75	46908141	625441.88	-
-FY2018-Q2	73	53697760	735585.7534	17.61%
-FY2018-Q3	58	42546660	733563.1034	-0.27%
-FY2018-Q4	90	63003020	700033.5556	-4.57%
-Grand Total	296	206155581	696471.5574	-0.51%
+Order Value analysis shows strong growth in Q2 FY2018, with AOV rising 17.6 % due to high-value bookings despite a small dip in order count. Q3 remained stable, while Q4 saw higher order volume but a 4.6 % decline in AOV, suggesting smaller-sized deals or discounting to drive year-end sales. Overall, the fiscal year ended with steady revenue growth but a marginal 0.5 % drop in average order value, indicating a shift toward volume-driven performance.”
