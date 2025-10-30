@@ -1,15 +1,25 @@
-def quick_sort(arr):
-    if len(arr)<=1:
-        return arr
-    
-    pivot = arr[len(arr) // 2]  # Choosing the middle element as pivot
-    left = [x for x in arr if x < pivot]
-    middle = [x for x in arr if x == pivot]
-    right = [x for x in arr if x > pivot]
-    
-    return quick_sort(left)+middle+quick_sort(right)
-my_array = [5,1,2,8,4]
-sorted_array = quick_sort(my_array)
-print(f"Original array: {my_array}")
-print(f"Sorted array: {sorted_array}")
-print("HURRAY!!!!")
+Dear FTV HELPDESK,
+
+
+
+I'm Animesh from RPA Team and I'm writing this mail concern regarding issue in FTV login at https://ftv.lge.com/logon_lge.jsp.
+
+We  as part of IT team develop RPA process which is basically automation bot which automate the User activity like login into ftv page and proceed to further actions.
+
+
+
+we understand for security reason login attempts are limited on all User ID but on one specific id- X2011039 ,we need no restriction for login should be there if somehow multiple login failed .as bot has to handle which is programmed bot.
+
+
+
+Hope you understand this and support on above mentioned id 
+
+
+
+please inf attached file showing error on login for your referecen
+
+
+
+thanks & Regards,
+
+Animesh﻿
