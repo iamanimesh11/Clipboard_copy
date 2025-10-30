@@ -1,1 +1,45 @@
-Order Value analysis shows strong growth in Q2 FY2018, with AOV rising 17.6 % due to high-value bookings despite a small dip in order count. Q3 remained stable, while Q4 saw higher order volume but a 4.6 % decline in AOV, suggesting smaller-sized deals or discounting to drive year-end sales. Overall, the fiscal year ended with steady revenue growth but a marginal 0.5 % drop in average order value, indicating a shift toward volume-driven performance.”
+                        ┌───────────────────────────────────────────┐
+                        │        Microservices / APIs               │
+                        │───────────────────────────────────────────│
+                        │  • OrderService → {"order_id":123,...}    │
+                        │  • UserService  → {"user_id":42,...}      │
+                        │  • InventoryService → {"sku":"A123",...}  │
+                        └───────────────────────────────────────────┘
+                                        │
+                                        ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ Step 1: Amazon S3 Landing Bucket                                   │
+│  • Receives raw JSON payloads from multiple microservices           │
+│  • Stores data for downstream processing                            │
+└────────────────────────────────────────────────────────────────────┘
+                                        │
+                          (S3 upload event triggers)
+                                        ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ Step 2: AWS Lambda                                                  │
+│  • Validates JSON schema                                            │
+│  • Tags metadata dynamically                                        │
+│  • Moves validated data to curated bucket                           │
+└────────────────────────────────────────────────────────────────────┘
+                                        │
+                                        ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ Step 3: Amazon S3 Curated Bucket                                   │
+│  • Stores cleaned & validated data                                  │
+│  • AWS Glue Crawler auto-detects new partitions                     │
+└────────────────────────────────────────────────────────────────────┘
+                                        │
+                                        ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ Step 4: AWS Glue Data Catalog                                       │
+│  • Updates schema & metadata catalog                                │
+│  • Data available for:                                              │
+│       - Amazon Athena                                               │
+│       - Amazon Redshift Spectrum                                    │
+└────────────────────────────────────────────────────────────────────┘
+                                        │
+                                        ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ Step 5: S3 Lifecycle Policy                                         │
+│  • Moves older data → Amazon S3 Glacier for cost optimization       │
+└────────────────────────────────────────────────────────────────────┘
