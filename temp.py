@@ -1,45 +1,27 @@
-                        ┌───────────────────────────────────────────┐
-                        │        Microservices / APIs               │
-                        │───────────────────────────────────────────│
-                        │  • OrderService → {"order_id":123,...}    │
-                        │  • UserService  → {"user_id":42,...}      │
-                        │  • InventoryService → {"sku":"A123",...}  │
-                        └───────────────────────────────────────────┘
-                                        │
-                                        ▼
-┌────────────────────────────────────────────────────────────────────┐
-│ Step 1: Amazon S3 Landing Bucket                                   │
-│  • Receives raw JSON payloads from multiple microservices           │
-│  • Stores data for downstream processing                            │
-└────────────────────────────────────────────────────────────────────┘
-                                        │
-                          (S3 upload event triggers)
-                                        ▼
-┌────────────────────────────────────────────────────────────────────┐
-│ Step 2: AWS Lambda                                                  │
-│  • Validates JSON schema                                            │
-│  • Tags metadata dynamically                                        │
-│  • Moves validated data to curated bucket                           │
-└────────────────────────────────────────────────────────────────────┘
-                                        │
-                                        ▼
-┌────────────────────────────────────────────────────────────────────┐
-│ Step 3: Amazon S3 Curated Bucket                                   │
-│  • Stores cleaned & validated data                                  │
-│  • AWS Glue Crawler auto-detects new partitions                     │
-└────────────────────────────────────────────────────────────────────┘
-                                        │
-                                        ▼
-┌────────────────────────────────────────────────────────────────────┐
-│ Step 4: AWS Glue Data Catalog                                       │
-│  • Updates schema & metadata catalog                                │
-│  • Data available for:                                              │
-│       - Amazon Athena                                               │
-│       - Amazon Redshift Spectrum                                    │
-└────────────────────────────────────────────────────────────────────┘
-                                        │
-                                        ▼
-┌────────────────────────────────────────────────────────────────────┐
-│ Step 5: S3 Lifecycle Policy                                         │
-│  • Moves older data → Amazon S3 Glacier for cost optimization       │
-└────────────────────────────────────────────────────────────────────┘
+def insertAtBottom(stack, item):
+    # Base case: if stack is empty, push item
+    if not stack:
+        stack.append(item)
+        return
+    # Otherwise, pop top and recurse
+    top = stack.pop()
+    insertAtBottom(stack, item)
+    # Push top back
+    stack.append(top)
+
+def reverseStack(stack):
+    # Base case
+    if not stack:
+        return
+    # Pop top element
+    top = stack.pop()
+    # Reverse remaining stack
+    reverseStack(stack)
+    # Insert popped element at the bottom
+    insertAtBottom(stack, top)
+
+# Example usage
+stack = [1, 2, 3, 4]
+print("Original stack:", stack)
+reverseStack(stack)
+print("Reversed stack:", stack)
