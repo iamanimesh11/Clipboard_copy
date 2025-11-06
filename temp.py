@@ -1,27 +1,16 @@
-def insertAtBottom(stack, item):
-    # Base case: if stack is empty, push item
-    if not stack:
-        stack.append(item)
+def count_Even(arr,count):
+    print(f"arr,calling {arr}")
+    if not arr:
+        return 
+    if len(arr)==1 and arr[0]%2==0:
+        count+=1
         return
-    # Otherwise, pop top and recurse
-    top = stack.pop()
-    insertAtBottom(stack, item)
-    # Push top back
-    stack.append(top)
-
-def reverseStack(stack):
-    # Base case
-    if not stack:
-        return
-    # Pop top element
-    top = stack.pop()
-    # Reverse remaining stack
-    reverseStack(stack)
-    # Insert popped element at the bottom
-    insertAtBottom(stack, top)
-
-# Example usage
-stack = [1, 2, 3, 4]
-print("Original stack:", stack)
-reverseStack(stack)
-print("Reversed stack:", stack)
+    print(arr)
+    print(count)
+    if arr[0]%2==0:
+        count+=1
+    return count_Even(arr[1:],count)
+arr=[2,4,3,5,8]
+count=0
+x=count_Even(arr,count)
+print(x)
