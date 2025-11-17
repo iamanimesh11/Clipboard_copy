@@ -1,14 +1,10 @@
-def selection_sort(arr):
-    n = len(arr)
-    for i in range(n):
-        min_index = i
-        for j in range(i + 1, n):
-            if arr[j] < arr[min_index]:
-                min_index = j
-        arr[i], arr[min_index] = arr[min_index], arr[i]
-    return arr
+Dear Ma'am,
 
-# Example
-nums = [7, 3, 9, 1, 5]
-print("Before sorting:", nums)
-print("After sorting :", selection_sort(nums))
+I would like to inquire about the job role. As the DPDP Act rules have been finalized by MIETY, I am wondering if the recruitment process will proceed and what the expected timeline for this might be.
+
+Any updates regarding this would be greatly appreciated, as it would allow me to prepare accordingly.
+
+Thank you for your continued support.
+
+Sincerely,
+Animesh Singh
