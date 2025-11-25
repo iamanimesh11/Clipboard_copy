@@ -1,51 +1,41 @@
-🚀 How S3 + Glue + Athena Replace Entire ETL Pipelines
+class Solution(object):
+    def maximumSubarraySum(self, nums, k):
+        freq = {}
+        l = 0
+        curr_sum = 0
+        max_sum = 0
+        distinct_count = 0
 
-Sources
-  ┌────────────┐   ┌─────────┐   ┌──────────┐   ┌──────────────┐
-  │ API & Txns │   │ CSVs    │   │ IoT Pings│   │ Clickstream  │
-  └─────┬──────┘   └────┬────┘   └────┬─────┘   └─────┬────────┘
-        │               │              │               │
-        │               │              │               │
-        ▼               ▼              ▼               ▼
-┌────────────────────────────────────────────────────────────┐
-│                         S3 (Raw)                           │
-│  - JSON / CSV / Parquet landed directly, event-driven      │
-│  - No ingestion servers / no cron jobs                     │
-└────────────────────────────────────────────────────────────┘
-                          │    ▲
-            (object-created│    │ Glue Crawler detects schema,
-             event ->)     │    │ registers/updates Glue Catalog,
-                          ▼    │ handles schema drift & partitions
-┌────────────────────────────────────────────────────────────┐
-│                      Glue Crawler                          │
-└────────────────────────────────────────────────────────────┘
-                          │
-        (catalog update -> triggers validation/transform)
-                          ▼
-┌────────────────────────────────────────────────────────────┐
-│                       Glue ETL Jobs                        │
-│  - Serverless jobs: cleaning, validation, partitioning     │
-│  - Convert raw -> optimized Parquet, write to Curated S3  │
-│  - No clusters, no Spark servers to manage                 │
-└────────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌────────────────────────────────────────────────────────────┐
-│                       S3 (Curated)                         │
-│  - Partitioned, Parquet, optimized for analytics           │
-└────────────────────────────────────────────────────────────┘
-                          │
-                          ▼
-┌────────────────────────────────────────────────────────────┐
-│                         Athena                             │
-│  - SQL directly on S3 (ad-hoc + dashboards)                │
-│  - No loading, no warehouse storage cost                   │
-│  - Example:                                                   
-│    SELECT user_id, COUNT(*) FROM curated.transactions 
-│    WHERE txn_status='FAILED' AND event_timestamp > now()-interval '1' day;
-└────────────────────────────────────────────────────────────┘
+        for r in range(len(nums)):
 
-Event-driven chain (zero manual ETL):
-File lands -> Glue Crawler -> Catalog update -> Glue ETL -> write refined -> Athena dashboard auto-refresh
+            # Add nums[r] to hashmap
+            old = freq.get(nums[r], 0)
+            freq[nums[r]] = old + 1
+            curr_sum += nums[r]
 
-Business wins: serverless scaling, ~80% lower storage/compute, minutes-to-analytics, zero 24/7 ETL clusters.
+            if old == 0:
+                distinct_count += 1     # new distinct element
+            elif old == 1:
+                distinct_count -= 1     # becomes non-distinct
+
+            # Shrink window if size > k
+            while r - l + 1 > k:
+                old = freq[nums[l]]
+                freq[nums[l]] = old - 1
+                curr_sum -= nums[l]
+
+                if old == 2:
+                    distinct_count += 1   # goes from freq 2 → 1, becomes distinct again
+                elif old == 1:
+                    distinct_count -= 1   # goes from freq 1 → 0, removed from distinct
+
+                if freq[nums[l]] == 0:
+                    del freq[nums[l]]
+
+                l += 1
+
+            # Valid window: size k AND all elements are distinct
+            if r - l + 1 == k and distinct_count == k:
+                max_sum = max(max_sum, curr_sum)
+
+        return max_sum
