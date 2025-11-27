@@ -1,186 +1,21 @@
-🚀 How S3 + Glue + Athena Replace Entire ETL Pipelines in Modern Data Architectures
 
+Dim client As New System.Net.WebClient()
 
+Dim jsonPayload As String = "{""UserName"": ""admin"", ""Password"": ""admin""}"
 
-Most companies still think analytics =
+client.Headers.Add("Accept", "application/json")
+client.Headers.Add("Content-Type", "application/json") 
 
-Load everything into a warehouse → write ETL → pray it doesn’t break.
 
+result= client.UploadString(url, jsonPayload)
+Dim jobj As Newtonsoft.json.Linq.JObject =Newtonsoft.Json.Linq.JObject.Parse(result)
+result=jobj("data")("Token").tostring()
 
 
-But real scalability comes from decoupling ETL from compute -and that’s exactly where the S3 + Glue + Athena pattern outperforms traditional systems.
+Dim client As New System.Net.WebClient()
 
+client.Headers.Add("Accept", "application/json")
+client.Headers.Add("Authorization", "Bearer " & token)
 
-
-The Real Business Problem ->
-
-
-
-A fintech company processes daily:
-
-* API & transaction logs (semi-structured)
-
-* CSV extracts from partner banks
-
-* IoT pings for fraud signals
-
-* Clickstream events from web + mobile
-
-
-
-Data arrives in different formats, at different times, with different volumes.
-
-
-
-Traditional ETL?
-
-❌ Can’t scale during peak loads
-
-❌ Expensive 24/7 compute
-
-❌ Schema changes break pipelines
-
-❌ Frequent reprocessing failures
-
-
-
-They needed something serverless, dynamic, and event-driven.
-
-
-
-🧠 The Architecture That Solved It (and why it works)
-
-
-
- 1️⃣ S3 as Raw Landing Zone
-
-All incoming files -JSON, CSV, Parquet -are dropped directly into an S3 raw bucket.
-
-No ingestion servers.
-
-No cron jobs.
-
-Pure event-driven.
-
-
-
-2️⃣ S3 → Glue Crawler (Schema Automation)
-
-Each new file triggers a Glue Crawler, which:
-
-* Detects schema
-
-* Registers/updates Glue Catalog tables
-
-* Handles schema drift (new fields added)
-
-* Automatically partitions data
-
-
-
-This eliminates manual schema management, which is the 1 reason enterprise ETLs break.
-
-
-
-3️⃣ Serverless Transformations with Glue Jobs
-
-
-
-For files requiring cleaning, validation, merging, or partitioning:
-
-
-
-* Glue ETL jobs run automatically
-
-* Convert raw data → optimized Parquet
-
-* Store it in curated S3 bucket (Layer 2)
-
-
-
-No clusters.
-
-No Spark servers.
-
-No DevOps complexity.
-
-
-
-4️⃣ Athena Turns S3 Into a Query Engine
-
-
-
-This is where the magic happens:
-
-You can run SQL like:
-
-
-
-SELECT user_id, COUNT(*) 
-
-FROM curated.transactions 
-
-WHERE txn_status = 'FAILED' 
-
-AND event_timestamp > now() - interval '1 day';
-
-
-
-And instantly query terabytes directly in S3.
-
-
-
-No loading data.
-
-No warehouse storage cost.
-
-No indexes to manage.
-
-
-
-⚡ 5️⃣ Event-Driven Automation: Zero Manual ETL
-
-
-
-The pipeline becomes a chain reaction:
-
-
-
-File lands in S3 →
-
-Trigger Glue Crawler →
-
-Update Catalog →
-
-Trigger Glue ETL →
-
-Write refined data →
-
-Athena dashboard auto-refresh
-
-
-
-This is what enterprise-grade serverless analytics looks like.
-
-
-
-📊 Business Impact
-
-
-
-* 80% lower storage + compute cost
-
-* No 24/7 ETL clusters
-
-* Analytics available minutes after data arrives
-
-* Zero human intervention
-
-* Scales from GB → TB → PB without redesign
-
-
-
-This isn’t just “cloud analytics”.
-
-This is a full data platform without a single server.
+result  = client.UploadString(url)
 
