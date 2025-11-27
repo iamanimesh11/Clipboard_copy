@@ -1,21 +1,27 @@
+'===========================
+' 1. CALL LOGIN API
+'===========================
+Dim client1 As New System.Net.WebClient()
 
-Dim client As New System.Net.WebClient()
+client1.Headers.Add("Accept", "application/json")
+client1.Headers.Add("Content-Type", "application/json")
 
-Dim jsonPayload As String = "{""UserName"": ""admin"", ""Password"": ""admin""}"
+Dim loginResponse As String = client1.UploadString(loginUrl, jsonPayload)
 
-client.Headers.Add("Accept", "application/json")
-client.Headers.Add("Content-Type", "application/json") 
-
-
-result= client.UploadString(url, jsonPayload)
-Dim jobj As Newtonsoft.json.Linq.JObject =Newtonsoft.Json.Linq.JObject.Parse(result)
-result=jobj("data")("Token").tostring()
+' Extract token
+Dim jobj As Newtonsoft.Json.Linq.JObject = Newtonsoft.Json.Linq.JObject.Parse(loginResponse)
+Dim token As String = jobj("data")("Token").ToString()
 
 
-Dim client As New System.Net.WebClient()
+'===========================
+' 2. CALL SECOND API USING TOKEN
+'===========================
+Dim client2 As New System.Net.WebClient()
 
-client.Headers.Add("Accept", "application/json")
-client.Headers.Add("Authorization", "Bearer " & token)
+client2.Headers.Add("Accept", "application/json")
+client2.Headers.Add("Authorization", "Bearer " & token)
 
-result  = client.UploadString(url)
+Dim response2 As String = client2.UploadString(dataUrl)
 
+' Return final output
+finalResult = response2
