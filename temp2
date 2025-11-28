@@ -1,25 +1,135 @@
-' 1. CALL LOGIN API
-Dim client1 As New System.Net.WebClient()
+class Node:
+    def __init__(self,data):
+        self.data=data
+        self.next=None
 
-client1.Headers.Add("Accept", "application/json")
-client1.Headers.Add("Content-Type", "application/json")
+class LinkedList:
+    def __init__(self):
+        self.head=None
+        
+    def insert_end(self,data):
+        new_node=Node(data)
+        
+        if self.head is None:
+            print("yes self.head is none")
+            self.head=new_node
+            return
 
-Dim loginResponse As String = client1.UploadString(loginUrl, jsonPayload)
+           
+        print(f"in class node : {self.__dict__}")
+        temp=self.head
+        print(f" temp var is {temp.__dict__}")
+        while temp.next: 
+            print("im in while loop")  
+            temp=temp.next
+        print(f"temp.next is {temp.next}")
+        temp.next=new_node
+        print(f"temp.next is {temp.next.__dict__}")
+    
+   
+    def insert_atINDEX(self,index,data):
+        new_node=Node(data)
+        
+        if index==0:
+            print("im in index 0")
+            print(f"self.head.next is {self.head.next.__dict__}")
+            new_node.next=self.head
+            self.head=new_node
+            return 
 
-' Extract token
-Dim jobj As Newtonsoft.Json.Linq.JObject = Newtonsoft.Json.Linq.JObject.Parse(loginResponse)
-Dim token As String = jobj("data")("Token").ToString()
 
-Console.WriteLine("Successfully retrieved token: " & token)
-Dim client2 As New System.Net.WebClient()
+        temp=self.head
+        print(f"temp is {temp.__dict__}")
+        curr_index=0
 
-client2.Headers.Add("Accept", "application/json")
-client2.Headers.Add("Content-Type", "application/json")
+        while temp is not None and curr_index<index-1:
+                    temp=temp.next
+                    curr_index+=1
+            
+        if temp is None:
+            raise IndexError("index out of range")
 
-client2.Headers.Add("Authorization", "Bearer " & token)
+        new_node.next=temp.next
+        temp.next=new_node
 
-Dim response2 As String = client2.UploadString(dataUrl,JSONPAYLOAD2)
+    def delete_AtINDEX(self,index):
+        if self.head is None:
+            return IndexError("list is empty")
 
-Dim jobj2 As Newtonsoft.Json.Linq.JObject = Newtonsoft.Json.Linq.JObject.Parse(response2)
+        if  index==0:
+            self.head=self.head.next
 
-result =  jobj2("data").ToString()
+        temp=self.head
+        curr_index=0
+
+        while temp is not None and curr_index<index-1:
+            temp =temp.next
+            curr_index+=1
+
+        if temp is  None or temp.next is  None:
+            raise IndexError("index out of unbound")
+
+        temp.next=temp.next.next
+        
+        
+    def print_list(self):
+        temp=self.head
+        while temp:
+            print(temp.data,end=" ")
+            temp=temp.next
+        print()
+
+    def count_nodes(self):
+        count=0
+        temp=self.head
+        while temp:
+            count+=1
+            temp=temp.next
+        print(f"count is {count}")
+
+    def count_node_recursively(self,node):
+        if node is None:
+               return 0
+        return 1+self.count_node_recursively(node.next)
+            
+
+    def search(self,target):
+        temp=self.head
+
+        while temp:
+            if temp.data==target:
+                print(f"target {target} exist in LL")
+                return
+            temp=temp.next
+        print(f"target {target} doesnt exist in LL")
+        return 
+        
+    def find_middle(self):
+            slow=self.head
+            fast=self.head
+
+            while fast and  fast.next:
+                slow =slow.next
+                fast=fast.next.next
+            return slow
+
+        
+ll=LinkedList()
+ll.print_list()
+print("###### new func calling again ###")
+ll.insert_end(10)
+ll.insert_end(20)
+ll.insert_end(30)
+ll.insert_end(40)
+ll.insert_atINDEX(4,50)
+ll.print_list()
+count=ll.count_node_recursively(ll.head)
+print(f"count is :{count}")
+ll.delete_AtINDEX(1)
+# print("###### new func calling again ###")
+# ll.insert_end(20)
+# print("###### new func calling again ###")
+# ll.insert_end(30)
+ll.print_list()
+middle=ll.find_middle()
+print(f"middle is : {middle.data}")
