@@ -1,1 +1,25 @@
+' 1. CALL LOGIN API
+Dim client1 As New System.Net.WebClient()
 
+client1.Headers.Add("Accept", "application/json")
+client1.Headers.Add("Content-Type", "application/json")
+
+Dim loginResponse As String = client1.UploadString(loginUrl, jsonPayload)
+
+' Extract token
+Dim jobj As Newtonsoft.Json.Linq.JObject = Newtonsoft.Json.Linq.JObject.Parse(loginResponse)
+Dim token As String = jobj("data")("Token").ToString()
+
+Console.WriteLine("Successfully retrieved token: " & token)
+Dim client2 As New System.Net.WebClient()
+
+client2.Headers.Add("Accept", "application/json")
+client2.Headers.Add("Content-Type", "application/json")
+
+client2.Headers.Add("Authorization", "Bearer " & token)
+
+Dim response2 As String = client2.UploadString(dataUrl,JSONPAYLOAD2)
+
+Dim jobj2 As Newtonsoft.Json.Linq.JObject = Newtonsoft.Json.Linq.JObject.Parse(response2)
+
+result =  jobj2("data").ToString()
