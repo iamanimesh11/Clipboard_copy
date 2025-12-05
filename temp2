@@ -1,23 +1,14 @@
-Sub FilterPivotGreaterThanZero()
+Sub FilterColumnGreaterThanZero()
 
     Dim ws As Worksheet
-    Dim pt As PivotTable
-    Dim pf As PivotField
+    Set ws = ActiveSheet   'or: Set ws = ThisWorkbook.Sheets("Sheet1")
     
-    '--- Change sheet name & pivot table name as needed ---
-    Set ws = ThisWorkbook.Sheets("Sheet1")
-    Set pt = ws.PivotTables("PivotTable1")
+    'Clear existing filters
+    If ws.AutoFilterMode Then ws.AutoFilterMode = False
     
-    '--- Change this to the VALUE field you want to filter ---
-    Set pf = pt.DataFields("Sum of Available")
-    
-    'Apply value filter (> 0)
-    pf.Parent.PivotFields(pf.Name).ClearAllFilters
-    pf.Parent.PivotFields(pf.Name).PivotFilters.Add _
-        Type:=xlValueIsGreaterThan, _
-        DataField:=pf, _
-        Value1:=0
-
-    MsgBox "Filter applied: Sum of Available > 0"
+    'Apply filter on column C (change column number as needed)
+    ws.Range("A1").CurrentRegion.AutoFilter _
+        Field:=3, Operator:=xlGreater, Criteria1:="0"
+        'Field:=3 means 3rd column (Column C)
 
 End Sub
