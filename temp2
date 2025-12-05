@@ -1,18 +1,23 @@
-Sub DeselectBlanksFromFilter()
+Sub FilterPivotGreaterThanZero()
+
     Dim ws As Worksheet
-    Set ws = ThisWorkbook.Sheets("SD Report")
+    Dim pt As PivotTable
+    Dim pf As PivotField
     
-    With ws
-        ' Check if filter is applied
-        If .AutoFilterMode Then
-            With .AutoFilter
-                ' Check if filter exists in column F (6th column)
-                If .Filters.Count >= 6 Then
-                    ' Apply filter to exclude blanks
-                    .Range.AutoFilter Field:=6, Criteria1:="<>"
-                End If
-            End With
-        Else
-           End If
-    End With
+    '--- Change sheet name & pivot table name as needed ---
+    Set ws = ThisWorkbook.Sheets("Sheet1")
+    Set pt = ws.PivotTables("PivotTable1")
+    
+    '--- Change this to the VALUE field you want to filter ---
+    Set pf = pt.DataFields("Sum of Available")
+    
+    'Apply value filter (> 0)
+    pf.Parent.PivotFields(pf.Name).ClearAllFilters
+    pf.Parent.PivotFields(pf.Name).PivotFilters.Add _
+        Type:=xlValueIsGreaterThan, _
+        DataField:=pf, _
+        Value1:=0
+
+    MsgBox "Filter applied: Sum of Available > 0"
+
 End Sub
