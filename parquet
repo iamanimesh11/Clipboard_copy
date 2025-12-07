@@ -1,0 +1,83 @@
+Here’s an improved version with a **minimal, clean starting point** that sets context (“Parquet is columnar, right?”) and then reveals the *dynamic encoding* twist.
+
+---
+
+## 🚀 We All Say “Parquet is Columnar”… But What If It’s *More* Than That?
+
+Most people stop at:
+
+> “Parquet is a columnar storage format.”
+
+True — but that’s just the surface.
+Underneath, Parquet behaves more like a **self-optimizing data engine** than a storage file.
+
+Here’s the part almost nobody talks about 👇
+
+### 🔥 Parquet uses *dynamic encoding* — and it can change encoding **page by page** inside the same column.
+
+To see why this is wild, look at how raw data is normally stored:
+
+```
+India  
+India  
+India  (10,000 times)
+```
+
+Or:
+
+```
+100, 101, 102, 103…
+```
+
+Or:
+
+```
+A, A, A, A, B, B, C
+```
+
+Traditional storage just writes values as-is.
+Parquet looks at them and *rewrites* them using intelligent encodings:
+
+* **Dictionary:** store "India" once → represent all rows as integers
+* **Delta:** store 100 → then +1, +1, +1…
+* **RLE:** store “A × 4, B × 2, C × 1”
+
+But here’s the mind-bender:
+
+### ⭐ Parquet doesn’t pick one encoding per column.
+
+It **adapts** encoding *mid-file* depending on the data distribution.
+
+If the first million rows compress well with dictionary encoding → great.
+If the next million suddenly have high-cardinality values → Parquet switches to a different encoding automatically.
+No config. No manual tuning.
+
+It chooses the most efficient strategy for *each page*.
+
+---
+
+# ⚡ Why this matters more than “columnar storage”
+
+Dynamic encoding gives you:
+
+* Better compression
+* Faster queries
+* Lower compute bills
+* Metadata that exposes data drift/cardinality issues
+* A file format that optimizes itself as data changes
+
+Parquet isn’t just “columnar.”
+It’s **adaptive**.
+
+A shape-shifting format that reacts to your data in real time — quietly improving performance without you ever asking.
+
+And most teams never notice it.
+
+---
+
+If you want, I can also prepare:
+• A more emotional storyteller version
+• A version with diagrams (carousel-style)
+• A version with deeper technical internals
+
+Which one next?
