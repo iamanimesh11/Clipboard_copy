@@ -1,83 +1,45 @@
-Here’s an improved version with a **minimal, clean starting point** that sets context (“Parquet is columnar, right?”) and then reveals the *dynamic encoding* twist.
+🚀 We All Say “Parquet is Columnar”… But It’s More Than That!
 
----
+While working in AWS, I tried converting some CSVs into Parquet just to see if query performance improved — and the results surprised me.
 
-## 🚀 We All Say “Parquet is Columnar”… But What If It’s *More* Than That?
+Parquet behaves more like a self-optimizing data engine than a storage file.
 
-Most people stop at:
+🔥 It uses dynamic encoding — and it can switch encoding page by page inside the same column.
 
-> “Parquet is a columnar storage format.”
+Before that makes sense, remember how a Parquet file is structured:
 
-True — but that’s just the surface.
-Underneath, Parquet behaves more like a **self-optimizing data engine** than a storage file.
+ A file is split into Row Groups (big horizontal chunks of data)
+ Each column inside a Row Group becomes a Column Chunk
+ And each Column Chunk is made of Pages (the smallest unit Parquet encodes)
 
-Here’s the part almost nobody talks about 👇
+Encoding decisions happen at the page level.
+This is why Parquet can adapt so aggressively.
 
-### 🔥 Parquet uses *dynamic encoding* — and it can change encoding **page by page** inside the same column.
+Think about how raw data normally looks:
 
-To see why this is wild, look at how raw data is normally stored:
 
-```
-India  
-India  
-India  (10,000 times)
-```
+Here’s the wild part:
 
-Or:
+⭐ Parquet doesn’t pick one encoding per column.
 
-```
-100, 101, 102, 103…
-```
+It adapts mid-file, page by page, inside each Column Chunk.
 
-Or:
+If the first pages in a Row Group compress well with dictionary encoding → great.
+If later pages suddenly have high cardinality → Parquet switches strategies seamlessly.
 
-```
-A, A, A, A, B, B, C
-```
+No config. No tuning.
+Optimal encoding per page — thousands of micro-optimizations inside every file.
 
-Traditional storage just writes values as-is.
-Parquet looks at them and *rewrites* them using intelligent encodings:
 
-* **Dictionary:** store "India" once → represent all rows as integers
-* **Delta:** store 100 → then +1, +1, +1…
-* **RLE:** store “A × 4, B × 2, C × 1”
+# ⚡ Why this matters beyond “columnar storage”
 
-But here’s the mind-bender:
+Adaptive, page-level encoding leads to:
 
-### ⭐ Parquet doesn’t pick one encoding per column.
+ Better compression
+ Faster queries
+ Lower compute cost
+ Page statistics that reveal drift/cardinality changes
+ A format that optimizes itself as your data evolves
 
-It **adapts** encoding *mid-file* depending on the data distribution.
+Parquet isn’t just columnar — it’s adaptive, reacting to your data in real time, quietly improving performance without anyone noticing.
 
-If the first million rows compress well with dictionary encoding → great.
-If the next million suddenly have high-cardinality values → Parquet switches to a different encoding automatically.
-No config. No manual tuning.
-
-It chooses the most efficient strategy for *each page*.
-
----
-
-# ⚡ Why this matters more than “columnar storage”
-
-Dynamic encoding gives you:
-
-* Better compression
-* Faster queries
-* Lower compute bills
-* Metadata that exposes data drift/cardinality issues
-* A file format that optimizes itself as data changes
-
-Parquet isn’t just “columnar.”
-It’s **adaptive**.
-
-A shape-shifting format that reacts to your data in real time — quietly improving performance without you ever asking.
-
-And most teams never notice it.
-
----
-
-If you want, I can also prepare:
-• A more emotional storyteller version
-• A version with diagrams (carousel-style)
-• A version with deeper technical internals
-
-Which one next?
