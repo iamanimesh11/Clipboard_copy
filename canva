@@ -1,3 +1,78 @@
+
+def print_list(ll):
+        temp=ll
+        while temp:
+            print(temp.data,end=" ")
+            temp=temp.next
+        print()
+        
+class Node:
+    def __init__(self,data):
+        self.data=data
+        self.next=None
+
+class LinkedList:
+    def __init__(self):
+        self.head=None
+        
+    def insert_end(self,data):
+        new_node=Node(data)
+        
+        if self.head is None:
+            print("yes self.head is none")
+            self.head=new_node
+            return
+
+           
+        temp=self.head
+        while temp.next: 
+            temp=temp.next
+        temp.next=new_node
+
+   
+        
+    def print_list(self):
+        temp=self.head
+        while temp:
+            print(temp.data,end=" ")
+            temp=temp.next
+        print()
+
+        
+    def find_middle(self):
+            slow=self.head
+            fast=self.head
+
+            while fast and  fast.next:
+                slow =slow.next
+                fast=fast.next.next
+            return slow
+
+    def reverse_ll(self):
+      curr=self.head
+      prev=None
+      while curr:
+          next=curr.next
+          curr.next=prev
+          prev=curr
+          curr=next
+  
+      self.head=prev    
+    
+
+    def identical_ll(self,ll):
+      head1=self.head 
+      head2= ll
+      while head1 is not None and head2 is not None:
+        if head1.data != head2.data:
+          print("false")
+          return False
+          
+        head1=head1.next
+        head2=head2.next
+      print("true")
+      return True
+      
                   
     def check_palindrome(self):
       print(self.head.next.__dict__)
@@ -11,3 +86,33 @@
       print_list(second_half)
       
       self.identical_ll(slow)
+      
+ll=LinkedList()
+ll.insert_end(1)
+ll.insert_end(2)
+ll.insert_end(2)
+ll.insert_end(1)
+
+print_list(ll.head)
+ll2=LinkedList()
+
+ll2.insert_end(1)
+ll2.insert_end(2)
+ll2.insert_end(2)
+ll2.insert_end(1)
+print_list(ll2.head)
+
+# ll2.identical_ll(ll)
+ll.check_palindrome()
+print_list(ll.head)
+print_list(ll2.head)
+
+# ll.reverse_ll_recursive()
+# ll.rotate_list_by_k(5)
+# ll.print_list()
+# ll.detect_cycle()
+# ll.make_cycle_atINDEX(2)
+# ll.detect_cycle()
+# ll.remove_cycle()
+# ll.detect_cycle()
+# ll.check_palindrome()
