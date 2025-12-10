@@ -1,297 +1,76 @@
-Got it.
-Here are all the essential array problem patterns that cover almost every array-based DSA problem on LeetCode and interviews.
+Create a clean, organized DSA notes structure in Notion. 
 
-This is the list you will put into your Patterns Table inside the Array topic.
-
-I’ll organize them cleanly + explain what each pattern covers.
-
-
----
-
-⭐ MASTER LIST: Array Problem Patterns (Complete)
-
-These 15 patterns cover 95% of array problems you will ever see.
-
+### Main Goal:
+I want a master page titled **DSA Notes** with a sub-page for **Arrays**. Inside Arrays, create:
+1. A page called **Arrays – Patterns** with a table of common array patterns.
+2. Each pattern should automatically have its own sub-page.
+3. Inside each pattern page, generate a problems table.
+4. Include a reusable problem-template section.
 
 ---
 
-1️⃣ Two-Pointers
+### 1. Arrays – Patterns Page
+Create a table named **Array Patterns** with these columns:
+- Pattern (Title)
+- Description (Text)
+- Difficulty Range (Text)
+- Link (Page)
 
-Used for:
+Add rows for these patterns:
+- Sliding Window
+- Two Pointers
+- Prefix Sum
+- Hashing / Frequency Map
+- Kadane / DP on Arrays
+- Binary Search on Answer
 
-sorted arrays
-
-pair sum problems
-
-removing duplicates
-
-moving elements
-
-
-Examples:
-
-Two Sum II
-
-Remove Duplicates
-
-Container With Most Water
-
-3Sum
-
-
+Each row should link to a sub-page named:
+**Pattern – <Pattern Name>**
 
 ---
 
-2️⃣ Sliding Window (Fixed Window)
+### 2. Inside Each Pattern Page
+Generate:
 
-Used when window size is fixed (k).
+#### Overview Section
+Short summary of:
+- When to use the pattern
+- Why it works
+- Common use cases
 
-Examples:
+#### Problems Table
+Make a table with columns:
+- Problem (Title)
+- Category
+- Approach Summary
+- Time
+- Space
+- Status
+- Link
 
-Max Sum Subarray of Size K
+Add 2–3 example problems for each pattern.
 
-First Negative in Every Window
+#### Problem Template
+Add this template for adding new problems:
 
+### Problem Name  
+**Link:**  
+**Category:**  
 
+#### Intuition  
+(Explain the core idea)
 
----
+#### Approach  
+(Write the steps)
 
-3️⃣ Sliding Window (Variable Window)
+#### Code  
+(Empty code block)
 
-Used when window expands & shrinks based on condition.
-
-Examples:
-
-Longest Substring Without Repeating
-
-Minimum Window Subarray
-
-
-
----
-
-4️⃣ Prefix Sum
-
-Used for subarray sum problems.
-
-Examples:
-
-Subarray Sum Equals K
-
-Range Sum Query
-
-Counting subarrays with given sum
-
-
-
----
-
-5️⃣ Kadane’s Algorithm
-
-Used for maximum subarray problems.
-
-Examples:
-
-Maximum Subarray (Kadane)
-
-Max Circular Subarray
-
-
+#### Complexity  
+- Time:  
+- Space:
 
 ---
 
-6️⃣ Binary Search on Array
-
-Used when the array is sorted or rotated.
-
-Examples:
-
-Binary Search
-
-Search in Rotated Sorted Array
-
-First/Last Occurrence
-
-
-
----
-
-7️⃣ Sorting + Two-Pointers
-
-Used when sorting helps simplify logic.
-
-Examples:
-
-3Sum
-
-4Sum
-
-Merge Intervals (after sorting intervals)
-
-
-
----
-
-8️⃣ Frequency Map / Hashing
-
-Used for counting elements efficiently.
-
-Examples:
-
-Majority Element
-
-Two Sum (Hashmap version)
-
-
-
----
-
-9️⃣ Difference Array / Range Update
-
-Used when multiple range updates needed.
-
-Examples:
-
-Corp Flight Bookings
-
-Range Addition
-
-
-
----
-
-🔟 Greedy Array Problems
-
-Used when choosing best local option leads to global solution.
-
-Examples:
-
-Jump Game
-
-Minimum Platforms
-
-Gas Station
-
-
-
----
-
-1️⃣1️⃣ Intervals (Common in arrays)
-
-Used when working with start/end pairs.
-
-Examples:
-
-Merge Intervals
-
-Insert Interval
-
-Meeting Rooms
-
-
-
----
-
-1️⃣2️⃣ Monotonic Stack (Array-specific)
-
-Used to find:
-
-next greater element
-
-previous greater
-
-next smaller
-
-
-Examples:
-
-Next Greater Element
-
-Daily Temperatures
-
-Largest Rectangle in Histogram
-
-
-
----
-
-1️⃣3️⃣ Matrix as Array-of-Arrays
-
-All 2D array problems.
-
-Examples:
-
-Spiral Matrix
-
-Rotate Matrix
-
-Transpose
-
-
-
----
-
-1️⃣4️⃣ Product-Based Patterns
-
-Used when multiplication required instead of sum.
-
-Examples:
-
-Product of Array Except Self
-
-Subarray Product Less Than K
-
-
-
----
-
-1️⃣5️⃣ Bucket / Counting / Pigeonhole
-
-Used when values fall in a limited range.
-
-Examples:
-
-Sort Colors
-
-Kth Largest Element (counting)
-
-
-
----
-
-🎯 THIS IS THE COMPLETE PATTERN SET FOR ARRAY PROBLEMS.
-
-If you add these patterns to your Notion Array page, you will cover almost every LC array problem.
-
-
----
-
-⭐ HOW THIS GOES INTO YOUR NOTION
-
-Inside topic ARRAY, your Patterns Table will be:
-
-Pattern Name	Description
-
-Two Pointers	left & right pointers
-Sliding Window – Fixed	window size K
-Sliding Window – Variable	expand/shrink
-Prefix Sum	cumulative array
-Kadane’s	max subarray
-Binary Search on Array	sorted/rotated arrays
-Sorting + Two Pointers	3Sum, 4Sum
-Hashing / Frequency Map	counts & frequency
-Difference Array	range updates
-Greedy	jump game
-Intervals	merge, overlap
-Monotonic Stack	next greater
-Matrix Patterns	2D array logic
-Product Patterns	multiplication-based
-Bucket / Counting	limited-range values
-
-
-Each pattern opens a page → inside that page, you add problems table for that pattern.
-
-
----
-
-💬 Want me to now generate a Notion-ready template with all these patterns already inserted?
+### 3. Format Everything Nicely
+Use proper headings, tables, and dividers.
