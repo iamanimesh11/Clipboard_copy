@@ -1,10 +1,13 @@
-Dear Ma'am,
-
-I would like to inquire about the job role. As the DPDP Act rules have been finalized by MIETY, I am wondering if the recruitment process will proceed and what the expected timeline for this might be.
-
-Any updates regarding this would be greatly appreciated, as it would allow me to prepare accordingly.
-
-Thank you for your continued support.
-
-Sincerely,
-Animesh Singh
+                  
+    def check_palindrome(self):
+      print(self.head.next.__dict__)
+      slow=self.find_middle()
+      
+      print(f"middle is{slow.data}")
+      print(f"Slow is {slow.__dict__}")
+      
+      second_half=self.reverse_ll(slow)
+      
+      print_list(second_half)
+      
+      self.identical_ll(slow)
