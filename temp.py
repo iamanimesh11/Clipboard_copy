@@ -1,20 +1,18 @@
-{
-  "Version": "2012-10-17",
-  "Statement": [
+aws s3api put-bucket-lifecycle-configuration --bucket my-de-lake-animesh11 --lifecycle-configuration '{
+  "Rules": [
     {
-      "Sid": "AllowListAndReadOnlyForMyAccount",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::YOUR-AWS-ACCOUNT-ID:root"
-      },
-      "Action": [
-        "s3:GetObject",
-        "s3:ListBucket"
+      "ID": "MoveOldRawToGlacier",
+      "Status": "Enabled",
+      "Prefix": "raw/",
+      "Transitions": [
+        {
+          "Days": 30,
+          "StorageClass": "GLACIER"
+        }
       ],
-      "Resource": [
-        "arn:aws:s3:::my-de-lake-animesh11",
-        "arn:aws:s3:::my-de-lake-animesh11/*"
-      ]
+      "Expiration": {
+        "Days": 365
+      }
     }
   ]
-}
+}'
