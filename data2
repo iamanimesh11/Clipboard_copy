@@ -1,16 +1,1 @@
-# Bubble sort in Python
-
-def bubbleSort(array):
-
-  for i in range(len(array)-1):
-    for j in range(0, len(array) - 1):
-      print("i:{},j:{}".format(array[i],array[j]))
-      if array[j] > array[j + 1]:
-        temp = array[j]
-        array[j] = array[j+1]
-        array[j+1] = temp
-
-data = [5, 3, 8, 4,2]
-bubbleSort(data)
-print('Sorted Array in Ascending Order:')
-print(data)
+https://awscertificationpractice.benchprep.com/app/aws-certified-data-engineer-associate-official-practice-question-set-dea-c01-v2#exams/take_exam/273383
